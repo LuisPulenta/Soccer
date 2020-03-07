@@ -7,22 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Soccer.Web.Data;
 using Soccer.Web.Data.Entities;
+using Soccer.Web.Helpers;
+using Soccer.Web.Models;
 
 namespace Soccer.Web.Controllers
 {
     public class LeaguesController : Controller
     {
         private readonly DataContext _context;
+        private readonly IImageHelper _imageHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public LeaguesController(DataContext context)
+        public LeaguesController(DataContext context,
+            IImageHelper imageHelper,
+            IConverterHelper converterHelper)
         {
             _context = context;
+            _imageHelper = imageHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Leagues
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Leagues.ToListAsync());
+            return View(await _context.Leagues
+                 .Include(t => t.Teams)
+                 .OrderBy(t => t.Name).ToListAsync());
         }
 
         // GET: Leagues/Details/5
@@ -34,6 +44,7 @@ namespace Soccer.Web.Controllers
             }
 
             var leagueEntity = await _context.Leagues
+                .Include(t=>t.Teams)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (leagueEntity == null)
             {
@@ -49,21 +60,45 @@ namespace Soccer.Web.Controllers
             return View();
         }
 
+
         // POST: Leagues/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,LogoPath")] LeagueEntity leagueEntity)
+        public async Task<IActionResult> Create(LeagueViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(leagueEntity);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var path = string.Empty;
+
+                if (model.LogoFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.LogoFile, "Leagues");
+                }
+
+                var league = _converterHelper.ToLeagueEntity(model, path, true);
+                _context.Add(league);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Esta Liga ya existe");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                    }
+                }
             }
-            return View(leagueEntity);
+
+                return View(model);
         }
+
+
 
         // GET: Leagues/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -73,50 +108,60 @@ namespace Soccer.Web.Controllers
                 return NotFound();
             }
 
-            var leagueEntity = await _context.Leagues.FindAsync(id);
+            LeagueEntity leagueEntity = await _context.Leagues.FindAsync(id);
             if (leagueEntity == null)
             {
                 return NotFound();
             }
-            return View(leagueEntity);
+
+            LeagueViewModel model = _converterHelper.ToLeagueViewModel(leagueEntity);
+            return View(model);
         }
+
 
         // POST: Leagues/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LogoPath")] LeagueEntity leagueEntity)
+        public async Task<IActionResult> Edit(LeagueViewModel model)
         {
-            if (id != leagueEntity.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(leagueEntity);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LeagueEntityExists(leagueEntity.Id))
+                    var path = model.LogoPath;
+
+                    if (model.LogoFile != null)
                     {
-                        return NotFound();
+                        path = await _imageHelper.UploadImageAsync(model.LogoFile, "Leagues");
                     }
-                    else
+
+                    LeagueEntity league = _converterHelper.ToLeagueEntity(model, path, false);
+                    _context.Update(league);
+                    try
                     {
-                        throw;
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.InnerException.Message.Contains("duplicate"))
+                        {
+                            ModelState.AddModelError(string.Empty, "Esta Liga ya existe");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                        }
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(leagueEntity);
+                }
+            return View(model);
         }
 
-        // GET: Leagues/Delete/5
+
+
+
+        // POST: Leagues/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,23 +176,169 @@ namespace Soccer.Web.Controllers
                 return NotFound();
             }
 
-            return View(leagueEntity);
-        }
-
-        // POST: Leagues/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var leagueEntity = await _context.Leagues.FindAsync(id);
             _context.Leagues.Remove(leagueEntity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LeagueEntityExists(int id)
+        public async Task<IActionResult> CreateTeam(int? id)
         {
-            return _context.Leagues.Any(e => e.Id == id);
+            if (id == null)
+
+            {
+
+                return NotFound();
+            }
+
+            var league = await _context.Leagues.FindAsync(id.Value);
+            if (league == null)
+            {
+                return NotFound();
+            }
+
+            var model = new TeamViewModel
+            {
+                LeagueId = league.Id
+                //Leagues = _combosHelper.GetComboLeagues()
+            };
+
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTeam(TeamViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = string.Empty;
+                model.Initials = model.Initials.ToUpper();
+                model.League = await _context.Leagues
+                .FirstOrDefaultAsync(p => p.Id == model.LeagueId);
+                if (model.LogoFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.LogoFile,"Teams");
+                }
+
+                var team = _converterHelper.ToTeamEntity(model, path, true);
+                _context.Teams.Add(team);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction($"Details/{model.Id}");
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Este Equipo ya existe");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                    }
+
+                }
+            }
+
+            //model.Leagues = _combosHelper.GetComboLeagues();
+            return View(model);
+        }
+
+
+        public async Task<IActionResult> EditTeam(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var team = await _context.Teams
+                .Include(p => p.League)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            return View(_converterHelper.ToTeamViewModel(team));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditTeam(TeamViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = model.LogoPath;
+                model.Initials = model.Initials.ToUpper();
+                model.League = await _context.Leagues
+                .FirstOrDefaultAsync(p => p.Id == model.LeagueId);
+
+                if (model.LogoFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.LogoFile, "Teams");
+                }
+
+                var team = _converterHelper.ToTeamEntity(model, path, false);
+                _context.Teams.Update(team);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction($"Details/{model.League.Id}");
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Este Equipo ya existe");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                    }
+                }
+            }
+            //model.Leagues = _combosHelper.GetComboLeagues();
+            return View(model);
+        }
+
+        public async Task<IActionResult> DetailsTeam(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var team = await _context.Teams
+                .Include(p => p.League)
+                .FirstOrDefaultAsync(o => o.Id == id.Value);
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            return View(team);
+        }
+
+        public async Task<IActionResult> DeleteTeam(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var team = await _context.Teams
+                .Include(p => p.League)
+                .FirstOrDefaultAsync(pi => pi.Id == id.Value);
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+
+            _context.Teams.Remove(team);
+            await _context.SaveChangesAsync();
+            return RedirectToAction($"{nameof(Details)}/{team.League.Id}");
         }
     }
 }

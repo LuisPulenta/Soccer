@@ -1,0 +1,36 @@
+﻿@model Soccer.Web.Models.MatchViewModel2
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Editar</h2>
+
+<h4>Partido del Grupo: @Model.Group.Name</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditMatchDetail2" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <input type="hidden" asp-for="DateNameId" />
+            <input type="hidden" asp-for="GroupId" />
+            <input type="hidden" asp-for="Teams" />
+            <input type="hidden" asp-for="Groups" />
+
+            <input type="hidden" asp-for="DateName" />
+            
+            <partial name="_Match2" />
+
+            <div class="form-group">
+                <input type="submit" value="Grabar" class="btn btn-primary" />
+                <a asp-action="DetailsDateName" asp-route-id="@Model.DateNameId" class="btn btn-success">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

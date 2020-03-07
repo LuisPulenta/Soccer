@@ -1,0 +1,42 @@
+﻿@model Soccer.Web.Models.TeamViewModel
+
+@{
+    ViewData["Title"] = "Crear Equipo";
+}
+
+<h2></h2>
+
+<h4></h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateTeam" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="LeagueId" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LogoFile" class="control-label"></label>
+                <input asp-for="LogoFile" class="form-control" type="file" />
+                <span asp-validation-for="LogoFile" class="text-danger"></span>
+            </divLogoFile
+
+
+
+            <div class="form-group">
+                <label asp-for="Initials" class="control-label"></label>
+                <input asp-for="Initials" class="form-control" />
+                <span asp-validation-for="Initials" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Crear Equipo" class="btn btn-primary" />
+                <a asp-action="Details" asp-route-id="@Model.LeagueId" class="btn btn-success">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>

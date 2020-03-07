@@ -1,4 +1,4 @@
-﻿@model Soccer.Web.Data.Entities.LeagueEntity
+﻿@model Soccer.Web.Data.Entities.TournamentEntity
 
 @{
     ViewData["Title"] = "Delete";
@@ -8,7 +8,7 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>LeagueEntity</h4>
+    <h4>TournamentEntity</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -16,6 +16,24 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.LogoPath)

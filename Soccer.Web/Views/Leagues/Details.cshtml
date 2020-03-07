@@ -4,10 +4,10 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>Detalles Liga</h2>
 
 <div>
-    <h4>LeagueEntity</h4>
+    <h4></h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -20,11 +20,104 @@
             @Html.DisplayNameFor(model => model.LogoPath)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.LogoPath)
+            @if (!string.IsNullOrEmpty(Model.LogoPath))
+            {
+                <img src="@Url.Content(Model.LogoPath)" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+            }
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+    <a asp-action="CreateTeam" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Equipo</a>
+    <a asp-action="Index" class="btn btn-success">Regresar</a>
 </div>
+
+<h4>Equipos</h4>
+@if (Model.Teams.Count == 0)
+{
+    <h5>Esta Liga no tiene Equipos registrados todavía.</h5>
+}
+else
+{
+    <table class="table">
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().LogoPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().Initials)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Teams.OrderBy(g => g.Name))
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.LogoPath))
+                    {
+                        <img src="@Url.Content(item.LogoPath)" alt="Image" style="width:50px;height:50px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Initials)
+                </td>
+                <td>
+                    <a asp-action="EditTeam" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                    <a asp-action="DetailsTeam" asp-route-id="@item.Id" class="btn btn-info">Detalles</a>
+                    <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+<!--Delete Item-->
+<div class="modal fade" id="deleteDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Borrar Registro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Quiere borrar este Equipo?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" id="btnYesDelete">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+    	$(document).ready(function () {
+        	// Delete item
+        	var item_to_delete;
+
+        	$('.deleteItem').click((e) => {
+            	item_to_delete = e.currentTarget.dataset.id;
+        	});
+
+        	$("#btnYesDelete").click(function () {
+            	window.location.href = '/Leagues/DeleteTeam/' + item_to_delete;
+        	});
+    	});
+    </script>
+}

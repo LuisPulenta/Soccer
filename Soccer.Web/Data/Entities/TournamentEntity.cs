@@ -41,6 +41,5 @@ namespace Soccer.Web.Data.Entities
 
         public ICollection<DateNameEntity> DateNames { get; set; }
 
-        public ICollection<MatchEntity> Matches { get; set; }
     }
 }

@@ -1,0 +1,196 @@
+﻿@model Soccer.Web.Data.Entities.TournamentEntity
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+
+<h2>Detalles Torneo</h2>
+
+<div>
+    <h4></h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.StartDateLocal)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.StartDateLocal)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.EndDateLocal)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.EndDateLocal)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.IsActive)
+                </dd>
+                <dt>
+                    N°Grupos
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Groups.Count)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.LogoPath))
+            {
+                <img src="@Url.Content(Model.LogoPath)" alt="Image" style="width:150px;height:150px;max-width: 100%; height: auto;" />
+            }
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+    <a asp-action="AddGroup" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Grupo</a>
+    <a asp-action="AddDateName" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Fecha</a>
+    <a asp-action="Index" class="btn btn-success">Regresar</a>
+</div>
+<br />
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Grupos</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-responsive table-striped" id="MyTableGroups">
+                    <thead>
+                        <tr>
+                            <th>
+                                Grupo
+                            </th>
+                            <th>
+                                N°Equipos
+                            </th>
+                            <th>
+                                N°Partidos
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Groups.OrderBy(g => g.Name))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.GroupDetails.Count)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Matches.Count)
+                                </td>
+                                <td>
+                                    <a asp-action="EditGroup" asp-route-id="@item.Id" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a asp-action="DetailsGroup" asp-route-id="@item.Id" class="btn btn-info"><i class="glyphicon glyphicon glyphicon-align-justify"></i></a>
+                                    <button data-id="@item.Id" class="btn btn-danger deleteGroup" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Fechas</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-responsive table-striped" id="MyTableDateNames">
+                    <thead>
+                        <tr>
+                            <th>
+                                Fecha
+                            </th>
+                            <th>
+                                N°Partidos
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.DateNames.OrderBy(g => g.Name))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Matches.Count)
+                                </td>
+                                <td>
+                                    <a asp-action="EditDateName" asp-route-id="@item.Id" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a asp-action="DetailsDateName" asp-route-id="@item.Id" class="btn btn-info"><i class="glyphicon glyphicon glyphicon-align-justify"></i></a>
+                                    <button data-id="@item.Id" class="btn btn-danger deleteDateName" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<partial name="_DeleteDialog" />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#MyTableGroups').DataTable();
+            $('#MyTableDateNames').DataTable();
+            // Delete item
+            var item_to_delete;
+            var action_to_delete;
+
+            $('.deleteGroup').click((e) => {
+                item_to_delete = e.currentTarget.dataset.id;
+                action_to_delete = 1;
+            });
+
+            $('.deleteDateName').click((e) => {
+                item_to_delete = e.currentTarget.dataset.id;
+                action_to_delete = 2;
+            });
+
+            $("#btnYesDelete").click(function () {
+                if (action_to_delete == 1) {
+                    window.location.href = '/Tournaments/DeleteGroup/' + item_to_delete;
+                } else {
+                    window.location.href = '/Tournaments/DeleteDateName/' + item_to_delete;
+                }
+            });
+        });
+    </script>
+}
