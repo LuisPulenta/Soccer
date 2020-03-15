@@ -110,6 +110,21 @@ namespace Soccer.Web.Migrations
                     b.ToTable("Leagues");
                 });
 
+            modelBuilder.Entity("Soccer.Web.Data.Entities.Manager", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Managers");
+                });
+
             modelBuilder.Entity("Soccer.Web.Data.Entities.MatchEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -130,8 +145,6 @@ namespace Soccer.Web.Migrations
 
                     b.Property<int?>("LocalId");
 
-                    b.Property<int?>("TournamentId");
-
                     b.Property<int?>("VisitorId");
 
                     b.HasKey("Id");
@@ -142,11 +155,53 @@ namespace Soccer.Web.Migrations
 
                     b.HasIndex("LocalId");
 
-                    b.HasIndex("TournamentId");
-
                     b.HasIndex("VisitorId");
 
                     b.ToTable("Matches");
+                });
+
+            modelBuilder.Entity("Soccer.Web.Data.Entities.Player", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("TeamEntityId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamEntityId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Players");
+                });
+
+            modelBuilder.Entity("Soccer.Web.Data.Entities.PredictionEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("GoalsLocal");
+
+                    b.Property<int?>("GoalsVisitor");
+
+                    b.Property<int?>("MatchId");
+
+                    b.Property<int?>("PlayerId");
+
+                    b.Property<int?>("Points");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("Predictions");
                 });
 
             modelBuilder.Entity("Soccer.Web.Data.Entities.TeamEntity", b =>
@@ -197,6 +252,83 @@ namespace Soccer.Web.Migrations
                     b.ToTable("Tournaments");
                 });
 
+            modelBuilder.Entity("Soccer.Web.Data.Entities.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(100);
+
+                    b.Property<DateTime>("BornDate");
+
+                    b.Property<string>("ConcurrencyStamp");
+
+                    b.Property<string>("Document")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("Email");
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<int?>("FavoriteTeamId");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<double>("Latitude");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<double>("Longitude");
+
+                    b.Property<string>("NickName")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("NormalizedEmail");
+
+                    b.Property<string>("NormalizedUserName");
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("Picture");
+
+                    b.Property<int>("Points");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<string>("Sex")
+                        .IsRequired()
+                        .HasMaxLength(6);
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName");
+
+                    b.Property<int>("UserType");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FavoriteTeamId");
+
+                    b.ToTable("User");
+                });
+
             modelBuilder.Entity("Soccer.Web.Data.Entities.DateNameEntity", b =>
                 {
                     b.HasOne("Soccer.Web.Data.Entities.TournamentEntity", "Tournament")
@@ -222,6 +354,13 @@ namespace Soccer.Web.Migrations
                         .HasForeignKey("TournamentId");
                 });
 
+            modelBuilder.Entity("Soccer.Web.Data.Entities.Manager", b =>
+                {
+                    b.HasOne("Soccer.Web.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Soccer.Web.Data.Entities.MatchEntity", b =>
                 {
                     b.HasOne("Soccer.Web.Data.Entities.DateNameEntity", "DateName")
@@ -236,13 +375,31 @@ namespace Soccer.Web.Migrations
                         .WithMany()
                         .HasForeignKey("LocalId");
 
-                    b.HasOne("Soccer.Web.Data.Entities.TournamentEntity", "Tournament")
-                        .WithMany("Matches")
-                        .HasForeignKey("TournamentId");
-
                     b.HasOne("Soccer.Web.Data.Entities.TeamEntity", "Visitor")
                         .WithMany()
                         .HasForeignKey("VisitorId");
+                });
+
+            modelBuilder.Entity("Soccer.Web.Data.Entities.Player", b =>
+                {
+                    b.HasOne("Soccer.Web.Data.Entities.TeamEntity")
+                        .WithMany("Fans")
+                        .HasForeignKey("TeamEntityId");
+
+                    b.HasOne("Soccer.Web.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Soccer.Web.Data.Entities.PredictionEntity", b =>
+                {
+                    b.HasOne("Soccer.Web.Data.Entities.MatchEntity", "Match")
+                        .WithMany("Predictions")
+                        .HasForeignKey("MatchId");
+
+                    b.HasOne("Soccer.Web.Data.Entities.Player", "Player")
+                        .WithMany("Predictions")
+                        .HasForeignKey("PlayerId");
                 });
 
             modelBuilder.Entity("Soccer.Web.Data.Entities.TeamEntity", b =>
@@ -250,6 +407,13 @@ namespace Soccer.Web.Migrations
                     b.HasOne("Soccer.Web.Data.Entities.LeagueEntity", "League")
                         .WithMany("Teams")
                         .HasForeignKey("LeagueId");
+                });
+
+            modelBuilder.Entity("Soccer.Web.Data.Entities.User", b =>
+                {
+                    b.HasOne("Soccer.Web.Data.Entities.TeamEntity", "FavoriteTeam")
+                        .WithMany()
+                        .HasForeignKey("FavoriteTeamId");
                 });
 #pragma warning restore 612, 618
         }

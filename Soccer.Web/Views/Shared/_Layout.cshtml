@@ -33,8 +33,30 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="Leagues" asp-action="Index">Ligas</a></li>
-                    <li><a asp-area="" asp-controller="Tournaments" asp-action="Index">Torneos</a></li>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Manager"))
+                    {
+                        <li><a asp-area="" asp-controller="Leagues" asp-action="Index">Ligas</a></li>
+                        <li><a asp-area="" asp-controller="Tournaments" asp-action="Index">Torneos</a></li>
+                        <li><a asp-area="" asp-controller="Managers" asp-action="Index">Managers</a></li>
+                        <li><a asp-area="" asp-controller="Players" asp-action="Index">Jugadores</a></li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a asp-area="" asp-controller="Account" asp-action="ChangeUser">@User.Identity.Name</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                    }
+                </ul>
+
+
+
+
+
                 </ul>
             </div>
         </div>

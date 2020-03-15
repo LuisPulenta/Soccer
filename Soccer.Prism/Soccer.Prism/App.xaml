@@ -2,10 +2,121 @@
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="Soccer.Prism.App">
 	<Application.Resources>
 
 		<!-- Application resource dictionary -->
 
-	</Application.Resources>
+    <ResourceDictionary>
+
+      
+
+
+      <!-- Parameters -->
+      <x:String x:Key="UrlAPI">http://keypress.serveftp.net:88/SoccerApi/</x:String>
+    </ResourceDictionary>
+
+
+    <!-- Colores -->
+    <Color x:Key="ColorBackground">#00D99D</Color>
+    <Color x:Key="ColorPrimary">#000000</Color>
+    <Color x:Key="ColorSecondary">#90FF69</Color>
+    <Color x:Key="ColorDanger">#FFFFFF</Color>
+    <Color x:Key="ColorAccent">#38006A</Color>
+    <Color x:Key="ColorFont">#000000</Color>
+    <Color x:Key="ColorFontInverse">#FFFFFF</Color>
+
+    
+    <!-- Styles -->
+    <Style TargetType="Button">
+      <Setter Property="BackgroundColor" Value="{StaticResource ColorAccent}" />
+      <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+      <Setter Property="TextColor" Value="{StaticResource ColorFontInverse}" />
+    </Style>
+
+    <Style TargetType="Label">
+      <Setter Property="TextColor" Value="{StaticResource ColorFont}" />
+    </Style>
+
+    <Style x:Key="SecondaryButton" TargetType="Button">
+      <Setter Property="BackgroundColor" Value="{StaticResource ColorSecondary}" />
+    </Style>
+
+    <Style x:Key="DangerButton" TargetType="Button">
+      <Setter Property="BackgroundColor" Value="{StaticResource ColorDanger}" />
+    </Style>
+
+
+
+    <!-- Data Templates -->
+    <DataTemplate x:Key="MatchTemplate">
+      <StackLayout>
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackLayout
+            Grid.Column="0">
+            <ffimageloading:CachedImage 
+                            Aspect="AspectFit"
+                            CacheDuration= "50"
+                            HeightRequest="80"
+                            RetryCount= "3"
+                            RetryDelay= "600"
+                            Source="{Binding Local.LogoFullPath}" 
+                            WidthRequest="80"/>
+            <Label
+            Text="{Binding Local.Initials}" 
+              FontSize="Medium"
+              FontAttributes="Bold"
+              HorizontalOptions="Center">
+            </Label>
+          </StackLayout>
+         
+          <StackLayout Grid.Column="1"
+                VerticalOptions="Center">
+            <StackLayout HorizontalOptions="Center" 
+                    Orientation="Horizontal">
+              <Label FontAttributes="Bold"
+                FontSize="48"
+                Text="{Binding GoalsLocal}"/>
+              <Label Text="Vs."
+                VerticalOptions="Center"/>
+              <Label FontAttributes="Bold"
+                FontSize="48"
+                Text="{Binding GoalsVisitor}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                    HorizontalOptions="Center">
+              <Label Text="{Binding DateLocal, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                VerticalOptions="Center" />
+            </StackLayout>
+          </StackLayout>
+          <StackLayout
+            Grid.Column="2">
+            <ffimageloading:CachedImage 
+                            Aspect="AspectFit"
+                            CacheDuration= "50"
+                            HeightRequest="80"
+                            RetryCount= "3"
+                            RetryDelay= "600"
+                            Source="{Binding Visitor.LogoFullPath}" 
+                            WidthRequest="80"/>
+            <Label
+            Text="{Binding Visitor.Initials}" 
+              FontSize="Medium"
+              FontAttributes="Bold"
+              HorizontalOptions="Center">
+            </Label>
+          </StackLayout>
+         
+        </Grid>
+      </StackLayout>
+    </DataTemplate>
+
+
+  </Application.Resources>
 </prism:PrismApplication>

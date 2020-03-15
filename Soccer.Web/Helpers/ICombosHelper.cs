@@ -14,6 +14,10 @@ namespace Soccer.Web.Helpers
         IEnumerable<SelectListItem> GetComboDateNames(int Id);
 
         IEnumerable<SelectListItem> GetComboGroups(int Id);
+        
+        IEnumerable<SelectListItem> GetComboUserTypes();
+        
+        IEnumerable<SelectListItem> GetComboSexs();
 
     }
 }

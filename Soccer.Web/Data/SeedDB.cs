@@ -1,4 +1,7 @@
-﻿using Soccer.Web.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Soccer.Common.Enums;
+using Soccer.Web.Data.Entities;
+using Soccer.Web.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,21 +12,145 @@ namespace Soccer.Web.Data
     public class SeedDb
     {
         private readonly DataContext _context;
+        private readonly IUserHelper _userHelper;
 
-        public SeedDb(DataContext context)
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
+            _userHelper = userHelper;
         }
 
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
-
+            await CheckRolesAsync();
             await CheckLeaguesAsync();
             await CheckTeamsAsync();
             await CheckTournamentsAsync();
             await CheckMatchesAsync();
+            
+            var favoriteTeam = await _context.Teams.FirstOrDefaultAsync(m => m.Id == 1);
+
+            var manager = await CheckUserAsync("17157729", "Luis", "Nuñez", "Espora 2052", DateTime.Now, "Hombre",  "Luis", "Lucho", favoriteTeam, 0, "luisalbertonu@gmail.com", "156814963", 0, 0, "Manager");
+
+            var player1 = await CheckUserAsync("17157729", "Luis", "Nuñez", "Espora 2052", DateTime.Now, "Hombre",  "Luis", "Lucho", favoriteTeam, 0, "luis@yopmail.com", "156814963", 0, 0, "Player");
+            var player2 = await CheckUserAsync("11111111", "Pablo", "Lacuadri", "Villa Santa Ana", DateTime.Now, "Hombre",  "Pablo", "Pablito", favoriteTeam, 0, "lacua@yopmail.com", "123456789", 0, 0, "Player");
+            var player3 = await CheckUserAsync("22222222", "Diego", "Maradona", "Villa Fiorito", DateTime.Now, "Hombre",  "Maradona", "Dieguito", favoriteTeam, 0, "maradona@yopmail.com", "10101010", 0, 0, "Player");
+            await CheckPlayerAsync(player1, player2, player3);
+            await CheckManagerAsync(manager);
+
+            await CheckPreditionsAsync();
+
         }
+
+        private async Task CheckPreditionsAsync()
+        {
+            if (!_context.Predictions.Any())
+            {
+                foreach (var player in _context.Players)
+                {
+                        AddPrediction(player);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private void AddPrediction(Player player)
+        {
+            var random = new Random();
+            foreach (var match in _context.Matches)
+            {
+                _context.Predictions.Add(new PredictionEntity
+                {
+                    GoalsLocal = random.Next(0, 5),
+                    GoalsVisitor = random.Next(0, 5),
+                    Match = match,
+                    Player=player
+                });
+            }
+        }
+
+
+
+        private async Task<User> CheckUserAsync(string document,
+                                                  string firstName,
+                                                  string lastName,
+                                                  string address,
+                                                  DateTime bornDate,
+                                                  string sex,
+                                                  string picture,
+                                                  string nickName,
+                                                  TeamEntity favoriteTeam,
+                                                  int points,
+                                                  string email,
+                                                  string phoneNumber,
+                                                  double latitude,
+                                                  double longitude,
+                                                  string role)
+        {
+            var user = await _userHelper.GetUserAsync(email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Document = document,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Address = address,
+                    BornDate = bornDate,
+                    Sex = sex,
+                    Picture = $"~/images/Users/{picture}.jpg",
+                    NickName = nickName,
+                    FavoriteTeam = favoriteTeam,
+                    Points = points,
+                    Email = email,
+                    UserName = email,
+                    PhoneNumber = phoneNumber,
+                    Latitude = latitude,
+                    Longitude = longitude
+                };
+
+                await _userHelper.AddUserAsync(user, "123456");
+                await _userHelper.AddUserToRoleAsync(user, Convert.ToString(role));
+            }
+
+            var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+            await _userHelper.ConfirmEmailAsync(user, token);
+
+            return user;
+        }
+
+        private async Task CheckPlayerAsync(User user1, User user2, User user3)
+        {
+            if (!_context.Players.Any())
+            {
+                _context.Players.Add(new Player { User = user1 });
+                _context.Players.Add(new Player { User = user2 });
+                _context.Players.Add(new Player { User = user3 });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckManagerAsync(User user)
+        {
+            if (!_context.Managers.Any())
+            {
+                _context.Managers.Add(new Manager { User = user });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
+        private async Task CheckRolesAsync()
+        {
+            await _userHelper.CheckRoleAsync(UserType.Manager.ToString());
+            await _userHelper.CheckRoleAsync(UserType.Player.ToString());
+            //await _userHelper.CheckRoleAsync("Manager");
+            //await _userHelper.CheckRoleAsync("Player");
+        }
+
+
 
         private async Task CheckLeaguesAsync()
         {

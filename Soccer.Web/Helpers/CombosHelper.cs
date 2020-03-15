@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Soccer.Common.Enums;
 using Soccer.Web.Data;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,6 +101,70 @@ namespace Soccer.Web.Helpers
             {
                 Text = "(Elija un Grupo...)",
                 Value = "0"
+            });
+
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboUserTypes()
+        {
+            var list = _context.Teams.Select(l => new SelectListItem
+            {
+                Text = l.Name,
+                Value = $"{l.Id}"
+            })
+                .OrderBy(l => l.Text)
+                .Where(l => l.Text == "z")
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione Rol del Usuario...]",
+                Value = "0"
+            });
+
+            list.Insert(1, new SelectListItem
+            {
+                Text = UserType.Manager.ToString(),
+                Value = "1"
+            });
+
+            list.Insert(2, new SelectListItem
+            {
+                Text = UserType.Player.ToString(),
+                Value = "2"
+            });
+
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboSexs()
+        {
+            var list = _context.Teams.Select(l => new SelectListItem
+            {
+                Text = l.Name,
+                Value = $"{l.Id}"
+            })
+                .OrderBy(l => l.Text)
+                .Where(l => l.Text == "z")
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione Sexo...]",
+                Value = "0"
+            });
+
+            list.Insert(1, new SelectListItem
+            {
+                Text = "Hombre",
+                Value = "Hombre"
+            });
+
+            list.Insert(2, new SelectListItem
+            {
+                Text = "Mujer",
+                Value = "Mujer"
             });
 
             return list;

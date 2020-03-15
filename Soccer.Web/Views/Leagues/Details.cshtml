@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Detalles Liga</h2>
+<h2>Detalle Liga</h2>
 
 <div>
     <h4></h4>
@@ -22,14 +22,14 @@
         <dd>
             @if (!string.IsNullOrEmpty(Model.LogoPath))
             {
-                <img src="@Url.Content(Model.LogoPath)" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                <img src="@Url.Content(Model.LogoPath)" alt="Image" style="width:80px;height:80px;max-height: 100%; width: auto;" />
             }
         </dd>
     </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
-    <a asp-action="CreateTeam" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Equipo</a>
+    <a asp-action="CreateTeam" asp-route-id="@Model.Id" class="btn btn-primary">Crear Equipo</a>
     <a asp-action="Index" class="btn btn-success">Regresar</a>
 </div>
 

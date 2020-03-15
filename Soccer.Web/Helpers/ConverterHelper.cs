@@ -1,6 +1,9 @@
-﻿using Soccer.Web.Data;
+﻿using Soccer.Common.Models;
+using Soccer.Web.Data;
 using Soccer.Web.Data.Entities;
 using Soccer.Web.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Soccer.Web.Helpers
@@ -254,5 +257,174 @@ namespace Soccer.Web.Helpers
                 DateName = matchEntity.DateName,
             };
         }
+
+        public TournamentResponse ToTournamentResponse(TournamentEntity tournamentEntity)
+        {
+            return new TournamentResponse
+            {
+                Id = tournamentEntity.Id,
+                Name = tournamentEntity.Name,
+                StartDate = tournamentEntity.StartDate,
+                EndDate = tournamentEntity.EndDate,
+                IsActive = tournamentEntity.IsActive,
+                LogoPath = tournamentEntity.LogoPath,
+                Groups = tournamentEntity.Groups?.Select(g => new GroupResponse
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    GroupDetails = g.GroupDetails?.Select(gd => new GroupDetailResponse
+                    {
+                        Id = gd.Id,
+                        Team = ToTeamResponse(gd.Team),
+                        MatchesPlayed = gd.MatchesPlayed,
+                        MatchesWon = gd.MatchesWon,
+                        MatchesTied = gd.MatchesTied,
+                        MatchesLost = gd.MatchesLost,
+                        GoalsFor = gd.GoalsFor,
+                        GoalsAgainst = gd.GoalsAgainst,
+                    }).ToList(),
+                    Matches = g.Matches?.Select(m => new MatchResponse
+                    {
+                        Date = m.Date,
+                        Local = ToTeamResponse(m.Local),
+                        Visitor = ToTeamResponse(m.Visitor),
+                        GoalsLocal = m.GoalsLocal,
+                        GoalsVisitor = m.GoalsVisitor,
+                        Id = m.Id,
+                        IsClosed = m.IsClosed,
+                        Predictions = m.Predictions?.Select(p => new PredictionResponse
+                        {
+                            Id = p.Id,
+                            Player = ToPlayerResponse(p.Player),
+                            GoalsLocal = p.GoalsLocal,
+                            GoalsVisitor = p.GoalsVisitor,
+                            Points = p.Points,
+                        }).ToList()
+                    }).ToList()
+                }).ToList(),
+                DateNames = tournamentEntity.DateNames?.Select(g => new DateNameResponse
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    Matches = g.Matches?.Select(m => new MatchResponse
+                    {
+                        Date = m.Date,
+                        Local = ToTeamResponse(m.Local),
+                        Visitor = ToTeamResponse(m.Visitor),
+                        GoalsLocal = m.GoalsLocal,
+                        GoalsVisitor = m.GoalsVisitor,
+                        Id = m.Id,
+                        IsClosed = m.IsClosed,
+                        Predictions = m.Predictions?.Select(p => new PredictionResponse
+                        {
+                            Id = p.Id,
+                            Player = ToPlayerResponse(p.Player),
+                            GoalsLocal = p.GoalsLocal,
+                            GoalsVisitor = p.GoalsVisitor,
+                            Points = p.Points,
+                        }).ToList()
+                    }).ToList()
+                }).ToList(),
+            };
+        }
+
+        public List<TournamentResponse> ToTournamentResponse(List<TournamentEntity> tournamentEntities)
+        {
+            List<TournamentResponse> list = new List<TournamentResponse>();
+            foreach (TournamentEntity tournamentEntity in tournamentEntities)
+            {
+                list.Add(ToTournamentResponse(tournamentEntity));
+            }
+
+            return list;
+        }
+
+        private PlayerResponse ToPlayerResponse(Player player)
+        {
+            if (player == null)
+            {
+                return null;
+            }
+
+            return new PlayerResponse
+            {
+                Address = player.User.Address,
+                Document = player.User.Document,
+                Email = player.User.Email,
+                FirstName = player.User.FirstName,
+                Id = player.Id,
+                LastName = player.User.LastName,
+                PhoneNumber = player.User.PhoneNumber,
+                PicturePath = player.User.Picture,
+                Team = ToTeamResponse(player?.User.FavoriteTeam),
+
+            };
+        }
+
+        private TeamResponse ToTeamResponse(TeamEntity team)
+        {
+            if (team == null)
+            {
+                return null;
+            }
+
+            return new TeamResponse
+            {
+                Id = team.Id,
+                LogoPath = team.LogoPath,
+                Name = team.Name,
+                Initials=team.Initials
+            };
+        }
+
+        public User ToUser(Player player)
+        {
+            return new User
+            {
+             Address=player.User.Address,
+             BornDate = player.User.BornDate,
+             Document = player.User.Document,
+             Email = player.User.Email,
+             FirstName = player.User.FirstName,
+             LastName = player.User.LastName,
+             Latitude = player.User.Latitude,
+             Longitude = player.User.Longitude,
+             NickName = player.User.NickName,
+             PhoneNumber = player.User.PhoneNumber,
+             Picture = player.User.Picture,
+             Points = player.User.Points,
+             Sex = player.User.Sex,
+             UserName = player.User.UserName,
+             FavoriteTeam = player.User.FavoriteTeam,
+             Id = player.User.Id,
+            };
+        }
+
+        public PredictionResponse ToPredictionResponse(PredictionEntity predictionEntity)
+        {
+            return new PredictionResponse
+            {
+                GoalsLocal = predictionEntity.GoalsLocal,
+                GoalsVisitor = predictionEntity.GoalsVisitor,
+                Id = predictionEntity.Id,
+                Match = ToMatchResponse(predictionEntity.Match),
+                Points = predictionEntity.Points
+            };
+        }
+
+        public MatchResponse ToMatchResponse(MatchEntity matchEntity)
+        {
+            return new MatchResponse
+            {
+                Date = matchEntity.Date,
+                GoalsLocal = matchEntity.GoalsLocal,
+                GoalsVisitor = matchEntity.GoalsVisitor,
+                Id = matchEntity.Id,
+                IsClosed = matchEntity.IsClosed,
+                Local = ToTeamResponse(matchEntity.Local),
+                Visitor = ToTeamResponse(matchEntity.Visitor)
+            };
+        }
+
     }
 }

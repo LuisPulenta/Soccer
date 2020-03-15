@@ -1,0 +1,157 @@
+﻿@model Soccer.Web.Models.AddUserViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Crear Jugador</h2>
+
+<h4></h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Document" class="control-label"></label>
+                <input asp-for="Document" class="form-control" />
+                <span asp-validation-for="Document" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Sex" class="control-label"></label>
+                <select asp-for="Sex" asp-items="Model.Sexs" class="form-control"></select>
+                <span asp-validation-for="Sex" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
+
+
+
+            <div class="form-group">
+                <label asp-for="NickName" class="control-label"></label>
+                <input asp-for="NickName" class="form-control" />
+                <span asp-validation-for="NickName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LeagueId" class="control-label"></label>
+                <select asp-for="LeagueId" asp-items="Model.Leagues" class="form-control"></select>
+                <span asp-validation-for="LeagueId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TeamId" class="control-label"></label>
+                <select asp-for="TeamId" asp-items="Model.Teams" class="form-control"></select>
+                <span asp-validation-for="TeamId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BornDate" class="control-label"></label>
+                <input asp-for="BornDate" class="form-control" />
+                <span asp-validation-for="BornDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Points" class="control-label"></label>
+                <input asp-for="Points" class="form-control" />
+                <span asp-validation-for="Points" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Latitude" class="control-label"></label>
+                <input asp-for="Latitude" class="form-control" />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label"></label>
+                <input asp-for="Longitude" class="form-control" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PasswordConfirm" class="control-label"></label>
+                <input asp-for="PasswordConfirm" class="form-control" />
+                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Crear Jugador" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#LeagueId").change(function () {
+                $("#TeamId").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetTeamsAsync")',
+                    dataType: 'json',
+                    data: { leagueId: $("#LeagueId").val() },
+                    success: function (teams) {
+                        $("#TeamId").append('<option value="0">(Elija un Equipo...)</option>');
+                        $.each(teams, function (i, team) {
+                            $("#TeamId").append('<option value="'
+                                + team.id + '">'
+                                + team.name + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Error al recuperar Equipos...' + ex.statusText);
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+}

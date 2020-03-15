@@ -25,5 +25,12 @@ namespace Soccer.Web.Data.Entities
         public LeagueEntity League { get; set; }
 
         public ICollection<GroupDetailEntity> GroupDetails { get; set; }
+
+        public ICollection<Player> Fans { get; set; }
+
+        public string LogoFullPath => string.IsNullOrEmpty(LogoPath)
+           ? "noimage"//null
+           : $"http://keypress.serveftp.net:88/SoccerApi{LogoPath.Substring(1)}";
+
     }
 }

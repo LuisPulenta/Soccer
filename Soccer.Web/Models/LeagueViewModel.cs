@@ -8,5 +8,9 @@ namespace Soccer.Web.Models
     {
         [Display(Name = "Logo")]
         public IFormFile LogoFile { get; set; }
+
+        public string LogoFullPath => string.IsNullOrEmpty(LogoPath)
+             ? "noimage"//null
+             : $"http://keypress.serveftp.net:88/SoccerApi{LogoPath.Substring(1)}";
     }
 }

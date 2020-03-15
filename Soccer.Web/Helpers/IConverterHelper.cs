@@ -1,5 +1,7 @@
-﻿using Soccer.Web.Data.Entities;
+﻿using Soccer.Common.Models;
+using Soccer.Web.Data.Entities;
 using Soccer.Web.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Soccer.Web.Helpers
@@ -38,5 +40,14 @@ namespace Soccer.Web.Helpers
 
         MatchViewModel2 ToMatchViewModel2(MatchEntity matchEntity);
 
+        TournamentResponse ToTournamentResponse(TournamentEntity tournamentEntity);
+
+        List<TournamentResponse> ToTournamentResponse(List<TournamentEntity> tournamentEntities);
+
+        User ToUser(Player player);
+
+        PredictionResponse ToPredictionResponse(PredictionEntity predictionEntity);
+
+        MatchResponse ToMatchResponse(MatchEntity matchEntity);
     }
 }

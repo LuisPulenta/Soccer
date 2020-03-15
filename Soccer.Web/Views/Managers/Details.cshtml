@@ -1,0 +1,103 @@
+﻿@model Soccer.Web.Data.Entities.Manager
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Detalles de un Jugador</h2>
+
+<div>
+    <h4></h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Document)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Document)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.LastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Address)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Address)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.PhoneNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.PhoneNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Sex)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Sex)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.BornDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.BornDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.NickName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.NickName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Points)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Points)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Picture)
+        </dt>
+        <dd>
+            @if (!string.IsNullOrEmpty(Model.User.Picture))
+            {
+                <img src="@Url.Content(Model.User.Picture)" alt="Image" style="width:80px;height:80px;max-height: 100%; width: auto;" />
+            }
+        </dd>
+        <dt>
+            Hincha de...
+        </dt>
+        <dd>
+            @if (!string.IsNullOrEmpty(Model.User.FavoriteTeam.LogoPath))
+            {
+                <img src="@Url.Content(Model.User.FavoriteTeam.LogoPath)" alt="Image" style="width:80px;height:80px;max-height: 100%; width: auto;" />
+            }
+            @Html.DisplayFor(model => model.User.FavoriteTeam.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+    <a asp-action="Index" class="btn btn-success">Regresar</a>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

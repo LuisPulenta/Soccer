@@ -41,5 +41,10 @@ namespace Soccer.Web.Data.Entities
 
         public ICollection<DateNameEntity> DateNames { get; set; }
 
+        public string LogoFullPath => string.IsNullOrEmpty(LogoPath)
+           ? "noimage"//null
+           : $"http://keypress.serveftp.net:88/SoccerApi{LogoPath.Substring(1)}";
+
+
     }
 }

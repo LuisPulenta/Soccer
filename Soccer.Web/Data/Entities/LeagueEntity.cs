@@ -16,5 +16,10 @@ namespace Soccer.Web.Data.Entities
         public string LogoPath { get; set; }
 
         public ICollection<TeamEntity> Teams { get; set; }
+
+        public string LogoFullPath => string.IsNullOrEmpty(LogoPath)
+           ? "noimage"//null
+           : $"http://keypress.serveftp.net:88/SoccerApi{LogoPath.Substring(1)}";
+
     }
 }

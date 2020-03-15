@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Soccer.Web.Data;
 using Soccer.Web.Data.Entities;
@@ -9,8 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Soccer2020.Web.Controllers
+namespace Soccer.Web.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class TournamentsController : Controller
     {
         private readonly DataContext _context;
@@ -20,13 +22,13 @@ namespace Soccer2020.Web.Controllers
 
         public TournamentsController(DataContext context,
                                      IConverterHelper converterHelper,
-                                     IImageHelper imageHelper, 
+                                     IImageHelper imageHelper,
                                      ICombosHelper combosHelper)
         {
             _context = context;
-            _converterHelper = converterHelper;
             _imageHelper = imageHelper;
             _combosHelper = combosHelper;
+            _converterHelper = converterHelper;
         }
 
         public async Task<JsonResult> GetTeamsAsync(int leagueId)
@@ -92,12 +94,17 @@ namespace Soccer2020.Web.Controllers
             if (ModelState.IsValid)
             {
                 string path = string.Empty;
+                model.Groups = new List<GroupEntity>
+                { };
+                model.DateNames = new List<DateNameEntity>
+                { };
+
 
                 if (model.LogoFile != null)
                 {
                     path = await _imageHelper.UploadImageAsync(model.LogoFile, "Tournaments");
                 }
-
+                model.LogoPath = path;
                 var tournament = _converterHelper.ToTournamentEntity(model, path, true);
                 _context.Add(tournament);
                 await _context.SaveChangesAsync();
