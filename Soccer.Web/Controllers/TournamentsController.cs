@@ -19,15 +19,18 @@ namespace Soccer.Web.Controllers
         private readonly IConverterHelper _converterHelper;
         private readonly IImageHelper _imageHelper;
         private readonly ICombosHelper _combosHelper;
+        private readonly IMatchHelper _matchHelper;
 
         public TournamentsController(DataContext context,
                                      IConverterHelper converterHelper,
                                      IImageHelper imageHelper,
-                                     ICombosHelper combosHelper)
+                                     ICombosHelper combosHelper,
+                                     IMatchHelper matchHelper)
         {
             _context = context;
             _imageHelper = imageHelper;
             _combosHelper = combosHelper;
+            _matchHelper = matchHelper;
             _converterHelper = converterHelper;
         }
 
@@ -832,5 +835,107 @@ namespace Soccer.Web.Controllers
             model.Groups = _combosHelper.GetComboGroups(model.Group.Tournament.Id);
             return View(model);
         }
+
+        public async Task<IActionResult> CloseMatch(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var matchEntity = await _context.Matches
+                .Include(m => m.Group)
+                .Include(m => m.Local)
+                .Include(m => m.Visitor)
+                .Include(d => d.DateName)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (matchEntity == null)
+            {
+                return NotFound();
+            }
+
+            var model = new CloseMatchViewModel
+            {
+                Group = matchEntity.Group,
+                GroupId = matchEntity.Group.Id,
+                Local = matchEntity.Local,
+                LocalId = matchEntity.Local.Id,
+                MatchId = matchEntity.Id,
+                Visitor = matchEntity.Visitor,
+                VisitorId = matchEntity.Visitor.Id,
+                DateName= matchEntity.DateName,
+                DateNameId = matchEntity.DateName.Id
+
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> CloseMatch2(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var matchEntity = await _context.Matches
+                .Include(m => m.Group)
+                .Include(m => m.Local)
+                .Include(m => m.Visitor)
+                .Include(d => d.DateName)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (matchEntity == null)
+            {
+                return NotFound();
+            }
+
+            var model = new CloseMatchViewModel
+            {
+                Group = matchEntity.Group,
+                GroupId = matchEntity.Group.Id,
+                Local = matchEntity.Local,
+                LocalId = matchEntity.Local.Id,
+                MatchId = matchEntity.Id,
+                Visitor = matchEntity.Visitor,
+                VisitorId = matchEntity.Visitor.Id,
+                DateName = matchEntity.DateName,
+                DateNameId = matchEntity.DateName.Id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CloseMatch(CloseMatchViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _matchHelper.CloseMatchAsync(model.MatchId, model.GoalsLocal.Value, model.GoalsVisitor.Value);
+                return RedirectToAction($"{nameof(DetailsGroup)}/{model.GroupId}");
+            }
+
+            model.Group = await _context.Groups.FindAsync(model.GroupId);
+            model.Local = await _context.Teams.FindAsync(model.LocalId);
+            model.Visitor = await _context.Teams.FindAsync(model.VisitorId);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CloseMatch2(CloseMatchViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _matchHelper.CloseMatchAsync(model.MatchId, model.GoalsLocal.Value, model.GoalsVisitor.Value);
+                return RedirectToAction($"{nameof(DetailsDateName)}/{model.DateNameId}");
+            }
+
+            model.DateName = await _context.DateNames.FindAsync(model.DateNameId);
+            model.Local = await _context.Teams.FindAsync(model.LocalId);
+            model.Visitor = await _context.Teams.FindAsync(model.VisitorId);
+            return View(model);
+        }
+
     }
 }

@@ -6,9 +6,15 @@ namespace Soccer.Common.Models
     public class PredictionRequest
     {
         [Required(ErrorMessage = "El campo {0} es requerido.")]
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es requerido.")]
-        public int TournamentId { get; set; }
+        public int MatchId { get; set; }
+
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public int GoalsLocal { get; set; }
+
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public int GoalsVisitor { get; set; }
     }
 }

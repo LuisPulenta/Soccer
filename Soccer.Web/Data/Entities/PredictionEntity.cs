@@ -16,6 +16,6 @@ namespace Soccer.Web.Data.Entities
         [Display(Name = "GV")]
         public int? GoalsVisitor { get; set; }
 
-        public int? Points { get; set; }
+        public int Points { get; set; }
     }
 }

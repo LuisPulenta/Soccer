@@ -256,6 +256,7 @@
 
                                     <td>
                                         <a asp-action="EditMatchDetail" asp-route-id="@item.Id" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i></a>
+                                        <a asp-action="CloseMatch" asp-route-id="@item.Id" class="btn btn-info"><i class="glyphicon glyphicon-check"></i></a>
                                         <button data-id="@item.Id" class="btn btn-danger deleteMatch" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
                                     </td>
                                 </tr>

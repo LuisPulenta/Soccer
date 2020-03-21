@@ -16,8 +16,8 @@ namespace Soccer.Common.Models
         public string NickName { get; set; }
         public TeamResponse Team { get; set; }
         public int Points { get; set; }
-        public string Latitude { get; set; }
-        public string Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public UserType UserType { get; set; }

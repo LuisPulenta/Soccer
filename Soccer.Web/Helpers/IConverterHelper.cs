@@ -46,8 +46,12 @@ namespace Soccer.Web.Helpers
 
         User ToUser(Player player);
 
+        Player ToPlayer(User user);
+
         PredictionResponse ToPredictionResponse(PredictionEntity predictionEntity);
 
         MatchResponse ToMatchResponse(MatchEntity matchEntity);
+
+        PlayerResponse ToPlayerResponse(Player player);
     }
 }

@@ -339,7 +339,7 @@ namespace Soccer.Web.Helpers
             return list;
         }
 
-        private PlayerResponse ToPlayerResponse(Player player)
+        public PlayerResponse ToPlayerResponse(Player player)
         {
             if (player == null)
             {
@@ -349,6 +349,11 @@ namespace Soccer.Web.Helpers
             return new PlayerResponse
             {
                 Address = player.User.Address,
+                BornDate = player.User.BornDate,
+                Sex = player.User.Sex,
+                NickName = player.User.NickName,
+                Latitude = player.User.Latitude,
+                Longitude = player.User.Longitude,
                 Document = player.User.Document,
                 Email = player.User.Email,
                 FirstName = player.User.FirstName,
@@ -400,6 +405,15 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        public Player ToPlayer(User user)
+        {
+            return new Player
+            {
+                User = user
+            };
+        
+        }
+
         public PredictionResponse ToPredictionResponse(PredictionEntity predictionEntity)
         {
             return new PredictionResponse
@@ -425,6 +439,5 @@ namespace Soccer.Web.Helpers
                 Visitor = ToTeamResponse(matchEntity.Visitor)
             };
         }
-
     }
 }

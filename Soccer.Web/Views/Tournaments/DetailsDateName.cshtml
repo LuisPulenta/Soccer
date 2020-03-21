@@ -6,10 +6,10 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 
-<h2>Detalles</h2>
+<h2>Detalles Fecha</h2>
 
 <div>
-    <h4>Fecha</h4>
+    <h4></h4>
     <hr />
     <div class="row">
         <div class="col-md-4">
@@ -139,6 +139,7 @@
 
                             <td>
                                 <a asp-action="EditMatchDetail2" asp-route-id="@item.Id" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i></a>
+                                <a asp-action="CloseMatch2" asp-route-id="@item.Id" class="btn btn-info"><i class="glyphicon glyphicon-check"></i></a>
                                 <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
                             </td>
                         </tr>

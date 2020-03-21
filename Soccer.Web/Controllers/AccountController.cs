@@ -394,6 +394,65 @@ namespace Soccer.Web.Controllers
             return View();
         }
 
+        public IActionResult RecoverPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _userHelper.GetUserAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "El Email no corresponde a un usuario registrado.");
+                    return View(model);
+                }
+
+                string myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+                string link = Url.Action(
+                    "ResetPassword",
+                    "Account",
+                    new { token = myToken }, protocol: HttpContext.Request.Scheme);
+                _mailHelper.SendMail(model.Email, "Soccer Recupero de Password", $"<h1>Soccer Recupero de Password</h1>" +
+                    $"Para recuperar el Password haga clic en este link: </br></br>" +
+                    $"<a href = \"{link}\">Resetear Password</a>");
+                ViewBag.Message = "Las instrucciones para recuperar su password han sido enviadas por mail.";
+                return View();
+
+            }
+
+            return View(model);
+        }
+
+        public IActionResult ResetPassword(string token)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            User user = await _userHelper.GetUserAsync(model.UserName);
+            if (user != null)
+            {
+                IdentityResult result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+                if (result.Succeeded)
+                {
+                    ViewBag.Message = "Password reseteado correctamente.";
+                    return View();
+                }
+
+                ViewBag.Message = "Error mientras se reseteaba el password.";
+                return View(model);
+            }
+
+            ViewBag.Message = "Usuario no encontrado.";
+            return View(model);
+        }
+
 
     }
 }
