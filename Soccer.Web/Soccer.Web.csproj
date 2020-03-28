@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\GroupBets\" />
     <Folder Include="wwwroot\images\Users\" />
   </ItemGroup>
 

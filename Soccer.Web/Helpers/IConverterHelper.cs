@@ -12,6 +12,10 @@ namespace Soccer.Web.Helpers
 
         LeagueViewModel ToLeagueViewModel(LeagueEntity leagueEntity);
 
+        GroupBet ToGroupBet(GroupBetViewModel model, string path, bool isNew);
+
+        GroupBetViewModel ToGroupBetViewModel(GroupBet groupBet);
+
         TeamEntity ToTeamEntity(TeamViewModel model, string path, bool isNew);
 
         TeamViewModel ToTeamViewModel(TeamEntity teamEntity);
@@ -42,7 +46,11 @@ namespace Soccer.Web.Helpers
 
         TournamentResponse ToTournamentResponse(TournamentEntity tournamentEntity);
 
+        LeagueResponse ToLeagueResponse(LeagueEntity leagueEntity);
+
         List<TournamentResponse> ToTournamentResponse(List<TournamentEntity> tournamentEntities);
+
+        List<LeagueResponse> ToLeagueResponse(List<LeagueEntity> leagueEntities);
 
         User ToUser(Player player);
 

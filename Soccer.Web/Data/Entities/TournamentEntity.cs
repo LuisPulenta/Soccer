@@ -39,6 +39,8 @@ namespace Soccer.Web.Data.Entities
 
         public ICollection<GroupEntity> Groups { get; set; }
 
+        public ICollection<GroupBet> GroupBets { get; set; }
+
         public ICollection<DateNameEntity> DateNames { get; set; }
 
         public string LogoFullPath => string.IsNullOrEmpty(LogoPath)

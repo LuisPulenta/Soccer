@@ -41,6 +41,26 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        public GroupBet ToGroupBet(GroupBetViewModel model, string path, bool isNew)
+        {
+            return new GroupBet
+            {
+                Id = isNew ? 0 : model.Id,
+                LogoPath = path,
+                Name = model.Name
+            };
+        }
+
+        public GroupBetViewModel ToGroupBetViewModel(GroupBet groupBet)
+        {
+            return new GroupBetViewModel
+            {
+                Id = groupBet.Id,
+                LogoPath = groupBet.LogoPath,
+                Name = groupBet.Name
+            };
+        }
+
         public TeamEntity ToTeamEntity(TeamViewModel model, string path, bool isNew)
         {
             return new TeamEntity
@@ -439,5 +459,33 @@ namespace Soccer.Web.Helpers
                 Visitor = ToTeamResponse(matchEntity.Visitor)
             };
         }
+
+        public LeagueResponse ToLeagueResponse(LeagueEntity leagueEntity)
+        {
+            return new LeagueResponse
+            {
+                Id = leagueEntity.Id,
+                Name = leagueEntity.Name,
+                Teams = leagueEntity.Teams?.Select(g => new TeamResponse
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    Initials=g.Initials,
+                    LogoPath=g.LogoPath,
+                }).ToList(),
+            };
+        }
+
+        public List<LeagueResponse> ToLeagueResponse(List<LeagueEntity> leagueEntities)
+        {
+            List<LeagueResponse> list = new List<LeagueResponse>();
+            foreach (LeagueEntity leagueEntity in leagueEntities)
+            {
+                list.Add(ToLeagueResponse(leagueEntity));
+            }
+
+            return list;
+        }
+
     }
 }

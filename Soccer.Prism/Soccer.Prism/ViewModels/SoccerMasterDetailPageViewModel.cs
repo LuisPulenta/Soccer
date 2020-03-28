@@ -11,14 +11,31 @@ namespace Soccer.Prism.ViewModels
     public class SoccerMasterDetailPageViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
+        private PlayerResponse _player;
 
         public SoccerMasterDetailPageViewModel(INavigationService navigationService) : base(navigationService)
         {
             _navigationService = navigationService;
+            LoadUser();
             LoadMenus();
         }
 
         public ObservableCollection<MenuItemViewModel> Menus { get; set; }
+
+        public PlayerResponse Player
+        {
+            get => _player;
+            set => SetProperty(ref _player, value);
+        }
+
+        private void LoadUser()
+        {
+            if (Settings.IsLogin)
+            {
+                Player = JsonConvert.DeserializeObject<PlayerResponse>(Settings.Player);
+            }
+        }
+
 
         private void LoadMenus()
         {
@@ -30,6 +47,12 @@ namespace Soccer.Prism.ViewModels
                     PageName = "TournamentsPage",
                     Title = "Torneos"
                 },
+                 new Menu
+                {
+                    Icon = "groups",
+                    PageName = "MyGroupsPage",
+                    Title = "Mis Grupos"
+                },
                 new Menu
                 {
                     Icon = "prediction",
@@ -40,7 +63,7 @@ namespace Soccer.Prism.ViewModels
                 {
                     Icon = "medal",
                     PageName = "MyPositionsPage",
-                    Title = "Mis Posiciones "
+                    Title = "Mis Posiciones"
                 },
                 new Menu
                 {
@@ -52,7 +75,7 @@ namespace Soccer.Prism.ViewModels
                 {
                     Icon = "login",
                     PageName = "LoginPage",
-                    Title = "Login"
+                    Title = Settings.IsLogin ? "Cerrar sesión" : "Iniciar Sesión"
                 }
             };
 

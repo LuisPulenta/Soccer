@@ -1,0 +1,123 @@
+﻿@model Soccer.Web.Data.Entities.GroupBet
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Detalle Grupo de Jugadores</h2>
+
+<div>
+    <h4></h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LogoPath)
+        </dt>
+        <dd>
+            @if (!string.IsNullOrEmpty(Model.LogoPath))
+            {
+                <img src="@Url.Content(Model.LogoPath)" alt="Image" style="width:80px;height:80px;max-height: 100%; width: auto;" />
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+    <a asp-action="CreatePlayer" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Jugador</a>
+    <a asp-action="Index" class="btn btn-success">Regresar</a>
+</div>
+
+<h4>Jugadores</h4>
+@if (Model.GroupBetPlayers.Count == 0)
+{
+    <h5>Este Grupo de Jugadores no tiene Jugadores registrados todavía.</h5>
+}
+else
+{
+    <table class="table">
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.GroupBetPlayers.FirstOrDefault().Player.User.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupBetPlayers.FirstOrDefault().Player.User.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupBetPlayers.FirstOrDefault().Player.User.FavoriteTeam.Name)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.GroupBetPlayers.OrderBy(g => g.Player.User.FullName))
+        {
+    <tr>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Player.User.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Player.User.Email)
+        </td>
+        <td>
+            @if (!string.IsNullOrEmpty(item.Player.User.FavoriteTeam.LogoPath))
+            {
+                <img src="@Url.Content(item.Player.User.FavoriteTeam.LogoPath)" alt="Image" style="width:50px;height:50px;max-width: 100%; height: auto;" />
+            }
+        </td>
+        <td>
+            <a asp-action="EditTeam" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+            <a asp-action="DetailsTeam" asp-route-id="@item.Id" class="btn btn-info">Detalles</a>
+            <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
+        </td>
+    </tr>
+        }
+
+    </table>
+}
+
+<!--Delete Item-->
+<div class="modal fade" id="deleteDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Borrar Registro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Quiere borrar este Equipo?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" id="btnYesDelete">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+    	$(document).ready(function () {
+        	// Delete item
+        	var item_to_delete;
+
+        	$('.deleteItem').click((e) => {
+            	item_to_delete = e.currentTarget.dataset.id;
+        	});
+
+        	$("#btnYesDelete").click(function () {
+            	window.location.href = '/Leagues/DeleteTeam/' + item_to_delete;
+        	});
+    	});
+    </script>
+}

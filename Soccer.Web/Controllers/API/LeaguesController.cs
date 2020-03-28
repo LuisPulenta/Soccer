@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Soccer.Web.Data;
 using Soccer.Web.Data.Entities;
+using Soccer.Web.Helpers;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Soccer.Web.Controllers.API
 {
@@ -11,17 +13,22 @@ namespace Soccer.Web.Controllers.API
     public class LeaguesController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IConverterHelper _converterHelper;
 
-        public LeaguesController(DataContext context)
+        public LeaguesController(DataContext context, IConverterHelper converterHelper)
         {
             _context = context;
+            _converterHelper = converterHelper;
         }
 
-        // GET: api/Leagues
         [HttpGet]
-        public IEnumerable<LeagueEntity> GetLeagues()
+        public async Task<IActionResult> GetLeagues()
         {
-            return _context.Leagues.OrderBy(pt => pt.Name);
+            List<LeagueEntity> leagues = await _context.Leagues
+                .Include(t => t.Teams)
+                .ToListAsync();
+            return Ok(_converterHelper.ToLeagueResponse(leagues));
         }
+
     }
 }

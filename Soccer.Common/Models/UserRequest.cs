@@ -16,7 +16,7 @@ namespace Soccer.Common.Models
 
         [Required]
         public string Address { get; set; }
-        
+
         [Required]
         public DateTime BornDate { get; set; }
 
@@ -36,6 +36,12 @@ namespace Soccer.Common.Models
         [StringLength(20, MinimumLength = 6)]
         public string Password { get; set; }
 
+        [Required]
+        [StringLength(20, MinimumLength = 6)]
+        public string PasswordConfirm { get; set; }
+
+        public int LeagueId { get; set; }
+        
         public int TeamId { get; set; }
 
         public byte[] PictureArray { get; set; }

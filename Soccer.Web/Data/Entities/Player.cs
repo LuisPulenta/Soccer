@@ -10,5 +10,7 @@ namespace Soccer.Web.Data.Entities
 
         public ICollection<PredictionEntity> Predictions { get; set; }
 
+        public ICollection<GroupBetPlayer> GroupBetPlayers { get; set; }
+
     }
 }

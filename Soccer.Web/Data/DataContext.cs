@@ -23,6 +23,8 @@ namespace Soccer.Web.Data
         public DbSet<PredictionEntity> Predictions { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Manager> Managers { get; set; }
+        public DbSet<GroupBet> GroupBets { get; set; }
+        public DbSet<GroupBetPlayer> GroupBetPlayers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
