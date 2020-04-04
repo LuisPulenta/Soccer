@@ -47,12 +47,15 @@ namespace Soccer.Web.Controllers.API
 
             Player player = await _context.Players
                 .Include(u => u.User.FavoriteTeam)
+                .ThenInclude(l => l.League)
                 .Include(u => u.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(m => m.Local)
+                .ThenInclude(l => l.League)
                 .Include(u => u.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(m => m.Visitor)
+                .ThenInclude(l => l.League)
                 .Include(u => u.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(p => p.Group)

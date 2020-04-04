@@ -27,7 +27,7 @@ namespace Soccer.Web.Helpers
             _signInManager = signInManager;
             _context = context;
         }
-        
+
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
@@ -43,16 +43,16 @@ namespace Soccer.Web.Helpers
                 Email = model.Username,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Points=model.Points,
+                Points = model.Points,
                 Picture = path,
                 PhoneNumber = model.PhoneNumber,
                 UserName = model.Username,
-                Longitude=model.Longitude,
-                Latitude=model.Latitude,
-                BornDate=model.BornDate,
-                FavoriteTeam= await _context.Teams.FindAsync(model.TeamId),
-                NickName =model.NickName,
-                Sex=model.Sex,
+                Longitude = model.Longitude,
+                Latitude = model.Latitude,
+                BornDate = model.BornDate,
+                FavoriteTeam = await _context.Teams.FindAsync(model.TeamId),
+                NickName = model.NickName,
+                Sex = model.Sex,
             };
 
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
@@ -87,6 +87,7 @@ namespace Soccer.Web.Helpers
         {
             return await _context.Users
                 .Include(u => u.FavoriteTeam)
+                .ThenInclude(l => l.League)
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
@@ -94,10 +95,11 @@ namespace Soccer.Web.Helpers
         {
             return await _context.Users
                 .Include(u => u.FavoriteTeam)
+                .ThenInclude(l => l.League)
                 .FirstOrDefaultAsync(u => u.Id == userId.ToString());
         }
 
-       
+
 
 
 

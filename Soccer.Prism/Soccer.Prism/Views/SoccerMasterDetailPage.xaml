@@ -13,6 +13,10 @@
     <ContentPage Title="Menu">
       <StackLayout Padding="20">
         <RelativeLayout>
+          <RelativeLayout.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding ModifyUserCommand}"/>
+          </RelativeLayout.GestureRecognizers>
+
           <Image x:Name="Logo" HorizontalOptions="Center"
                            RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=X,Factor=1,Constant=60}"
                            HeightRequest="150"
@@ -40,14 +44,14 @@
                                                 Margin="5"
                                                 RetryCount= "3"
                                                 RetryDelay= "600"/>
-          <Label RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=Y,Factor=1,Constant=110}"
-                           FontAttributes="Bold"
-                           FontSize="Large"
-                           Text="{Binding Player.FullName}"
-                           TextColor="Black"/>
-          <Label RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=Y,Factor=1,Constant=145}"
+          <Label RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=Y,Factor=1,Constant=118}"
                            FontAttributes="Bold"
                            FontSize="Medium"
+                           Text="{Binding Player.FullName}"
+                           TextColor="Black"/>
+          <Label RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=Y,Factor=1,Constant=100}"
+                           FontAttributes="Bold"
+                           FontSize="Small"
                            Text="{Binding Player.NickName}"
                            TextColor="Blue"/>
         </RelativeLayout>

@@ -47,6 +47,10 @@ namespace Soccer.Web.Helpers
             {
                 Id = isNew ? 0 : model.Id,
                 LogoPath = path,
+                CreationDate = model.CreationDate,
+                Admin = model.Admin,
+                Tournament = model.Tournament,
+                GroupBetPlayers = model.GroupBetPlayers,
                 Name = model.Name
             };
         }
@@ -57,7 +61,11 @@ namespace Soccer.Web.Helpers
             {
                 Id = groupBet.Id,
                 LogoPath = groupBet.LogoPath,
-                Name = groupBet.Name
+                Name = groupBet.Name,
+                Admin = groupBet.Admin,
+                CreationDate = groupBet.CreationDate,
+                GroupBetPlayers = groupBet.GroupBetPlayers,
+                Tournament = groupBet.Tournament
             };
         }
 
@@ -68,8 +76,8 @@ namespace Soccer.Web.Helpers
                 Id = isNew ? 0 : model.Id,
                 LogoPath = path,
                 Name = model.Name,
-                Initials=model.Initials,
-                League=model.League,
+                Initials = model.Initials,
+                League = model.League,
             };
         }
 
@@ -80,9 +88,9 @@ namespace Soccer.Web.Helpers
                 Id = teamEntity.Id,
                 LogoPath = teamEntity.LogoPath,
                 Name = teamEntity.Name,
-                Initials=teamEntity.Initials,
-                League=teamEntity.League,
-                LeagueId= teamEntity.League.Id
+                Initials = teamEntity.Initials,
+                League = teamEntity.League,
+                LeagueId = teamEntity.League.Id
             };
         }
 
@@ -92,12 +100,25 @@ namespace Soccer.Web.Helpers
             {
                 EndDate = model.EndDate,
                 Groups = model.Groups,
-                DateNames=model.DateNames,
+                DateNames = model.DateNames,
                 Id = isNew ? 0 : model.Id,
                 IsActive = model.IsActive,
                 LogoPath = path,
                 Name = model.Name,
                 StartDate = model.StartDate
+            };
+        }
+
+        public TournamentEntity ToTournamentEntity(TournamentResponse model)
+        {
+            return new TournamentEntity
+            {
+                EndDate = model.EndDate,
+                IsActive = model.IsActive,
+                Name = model.Name,
+                StartDate = model.StartDate,
+                Id = model.Id,
+                LogoPath = model.LogoPath,
             };
         }
 
@@ -107,7 +128,7 @@ namespace Soccer.Web.Helpers
             {
                 EndDate = tournamentEntity.EndDate,
                 Groups = tournamentEntity.Groups,
-                DateNames= tournamentEntity.DateNames,
+                DateNames = tournamentEntity.DateNames,
                 Id = tournamentEntity.Id,
                 IsActive = tournamentEntity.IsActive,
                 LogoPath = tournamentEntity.LogoPath,
@@ -127,6 +148,7 @@ namespace Soccer.Web.Helpers
                 Tournament = await _context.Tournaments.FindAsync(model.TournamentId)
             };
         }
+
 
         public GroupViewModel ToGroupViewModel(GroupEntity groupEntity)
         {
@@ -213,8 +235,8 @@ namespace Soccer.Web.Helpers
                 IsClosed = model.IsClosed,
                 Local = await _context.Teams.FindAsync(model.LocalId),
                 Visitor = await _context.Teams.FindAsync(model.VisitorId),
-                DateName= model.DateName,
-                
+                DateName = model.DateName,
+
             };
         }
 
@@ -235,8 +257,8 @@ namespace Soccer.Web.Helpers
                 DateNames = _combosHelper.GetComboDateNames(matchEntity.Group.Tournament.Id),
                 Visitor = matchEntity.Visitor,
                 VisitorId = matchEntity.Visitor.Id,
-                DateName= matchEntity.DateName,
-                DateNameId=matchEntity.DateName.Id
+                DateName = matchEntity.DateName,
+                DateNameId = matchEntity.DateName.Id
             };
         }
 
@@ -378,6 +400,7 @@ namespace Soccer.Web.Helpers
                 Email = player.User.Email,
                 FirstName = player.User.FirstName,
                 Id = player.Id,
+                UserId = player.User.Id,
                 LastName = player.User.LastName,
                 PhoneNumber = player.User.PhoneNumber,
                 PicturePath = player.User.Picture,
@@ -398,7 +421,10 @@ namespace Soccer.Web.Helpers
                 Id = team.Id,
                 LogoPath = team.LogoPath,
                 Name = team.Name,
-                Initials=team.Initials
+                Initials = team.Initials,
+                LeagueId = team.League.Id,
+                LeagueName = team.League.Name
+
             };
         }
 
@@ -406,22 +432,32 @@ namespace Soccer.Web.Helpers
         {
             return new User
             {
-             Address=player.User.Address,
-             BornDate = player.User.BornDate,
-             Document = player.User.Document,
-             Email = player.User.Email,
-             FirstName = player.User.FirstName,
-             LastName = player.User.LastName,
-             Latitude = player.User.Latitude,
-             Longitude = player.User.Longitude,
-             NickName = player.User.NickName,
-             PhoneNumber = player.User.PhoneNumber,
-             Picture = player.User.Picture,
-             Points = player.User.Points,
-             Sex = player.User.Sex,
-             UserName = player.User.UserName,
-             FavoriteTeam = player.User.FavoriteTeam,
-             Id = player.User.Id,
+                Address = player.User.Address,
+                BornDate = player.User.BornDate,
+                Document = player.User.Document,
+                Email = player.User.Email,
+                FirstName = player.User.FirstName,
+                LastName = player.User.LastName,
+                Latitude = player.User.Latitude,
+                Longitude = player.User.Longitude,
+                NickName = player.User.NickName,
+                PhoneNumber = player.User.PhoneNumber,
+                Picture = player.User.Picture,
+                Points = player.User.Points,
+                Sex = player.User.Sex,
+                UserName = player.User.UserName,
+                FavoriteTeam = player.User.FavoriteTeam,
+                Id = player.User.Id,
+            };
+        }
+
+        public async Task<Player> ToPlayer2(User user)
+        {
+            var player = await _context.Players.FindAsync(user.Id);
+            return new Player
+            {
+                Id = player.Id,
+                User = player.User,
             };
         }
 
@@ -429,9 +465,17 @@ namespace Soccer.Web.Helpers
         {
             return new Player
             {
-                User = user
+                User = user,
             };
-        
+        }
+
+        public Player ToPlayer(PlayerResponse playerResponse)
+        {
+            return new Player
+            {
+                User = ToUser(ToPlayer(playerResponse))
+            };
+
         }
 
         public PredictionResponse ToPredictionResponse(PredictionEntity predictionEntity)
@@ -470,8 +514,10 @@ namespace Soccer.Web.Helpers
                 {
                     Id = g.Id,
                     Name = g.Name,
-                    Initials=g.Initials,
-                    LogoPath=g.LogoPath,
+                    Initials = g.Initials,
+                    LogoPath = g.LogoPath,
+                    LeagueId = g.League.Id,
+                    LeagueName = g.League.Name
                 }).ToList(),
             };
         }

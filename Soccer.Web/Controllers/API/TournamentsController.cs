@@ -15,7 +15,7 @@ namespace Soccer.Web.Controllers.API
         private readonly DataContext _context;
         private readonly IConverterHelper _converterHelper;
 
-        public TournamentsController(DataContext context,IConverterHelper converterHelper)
+        public TournamentsController(DataContext context, IConverterHelper converterHelper)
         {
             _context = context;
             _converterHelper = converterHelper;
@@ -28,8 +28,9 @@ namespace Soccer.Web.Controllers.API
                 .Include(t => t.Groups)
                 .ThenInclude(g => g.GroupDetails)
                 .ThenInclude(gd => gd.Team)
+                .ThenInclude(l => l.League)
 
-               
+
                 .Include(t => t.Groups)
                 .ThenInclude(g => g.Matches)
                 .ThenInclude(m => m.Local)

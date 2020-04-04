@@ -2,6 +2,7 @@
 using Soccer.Common.Models;
 using Soccer.Common.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Soccer.Prism.ViewModels
@@ -11,7 +12,9 @@ namespace Soccer.Prism.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private List<TournamentItemViewModel> _tournaments;
+        private ObservableCollection<LeagueResponse> _leagues;
         private bool _isRunning;
+        private static TournamentsPageViewModel _instance;
 
         public bool IsRunning
         {
@@ -25,8 +28,16 @@ namespace Soccer.Prism.ViewModels
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _instance = this;
             Title = "Torneos";
             LoadTournamentsAsync();
+            LoadLeaguesAsync();
+        }
+
+        public ObservableCollection<LeagueResponse> Leagues
+        {
+            get => _leagues;
+            set => SetProperty(ref _leagues, value);
         }
 
         public List<TournamentItemViewModel> Tournaments
@@ -75,6 +86,40 @@ namespace Soccer.Prism.ViewModels
                 Name = t.Name,
                 StartDate = t.StartDate
             }).ToList();
+        }
+
+        private async void LoadLeaguesAsync()
+        {
+            string url = App.Current.Resources["UrlAPI"].ToString();
+            bool connection = await _apiService.CheckConnectionAsync(url);
+            if (!connection)
+            {
+                IsRunning = false;
+
+                await App.Current.MainPage.DisplayAlert(
+                    "Error",
+                    "Revise su conexión a Internet",
+                    "Aceptar");
+                return;
+            }
+
+            Response response = await _apiService.GetListAsync<LeagueResponse>(url, "api", "/Leagues");
+
+            if (!response.IsSuccess)
+            {
+                await App.Current.MainPage.DisplayAlert(
+                    "Error",
+                    response.Message,
+                    "Aceptar");
+                return;
+            }
+            List<LeagueResponse> list = (List<LeagueResponse>)response.Result;
+            Leagues = new ObservableCollection<LeagueResponse>(list.OrderBy(t => t.Name));
+        }
+
+        public static TournamentsPageViewModel GetInstance()
+        {
+            return _instance;
         }
     }
 }

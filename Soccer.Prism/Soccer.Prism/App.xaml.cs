@@ -49,6 +49,10 @@ namespace Soccer.Prism
             containerRegistry.RegisterForNavigation<MyGroupsPage, MyGroupsPageViewModel>();
 
             containerRegistry.RegisterForNavigation<RegisterPage, RegisterPageViewModel>();
+            containerRegistry.RegisterForNavigation<RememberPasswordPage, RememberPasswordPageViewModel>();
+            containerRegistry.RegisterForNavigation<ChangePasswordPage, ChangePasswordPageViewModel>();
+            containerRegistry.RegisterForNavigation<AddGroupBetPage, AddGroupBetPageViewModel>();
+            containerRegistry.RegisterForNavigation<PredictionsForTournamentPage, PredictionsForTournamentPageViewModel>();
         }
     }
 }

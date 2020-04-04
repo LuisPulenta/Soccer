@@ -24,5 +24,24 @@ namespace Soccer.Common.Services
 
         Task<Response> RegisterUserAsync(string urlBase, string servicePrefix, string controller, UserRequest userRequest);
 
+        Task<Response> RecoverPasswordAsync(string urlBase, string servicePrefix, string controller, EmailRequest emailRequest);
+
+        Task<Response> PutAsync<T>(string urlBase, string servicePrefix, string controller, T model, string tokenType, string accessToken);
+
+        Task<Response> ChangePasswordAsync(string urlBase, string servicePrefix, string controller, ChangePasswordRequest changePasswordRequest, string tokenType, string accessToken);
+
+        Task<Response> AddGroupBetAsync(string urlBase, string servicePrefix, string controller, GroupBetRequest groupBetRequest, string tokenType, string accessToken);
+
+        Task<ResponseT<object>> GetGroupBetsByEmail(
+           string urlBase,
+           string servicePrefix,
+           string controller,
+           string id,
+           string tokenType,
+           string accessToken);
+
+        Task<Response> GetPredictionsForUserAsync(string urlBase, string servicePrefix, string controller, PredictionsForUserRequest predictionsForUserRequest, string tokenType, string accessToken);
+
+        Task<Response> MakePredictionAsync(string urlBase, string servicePrefix, string controller, PredictionRequest predictionRequest, string tokenType, string accessToken);
     }
 }

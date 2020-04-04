@@ -2,9 +2,208 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="Soccer.Prism.Views.MyGroupsPage"
              BackgroundColor="{StaticResource ColorBackground}"
              Title="{Binding Title}">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Icon="ic_add_circle"
+                 Command="{Binding AddGroupBetCommand}" />
+  </ContentPage.ToolbarItems>
+
+  <StackLayout Padding="5">
+
+    <StackLayout Orientation="Horizontal"
+                   BackgroundColor="{StaticResource ColorBackground}"
+                   Padding="2">
+      <Label Text="Grupos de Apuestas de"
+             VerticalOptions="Center"
+             BackgroundColor="{StaticResource ColorBackground}"  
+             FontSize="Small"
+               TextColor="Blue"
+               FontAttributes="Bold"></Label>
+      <Label Text="{Binding PlayerLogueado.NickName}"
+             VerticalOptions="Center"
+             BackgroundColor="{StaticResource ColorBackground}"
+               TextColor="Blue"
+               FontSize="Small"
+               FontAttributes="Bold"></Label>
+      <RelativeLayout>
+        <ffimageloading:CachedImage x:Name="Picture" 
+                                              Aspect="AspectFit"
+                                              Source="{Binding PlayerLogueado.PictureFullPath}" 
+                                              CacheDuration= "50"
+                                              Margin="5"
+                                              RetryCount= "3"
+                                              RetryDelay= "600"
+                                              HeightRequest="60"
+                                              WidthRequest="60">
+          <ffimageloading:CachedImage.Transformations>
+            <fftransformations:CircleTransformation />
+          </ffimageloading:CachedImage.Transformations>
+        </ffimageloading:CachedImage>
+        <ffimageloading:CachedImage x:Name="Team" 
+                                                 Grid.Column="2"
+                                                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=Y,Factor=1,Constant=40}"
+                                                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=X,Factor=1,Constant=30}"
+                                                Aspect="AspectFit"
+                                                Source="{Binding PlayerLogueado.Team.LogoFullPath}" 
+                                                CacheDuration= "50"
+                                                WidthRequest="30"
+                                                HeightRequest="30"
+                                                Margin="5"
+                                                RetryCount= "3"
+                                                RetryDelay= "600"/>
+      </RelativeLayout>
+    </StackLayout>
+
+
+
+
+
+
+    <ListView ItemsSource="{Binding GroupBets}"
+                HasUnevenRows="True"
+                IsPullToRefreshEnabled="True"
+                RefreshCommand="{Binding RefreshCommand}"
+                IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"
+                SeparatorVisibility="None">
+
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <Frame CornerRadius="10"
+                     HasShadow="True"
+                     BackgroundColor="LightGreen"
+                     Margin="3"
+                     Padding="5"
+                     >
+              <StackLayout 
+                  >
+                <Grid 
+                        RowSpacing="-0">
+                  <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectGroupBetCommand}" />
+                  </Grid.GestureRecognizers>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                  </Grid.ColumnDefinitions>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+
+                  <!--Columna 0-->
+                  <ffimageloading:CachedImage
+                    Grid.Column="0"
+                                                    Aspect="AspectFit"
+                                                    Source="{Binding LogoFullPath}" 
+                                                    CacheDuration= "50"
+                                                    Margin="5"
+                                                    RetryCount= "3"
+                                                    RetryDelay= "600"
+                                                    HeightRequest="90"
+                                                    WidthRequest="90">
+                  </ffimageloading:CachedImage>
+
+                  <!--Columna 1-->
+                  <StackLayout Grid.Row="0"
+                           Grid.Column="1">
+                    <Label 
+                           FontSize="Medium"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Start"
+                           Text="{Binding Name}"></Label>
+                    <StackLayout
+                      Orientation="Horizontal">
+                      <Label
+                        Text="Creado el"
+                        FontSize="Micro">
+                      </Label>
+                      <Label
+                        Text="{Binding CreationDate, StringFormat='{0:dd/MM/yyyy}'}"
+                        FontSize="Micro">
+                      </Label>
+                    </StackLayout>
+                    <StackLayout
+                      Orientation="Horizontal">
+                      <Label
+                        Text="por"
+                        FontSize="Micro">
+                      </Label>
+                      <Label
+                        Text="{Binding Admin.FullName}"
+                        FontSize="Micro">
+                      </Label>
+                    </StackLayout>
+                    <StackLayout>
+                      <Label
+                        Text="{Binding Tournament.Name}"
+                        FontSize="Micro">
+                      </Label>
+                    </StackLayout>
+                  </StackLayout>
+
+                  <!--Columna 2-->
+                  <StackLayout Grid.Row="0"
+                           Grid.Column="2">
+                    <RelativeLayout>
+                      <ffimageloading:CachedImage x:Name="Picture" 
+                                              Aspect="AspectFit"
+                                              Source="{Binding Admin.PictureFullPath}" 
+                                              CacheDuration= "50"
+                                              Margin="5"
+                                              RetryCount= "3"
+                                              RetryDelay= "600"
+                                              HeightRequest="60"
+                                              WidthRequest="60">
+                        <ffimageloading:CachedImage.Transformations>
+                          <fftransformations:CircleTransformation />
+                        </ffimageloading:CachedImage.Transformations>
+                      </ffimageloading:CachedImage>
+                      <ffimageloading:CachedImage x:Name="Team" 
+                                                 Grid.Column="2"
+                                                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=Y,Factor=1,Constant=40}"
+                                                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=X,Factor=1,Constant=30}"
+                                                Aspect="AspectFit"
+                                                Source="{Binding Admin.Team.LogoFullPath}" 
+                                                CacheDuration= "50"
+                                                WidthRequest="30"
+                                                HeightRequest="30"
+                                                Margin="5"
+                                                RetryCount= "3"
+                                                RetryDelay= "600"/>
+                    </RelativeLayout>
+                  </StackLayout>
+
+                  <!--Columna 3-->
+                  <Image Grid.Row="0"
+                           Grid.Column="3"
+                           VerticalOptions="Center"
+                           Source="ic_chevron_right">
+                  </Image>
+
+
+
+
+                </Grid>
+              </StackLayout>
+            </Frame>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </StackLayout>
 
 </ContentPage>

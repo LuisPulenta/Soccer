@@ -47,7 +47,7 @@ namespace Soccer.Prism.ViewModels
             _apiService = apiService;
             _filesHelper = filesHelper;
             LoadLeaguesAsync();
-            
+
             Title = "Registro de Nuevo Usuario";
             Image = App.Current.Resources["UrlNoImage"].ToString();
             IsEnabled = true;
@@ -113,10 +113,10 @@ namespace Soccer.Prism.ViewModels
             get => _teams;
             set => SetProperty(ref _teams, value);
         }
-        
+
         public ObservableCollection<LeagueResponse> Leagues
         {
-            get => _leagues;                
+            get => _leagues;
             set => SetProperty(ref _leagues, value);
         }
 
@@ -158,11 +158,11 @@ namespace Soccer.Prism.ViewModels
             {
                 imageArray = _filesHelper.ReadFully(_file.GetStream());
             }
-            
+
             User.Sex = Sex.Name;
             User.TeamId = Team.Id;
             User.PictureArray = imageArray;
-            
+
 
 
             Response response = await _apiService.RegisterUserAsync(url, "api", "/Account", User);
@@ -280,7 +280,7 @@ namespace Soccer.Prism.ViewModels
 
             return true;
         }
-        
+
         private async void LoadLeaguesAsync()
         {
             string url = App.Current.Resources["UrlAPI"].ToString();
@@ -319,10 +319,12 @@ namespace Soccer.Prism.ViewModels
             {
                 Teams.Add(new TeamResponse
                 {
-                    Id=team.Id,
+                    Id = team.Id,
                     Initials = team.Initials,
                     Name = team.Name,
-                    LogoPath=team.LogoPath
+                    LogoPath = team.LogoPath,
+                    LeagueId = team.LeagueId,
+                    LeagueName = team.LeagueName
                 });
             }
         }

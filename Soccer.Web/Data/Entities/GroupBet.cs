@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace Soccer.Web.Data.Entities
 {
@@ -18,6 +19,8 @@ namespace Soccer.Web.Data.Entities
         public Player Admin { get; set; }
 
         public TournamentEntity Tournament { get; set; }
+
+        public DateTime CreationDate { get; set; }
 
         public ICollection<GroupBetPlayer> GroupBetPlayers { get; set; }
 
