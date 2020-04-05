@@ -63,6 +63,75 @@
                                                 RetryDelay= "600"/>
       </RelativeLayout>
     </StackLayout>
+    <StackLayout
+      Orientation="Horizontal">
+
+
+
+      <Grid RowSpacing="-0">
+        
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--Columna 0-->
+        <StackLayout Grid.Row="0"
+                     Grid.Column="0">
+          <Button
+            Command="{Binding InvitarCommand}"
+            Text="Invitar"
+            IsEnabled="{Binding IsEnabledAdmin}"
+            HeightRequest="40"
+            BackgroundColor="Blue"
+            TextColor="White"
+            FontSize="Small"
+            VerticalOptions="Center"
+            HorizontalOptions="Start">
+          </Button>
+        </StackLayout>
+
+        <!--Columna 1-->
+        <StackLayout Grid.Row="0"
+                     Grid.Column="1"
+                     VerticalOptions="Center">
+          <Button
+            Command="{Binding BorrarGrupoCommand}"
+            Text="Borrar"
+            HeightRequest="40"
+            BackgroundColor="Red"
+            IsEnabled="{Binding IsEnabledAdmin}"
+            TextColor="White"
+            FontSize="Small"
+            VerticalOptions="Center"
+            HorizontalOptions="Center">
+          </Button>
+        </StackLayout>
+
+        <!--Columna 2-->
+        <StackLayout Grid.Row="0"
+                     Grid.Column="2"
+                     VerticalOptions="Center">
+         <Button
+            Command="{Binding SalirGrupoCommand}"
+            Text="Salir"
+            IsEnabled="{Binding IsEnabledPlayer}"
+            HeightRequest="40"
+            BackgroundColor="Yellow"
+            TextColor="Red"
+            FontSize="Small"
+            VerticalOptions="Center"
+            HorizontalOptions="End">
+          </Button>
+
+        </StackLayout>
+      </Grid>
+    </StackLayout>
+    
     <ListView ItemsSource="{Binding GroupBetPlayers}"
                 HasUnevenRows="True"
                 IsPullToRefreshEnabled="True"

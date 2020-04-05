@@ -4,7 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
           	 xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="Soccer.Prism.Views.RememberPasswordPage"
+             x:Class="Soccer.Prism.Views.InvitarPage"
              BackgroundColor="{StaticResource ColorBackground}"
              Title="{Binding Title}">
 
@@ -13,13 +13,21 @@
                         AbsoluteLayout.LayoutFlags="All" 
                         Padding="5">
       <Image
-        Source="Reset"
+        Source="invitacion"
         HorizontalOptions="Center"
         HeightRequest="200"
         WidthRequest="200">
 
       </Image>
-      
+
+      <Image
+        Source="{Binding GroupBet.LogoFullPath}"
+        HorizontalOptions="Center"
+        HeightRequest="200"
+        WidthRequest="200">
+
+      </Image>
+
       <Label Text="Email:"/>
       <Entry Keyboard="Email"
                     HorizontalOptions="FillAndExpand"
@@ -29,7 +37,7 @@
             	Command="{Binding RecoverCommand}"
             	IsEnabled="{Binding IsEnabled}"
                 HorizontalOptions="FillAndExpand"
-            	Text="Recuperar Password"
+            	Text="Invitar"
                 VerticalOptions="EndAndExpand"/>
     </StackLayout>
     <busyindicator:SfBusyIndicator AnimationType="Gear" 
