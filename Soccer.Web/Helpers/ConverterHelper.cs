@@ -522,6 +522,24 @@ namespace Soccer.Web.Helpers
             };
         }
 
+
+        
+        public async Task<GroupBetResponse>  ToGroupBetResponse(GroupBet groupBet)
+        {
+            var player = await _context.Players.FindAsync(groupBet.Admin.Id);
+            var tournament = await _context.Tournaments.FindAsync(groupBet.Tournament.Id);
+
+            return new GroupBetResponse
+            {
+                Id = groupBet.Id,
+                Name = groupBet.Name,
+                Admin = ToPlayerResponse(player),
+                CreationDate = groupBet.CreationDate,
+                LogoPath = groupBet.LogoPath,
+                Tournament = ToTournamentResponse(tournament)
+            };
+        }
+
         public List<LeagueResponse> ToLeagueResponse(List<LeagueEntity> leagueEntities)
         {
             List<LeagueResponse> list = new List<LeagueResponse>();

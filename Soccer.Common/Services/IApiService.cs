@@ -32,6 +32,8 @@ namespace Soccer.Common.Services
 
         Task<Response> AddGroupBetAsync(string urlBase, string servicePrefix, string controller, GroupBetRequest groupBetRequest, string tokenType, string accessToken);
 
+        Task<Response> AddGroupBetPlayerAsync(string urlBase, string servicePrefix, string controller, GroupBetPlayerRequest groupBetPlayerRequest, string tokenType, string accessToken);
+
         Task<ResponseT<object>> GetGroupBetsByEmail(
            string urlBase,
            string servicePrefix,

@@ -5,26 +5,31 @@
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="Soccer.Prism.Views.MyGroupsPage"
+             x:Class="Soccer.Prism.Views.GroupBetPage"
+             IconImageSource="ic_grade"
              BackgroundColor="{StaticResource ColorBackground}"
              Title="{Binding Title}">
-  <ContentPage.ToolbarItems>
-    <ToolbarItem Icon="ic_add_circle"
-                 Command="{Binding AddGroupBetCommand}" />
-  </ContentPage.ToolbarItems>
+
 
   <StackLayout Padding="5">
 
     <StackLayout Orientation="Horizontal"
                    BackgroundColor="{StaticResource ColorBackground}"
                    Padding="2">
-      <Label Text="Grupos de Apuestas de"
+      <Image
+        Source="{Binding GroupBet.LogoFullPath}"
+        WidthRequest="80"
+        HeightRequest="80">
+        
+      </Image>
+      
+      <Label Text="Administrador:"
              VerticalOptions="Center"
              BackgroundColor="{StaticResource ColorBackground}"  
              FontSize="Small"
                TextColor="Blue"
                FontAttributes="Bold"></Label>
-      <Label Text="{Binding PlayerLogueado.NickName}"
+      <Label Text="{Binding GroupBet.Admin.NickName}"
              VerticalOptions="Center"
              BackgroundColor="{StaticResource ColorBackground}"
                TextColor="Blue"
@@ -33,7 +38,7 @@
       <RelativeLayout>
         <ffimageloading:CachedImage x:Name="Picture" 
                                               Aspect="AspectFit"
-                                              Source="{Binding PlayerLogueado.PictureFullPath}" 
+                                              Source="{Binding GroupBet.Admin.PictureFullPath}" 
                                               CacheDuration= "50"
                                               Margin="5"
                                               RetryCount= "3"
@@ -49,7 +54,7 @@
                                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=Y,Factor=1,Constant=40}"
                                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=X,Factor=1,Constant=30}"
                                                 Aspect="AspectFit"
-                                                Source="{Binding PlayerLogueado.Team.LogoFullPath}" 
+                                                Source="{Binding GroupBet.Admin.Team.LogoFullPath}" 
                                                 CacheDuration= "50"
                                                 WidthRequest="30"
                                                 HeightRequest="30"
@@ -58,7 +63,7 @@
                                                 RetryDelay= "600"/>
       </RelativeLayout>
     </StackLayout>
-    <ListView ItemsSource="{Binding GroupBets}"
+    <ListView ItemsSource="{Binding GroupBetPlayers}"
                 HasUnevenRows="True"
                 IsPullToRefreshEnabled="True"
                 RefreshCommand="{Binding RefreshCommand}"
@@ -79,7 +84,7 @@
                 <Grid 
                         RowSpacing="-0">
                   <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding SelectGroupBetCommand}" />
+                    <TapGestureRecognizer Command="{Binding SelectGroupBetPlayerCommand}" />
                   </Grid.GestureRecognizers>
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -98,64 +103,12 @@
                   </Grid.RowDefinitions>
 
                   <!--Columna 0-->
-                  <ffimageloading:CachedImage
-                    Grid.Column="0"
-                                                    Aspect="AspectFit"
-                                                    Source="{Binding LogoFullPath}" 
-                                                    CacheDuration= "50"
-                                                    Margin="5"
-                                                    RetryCount= "3"
-                                                    RetryDelay= "600"
-                                                    HeightRequest="90"
-                                                    WidthRequest="90">
-                  </ffimageloading:CachedImage>
-
-                  <!--Columna 1-->
                   <StackLayout Grid.Row="0"
-                           Grid.Column="1">
-                    <Label 
-                           FontSize="Medium"
-                           FontAttributes="Bold"
-                           TextColor="Black"
-                           HorizontalOptions="Start"
-                           Text="{Binding Name}"></Label>
-                    <StackLayout
-                      Orientation="Horizontal">
-                      <Label
-                        Text="Creado el"
-                        FontSize="Micro">
-                      </Label>
-                      <Label
-                        Text="{Binding CreationDate, StringFormat='{0:dd/MM/yyyy}'}"
-                        FontSize="Micro">
-                      </Label>
-                    </StackLayout>
-                    <StackLayout
-                      Orientation="Horizontal">
-                      <Label
-                        Text="por"
-                        FontSize="Micro">
-                      </Label>
-                      <Label
-                        Text="{Binding Admin.FullName}"
-                        FontSize="Micro">
-                      </Label>
-                    </StackLayout>
-                    <StackLayout>
-                      <Label
-                        Text="{Binding Tournament.Name}"
-                        FontSize="Micro">
-                      </Label>
-                    </StackLayout>
-                  </StackLayout>
-
-                  <!--Columna 2-->
-                  <StackLayout Grid.Row="0"
-                           Grid.Column="2">
+                           Grid.Column="0">
                     <RelativeLayout>
                       <ffimageloading:CachedImage x:Name="Picture" 
                                               Aspect="AspectFit"
-                                              Source="{Binding Admin.PictureFullPath}" 
+                                              Source="{Binding Player.PictureFullPath}" 
                                               CacheDuration= "50"
                                               Margin="5"
                                               RetryCount= "3"
@@ -171,7 +124,7 @@
                                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=Y,Factor=1,Constant=40}"
                                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Picture,Property=X,Factor=1,Constant=30}"
                                                 Aspect="AspectFit"
-                                                Source="{Binding Admin.Team.LogoFullPath}" 
+                                                Source="{Binding Player.Team.LogoFullPath}" 
                                                 CacheDuration= "50"
                                                 WidthRequest="30"
                                                 HeightRequest="30"
@@ -181,6 +134,34 @@
                     </RelativeLayout>
                   </StackLayout>
 
+
+
+
+                  <!--Columna 1-->
+                  <StackLayout Grid.Row="0"
+                           Grid.Column="1"
+                               VerticalOptions="Center">
+                    <Label 
+                           FontSize="Small"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Center"
+                           Text="{Binding Player.FullName}"></Label>
+                  </StackLayout>
+
+                  <!--Columna 2-->
+                  <StackLayout Grid.Row="0"
+                           Grid.Column="2"
+                               VerticalOptions="Center">
+                    <Label 
+                           FontSize="Large"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Center"
+                           Text="{Binding Points}"></Label>
+                  </StackLayout>
                   <!--Columna 3-->
                   <Image Grid.Row="0"
                            Grid.Column="3"
@@ -198,6 +179,11 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
-  </StackLayout>
 
+  </StackLayout>
+  
+  
+  
+  
+  
 </ContentPage>

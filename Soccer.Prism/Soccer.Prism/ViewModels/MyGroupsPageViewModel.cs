@@ -99,6 +99,7 @@ namespace Soccer.Prism.ViewModels
 
             _navigationService = navigationService;
             _apiService = apiService;
+            _instance = this;
             LoadPlayer();
             PlayerGroupBets = new ObservableCollection<PlayerGroupBetItemViewModel>();
             GroupBets = new ObservableCollection<GroupBetItemViewModel>();
@@ -168,6 +169,14 @@ namespace Soccer.Prism.ViewModels
         {
             LoadPlayer();
         }
+
+        public async void ReloadGroups()
+        {
+           LoadPlayer();
+        }
+
+
+
 
         //public void RefreshList()
         //{

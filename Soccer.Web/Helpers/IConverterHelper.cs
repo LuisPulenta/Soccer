@@ -61,5 +61,8 @@ namespace Soccer.Web.Helpers
         MatchResponse ToMatchResponse(MatchEntity matchEntity);
 
         PlayerResponse ToPlayerResponse(Player player);
+
+        Task<GroupBetResponse> ToGroupBetResponse(GroupBet groupBet);
+
     }
 }

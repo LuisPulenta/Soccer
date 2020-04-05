@@ -62,9 +62,24 @@ namespace Soccer.Web.Controllers.API
                 LogoPath = picturePath,
             };
 
+            var groupBetPlayer = new GroupBetPlayer
+            {
+
+                GroupBet = groupBet,
+                Player= await _context.Players
+                .Include(u => u.User)
+                .FirstOrDefaultAsync(p => p.User.Email == request.PlayerEmail),
+                IsAccepted=true,
+                IsBlocked=false,
+                Points=0
+            };
+
+
             _context.GroupBets.Add(groupBet);
+            _context.GroupBetPlayers.Add(groupBetPlayer);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(_converterHelper.ToGroupBetResponse(groupBet));
+            //return NoContent();
         }
 
         [HttpPost]

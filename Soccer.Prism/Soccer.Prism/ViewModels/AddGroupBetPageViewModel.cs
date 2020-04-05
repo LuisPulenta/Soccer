@@ -30,6 +30,7 @@ namespace Soccer.Prism.ViewModels
         private bool _isEnabled;
         private DelegateCommand _saveCommand;
         private DelegateCommand _changeImageCommand;
+        private GroupBetResponse _groupBetResponse;
 
         public AddGroupBetPageViewModel(
             INavigationService navigationService,
@@ -127,8 +128,7 @@ namespace Soccer.Prism.ViewModels
             var token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
 
             Response response = await _apiService.AddGroupBetAsync(url, "api", "/GroupBets", groupBetRequest, "bearer", token.Token);
-            IsRunning = false;
-            IsEnabled = true;
+            
 
             if (!response.IsSuccess)
             {
@@ -139,11 +139,16 @@ namespace Soccer.Prism.ViewModels
                 return;
             }
 
+            MyGroupsPageViewModel.GetInstance().ReloadGroups();
+
             await App.Current.MainPage.DisplayAlert(
                 "Ok",
                 response.Message,
                 "Aceptar");
             await _navigationService.GoBackAsync();
+
+
+
         }
 
 
