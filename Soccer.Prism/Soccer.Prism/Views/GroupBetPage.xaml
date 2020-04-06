@@ -35,6 +35,7 @@
                TextColor="Blue"
                FontSize="Small"
                FontAttributes="Bold"></Label>
+      
       <RelativeLayout>
         <ffimageloading:CachedImage x:Name="Picture" 
                                               Aspect="AspectFit"

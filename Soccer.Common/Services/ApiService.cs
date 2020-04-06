@@ -194,6 +194,55 @@ namespace Soccer.Common.Services
                 };
             }
         }
+
+        public async Task<Response> GetGroupBetPlayerByIds(
+            string urlBase,
+            string servicePrefix,
+            string controller,
+            string tokenType,
+            string accessToken,
+            GroupBetPlayerRequest2 groupBetRequestest)
+        {
+            try
+            {
+                string requestString = JsonConvert.SerializeObject(groupBetRequestest);
+                StringContent content = new StringContent(requestString, Encoding.UTF8, "application/json");
+                HttpClient client = new HttpClient
+                {
+                    BaseAddress = new Uri(urlBase)
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(tokenType, accessToken);
+                string url = $"{servicePrefix}{controller}";
+                HttpResponseMessage response = await client.PostAsync(url, content);
+                string result = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = result,
+                    };
+                }
+
+                GroupBetPlayerResponse groupBetPlayerResponse = JsonConvert.DeserializeObject<GroupBetPlayerResponse>(result);
+                return new Response
+                {
+                    IsSuccess = true,
+                    Result = groupBetPlayerResponse
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
+
         public async Task<Response> RegisterUserAsync(string urlBase, string servicePrefix, string controller, UserRequest userRequest)
         {
             try
@@ -560,6 +609,47 @@ namespace Soccer.Common.Services
             }
         }
 
+        public async Task<Response> DeleteAsync(
+           string urlBase,
+           string servicePrefix,
+           string controller,
+           int id,
+           string tokenType,
+           string accessToken)
+        {
+            try
+            {
+                var client = new HttpClient
+                {
+                    BaseAddress = new Uri(urlBase)
+                };
 
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(tokenType, accessToken);
+                var url = $"{servicePrefix}{controller}/{id}";
+                var response = await client.DeleteAsync(url);
+                var answer = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = answer,
+                    };
+                }
+
+                return new Response
+                {
+                    IsSuccess = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = ex.Message,
+                };
+            }
+        }
     }
 }

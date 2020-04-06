@@ -22,6 +22,8 @@ namespace Soccer.Common.Services
 
         Task<Response> GetUserByEmail(string urlBase, string servicePrefix, string controller, string tokenType, string accessToken, EmailRequest request);
 
+        Task<Response> GetGroupBetPlayerByIds(string urlBase, string servicePrefix, string controller, string tokenType, string accessToken, GroupBetPlayerRequest2 groupBetRequest);
+
         Task<Response> RegisterUserAsync(string urlBase, string servicePrefix, string controller, UserRequest userRequest);
 
         Task<Response> RecoverPasswordAsync(string urlBase, string servicePrefix, string controller, EmailRequest emailRequest);
@@ -42,7 +44,15 @@ namespace Soccer.Common.Services
            string tokenType,
            string accessToken);
 
-        Task<Response> GetPredictionsForUserAsync(string urlBase, string servicePrefix, string controller, PredictionsForUserRequest predictionsForUserRequest, string tokenType, string accessToken);
+        Task<Response> DeleteAsync(
+            string urlBase,
+            string servicePrefix,
+            string controller,
+            int id,
+            string tokenType,
+            string accessToken);
+
+         Task<Response> GetPredictionsForUserAsync(string urlBase, string servicePrefix, string controller, PredictionsForUserRequest predictionsForUserRequest, string tokenType, string accessToken);
 
         Task<Response> MakePredictionAsync(string urlBase, string servicePrefix, string controller, PredictionRequest predictionRequest, string tokenType, string accessToken);
     }

@@ -23,6 +23,8 @@ namespace Soccer.Prism.ViewModels
         private DelegateCommand _invitarCommand;
         private DelegateCommand _borrarGrupoCommand;
         private DelegateCommand _salirGrupoCommand;
+        private bool _isRunning;
+        private bool _isEnabled;
 
         public DelegateCommand InvitarCommand => _invitarCommand ?? (_invitarCommand = new DelegateCommand(InvitarAsync));
         public DelegateCommand BorrarGrupoCommand => _borrarGrupoCommand ?? (_borrarGrupoCommand = new DelegateCommand(BorrarGrupoAsync));
@@ -58,6 +60,19 @@ namespace Soccer.Prism.ViewModels
         {
             get => _isEnabledAdmin;
             set => SetProperty(ref _isEnabledAdmin, value);
+        }
+
+        public bool IsRunning
+        {
+            get => _isRunning;
+            set => SetProperty(ref _isRunning, value);
+        }
+
+
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
         }
 
         public bool IsEnabledPlayer
@@ -109,7 +124,59 @@ namespace Soccer.Prism.ViewModels
 
         private async void SalirGrupoAsync()
         {
+                DeleteAsync();
+        }
 
+        private async void DeleteAsync()
+        {
+            var answer = await App.Current.MainPage.DisplayAlert(
+                "Confirmar",
+                "¿Está seguro de salir de este grupo?",
+                "Si",
+                "No");
+
+            if (!answer)
+            {
+                return;
+            }
+
+            IsRunning = true;
+            IsEnabled = false;
+
+
+            var url = App.Current.Resources["UrlAPI"].ToString();
+            var token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
+
+            var groupBetRequest = new GroupBetPlayerRequest2
+            {
+                GroupBetId = GroupBet.Id,
+                PlayerId = Player.Id
+            };
+
+
+            Response response2 = await _apiService.GetGroupBetPlayerByIds(
+                url,
+                "api",
+                "/GroupBetPlayers/GetGroupBetPlayerByIds",
+                "bearer",
+                token.Token, groupBetRequest);
+
+            GroupBetPlayerResponse groupBetPlayerResponse = (GroupBetPlayerResponse)response2.Result;
+            
+
+            var response = await _apiService.DeleteAsync(
+                url,
+                "api",
+                "/GroupBetPlayers",
+                groupBetPlayerResponse.Id, 
+                "bearer",
+                token.Token);
+
+            MyGroupsPageViewModel.GetInstance().ReloadGroups();
+
+            IsRunning = false;
+            IsEnabled = true;
+            await _navigationService.GoBackAsync();
         }
     }
 }

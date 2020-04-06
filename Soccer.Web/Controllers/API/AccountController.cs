@@ -244,12 +244,23 @@ namespace Soccer.Web.Controllers.API
                 return BadRequest();
             }
 
+
+
+
             User userEntity = await _userHelper.GetUserAsync(request.Email);
             if (userEntity == null)
             {
                 return NotFound("Este Usuario no existe.");
             }
-            return Ok(_converterHelper.ToPlayerResponse(_converterHelper.ToPlayer(userEntity)));
+
+            var player = _dataContext.Players
+                .FirstOrDefault(o => o.User.Id == userEntity.Id);
+
+
+
+            //return Ok(_converterHelper.ToPlayerResponse(_converterHelper.ToPlayer(userEntity)));
+
+            return Ok(_converterHelper.ToPlayerResponse(player));
         }
 
 

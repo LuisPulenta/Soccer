@@ -133,6 +133,66 @@ namespace Soccer.Web.Controllers.API
             return Ok(predictionResponses.OrderBy(pr => pr.Id).ThenBy(pr => pr.Match.Date));
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteGroupBetPlayer([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.BadRequest(ModelState);
+            }
 
+            var groupBetPlayer = await _context.GroupBetPlayers
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (groupBetPlayer == null)
+            {
+                return this.NotFound();
+            }
+
+            _context.GroupBetPlayers.Remove(groupBetPlayer);
+            await _context.SaveChangesAsync();
+            return Ok("J");
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost]
+        [Route("GetGroupBetPlayerByIds")]
+        public async Task<IActionResult> GetGroupBetPlayerByIds([FromBody] GroupBetPlayerRequest2 groupBetPlayerRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var groupBetPlayer = _context.GroupBetPlayers
+                .FirstOrDefault(o => o.GroupBet.Id == groupBetPlayerRequest.GroupBetId && o.Player.Id== groupBetPlayerRequest.PlayerId);
+
+
+            var groupBet = await _context.GroupBets
+                .Include(p => p.Tournament)
+                .Include(p=>p.Admin)
+                .ThenInclude(p => p.User)
+                .ThenInclude(p => p.FavoriteTeam)
+                .ThenInclude(p => p.League)
+                .FirstOrDefaultAsync(u => u.Id == groupBetPlayerRequest.GroupBetId);
+            var player = await _context.Players
+                .Include(p => p.User)
+                .ThenInclude(p => p.FavoriteTeam)
+                .ThenInclude(p => p.League)
+                .FirstOrDefaultAsync(u => u.Id == groupBetPlayerRequest.PlayerId);
+
+            var groupBetPlayer1 = new GroupBetPlayer
+            {
+                Id = groupBetPlayer.Id,
+                GroupBet = groupBet,
+                Player = player,
+                IsAccepted = groupBetPlayer.IsAccepted,
+                IsBlocked = groupBetPlayer.IsBlocked,
+                Points = groupBetPlayer.Points
+            };
+
+            var groupBetPlayerResponse = _converterHelper.ToGroupBetPlayerResponse(groupBetPlayer1);
+
+            return Ok(groupBetPlayerResponse.Result);
+        }
     }
 }

@@ -64,5 +64,7 @@ namespace Soccer.Web.Helpers
 
         Task<GroupBetResponse> ToGroupBetResponse(GroupBet groupBet);
 
+        Task<GroupBetPlayerResponse> ToGroupBetPlayerResponse(GroupBetPlayer groupBetPlayer);
+
     }
 }
