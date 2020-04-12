@@ -25,6 +25,9 @@ namespace Soccer.Web.Data
         public DbSet<Manager> Managers { get; set; }
         public DbSet<GroupBet> GroupBets { get; set; }
         public DbSet<GroupBetPlayer> GroupBetPlayers { get; set; }
+        public DbSet<PlayerGroupBetRequestEntity> PlayerGroupBetRequests { get; set; }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

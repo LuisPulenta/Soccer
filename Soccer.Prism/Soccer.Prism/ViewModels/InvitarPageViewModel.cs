@@ -18,6 +18,8 @@ namespace Soccer.Prism.ViewModels
         private bool _isEnabled;
         private DelegateCommand _recoverCommand;
         private GroupBetResponse _groupBet;
+        private PlayerResponse _player;
+        private TokenResponse _token;
 
 
         public InvitarPageViewModel(INavigationService navigationService, IApiService apiService, IRegexHelper regexHelper)
@@ -26,6 +28,8 @@ namespace Soccer.Prism.ViewModels
             _navigationService = navigationService;
             _apiService = apiService;
             _regexHelper = regexHelper;
+            Player = JsonConvert.DeserializeObject<PlayerResponse>(Settings.Player);
+            Token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
             GroupBet = JsonConvert.DeserializeObject<GroupBetResponse>(Settings.GroupBet);
             Title = $"Invitar al Grupo {GroupBet.Name}";
             IsEnabled = true;
@@ -47,6 +51,18 @@ namespace Soccer.Prism.ViewModels
             set => SetProperty(ref _groupBet, value);
         }
 
+        public PlayerResponse Player
+        {
+            get => _player;
+            set => SetProperty(ref _player, value);
+        }
+
+        public TokenResponse Token
+        {
+            get => _token;
+            set => SetProperty(ref _token, value);
+        }
+
         public bool IsEnabled
         {
             get => _isEnabled;
@@ -64,13 +80,15 @@ namespace Soccer.Prism.ViewModels
             IsRunning = true;
             IsEnabled = false;
 
-            EmailRequest request = new EmailRequest
+            AddUserGroupBetRequest request = new AddUserGroupBetRequest
             {
-                Email = Email,
+                PlayerId = Player.Id,
+                GroupBetId = GroupBet.Id,
+                Email = Email
             };
 
             string url = App.Current.Resources["UrlAPI"].ToString();
-            Response response = await _apiService.RecoverPasswordAsync(url, "api", "/GroupBets/Invitar", request);
+            Response response = await _apiService.InviteAsync(url, "api", "/GroupBets/Invitar", request,"bearer",Token.Token);
             
             
             IsRunning = false;

@@ -453,6 +453,84 @@ namespace Soccer.Web.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> ConfirmUserGroup(int requestId, string token)
+        {
+            if (requestId == 0 || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
+
+            PlayerGroupBetRequestEntity playerGroupBetRequest = await _context.PlayerGroupBetRequests
+                .Include(ugr => ugr.ProposalPlayer)
+                .ThenInclude(us=>us.User)
+                .Include(ugr => ugr.RequiredPlayer)
+                .ThenInclude(us => us.User)
+                .FirstOrDefaultAsync(ugr => ugr.Id == requestId &&
+                                            ugr.Token == new Guid(token));
+            if (playerGroupBetRequest == null)
+            {
+                return NotFound();
+            }
+
+            //await AddGroupBetPlayerAsync(playerGroupBetRequest.ProposalPlayer);
+            
+
+            //playerGroupBetRequest.Status = UserGroupStatus.Accepted;
+            //_context.UserGroupRequests.Update(playerGroupBetRequest);
+            //await _context.SaveChangesAsync();
+            return View();
+        }
+
+        //private async Task AddGroupBetPlayerAsync(Player proposalPlayer)
+        //{
+        //    UserGroupEntity userGroup = await _context.UserGroups
+        //        .Include(ug => ug.Users)
+        //        .ThenInclude(u => u.User)
+        //        .FirstOrDefaultAsync(ug => ug.User.Id == proposalUser.Id);
+        //    if (userGroup != null)
+        //    {
+        //        UserGroupDetailEntity user = userGroup.Users.FirstOrDefault(u => u.User.Id == requiredUser.Id);
+        //        if (user == null)
+        //        {
+        //            userGroup.Users.Add(new UserGroupDetailEntity { User = requiredUser });
+        //        }
+
+        //        _context.UserGroups.Update(userGroup);
+        //    }
+        //    else
+        //    {
+        //        _context.UserGroups.Add(new UserGroupEntity
+        //        {
+        //            User = proposalUser,
+        //            Users = new List<UserGroupDetailEntity>
+        //    {
+        //        new UserGroupDetailEntity { User = requiredUser }
+        //    }
+        //        });
+        //    }
+        //}
+
+        //public async Task<IActionResult> RejectUserGroup(int requestId, string token)
+        //{
+        //    if (requestId == 0 || string.IsNullOrEmpty(token))
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    UserGroupRequestEntity userGroupRequest = await _context
+        //        .UserGroupRequests.FirstOrDefaultAsync(ugr => ugr.Id == requestId &&
+        //                                                ugr.Token == new Guid(token));
+        //    if (userGroupRequest == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    userGroupRequest.Status = UserGroupStatus.Rejected;
+        //    _context.UserGroupRequests.Update(userGroupRequest);
+        //    await _context.SaveChangesAsync();
+        //    return View();
+        //}
+
 
     }
 }

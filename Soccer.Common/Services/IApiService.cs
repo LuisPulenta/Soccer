@@ -55,5 +55,7 @@ namespace Soccer.Common.Services
          Task<Response> GetPredictionsForUserAsync(string urlBase, string servicePrefix, string controller, PredictionsForUserRequest predictionsForUserRequest, string tokenType, string accessToken);
 
         Task<Response> MakePredictionAsync(string urlBase, string servicePrefix, string controller, PredictionRequest predictionRequest, string tokenType, string accessToken);
+
+        Task<Response> InviteAsync(string urlBase, string servicePrefix, string controller, AddUserGroupBetRequest addUserGroupBetRequest, string tokenType, string accessToken);
     }
 }

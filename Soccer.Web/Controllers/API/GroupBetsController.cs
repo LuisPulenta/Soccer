@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Soccer.Common.Helpers;
+using Soccer.Common.Enum;
 using Soccer.Common.Models;
 using Soccer.Web.Data;
 using Soccer.Web.Data.Entities;
@@ -13,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace Soccer.Web.Controllers.API
 {
@@ -25,13 +25,15 @@ namespace Soccer.Web.Controllers.API
         private readonly IConverterHelper _converterHelper;
         private readonly IUserHelper _userHelper;
         private readonly IImageHelper _imageHelper;
+        private readonly IMailHelper _mailHelper;
 
-        public GroupBetsController(DataContext context, IConverterHelper converterHelper, IUserHelper userHelper, IImageHelper imageHelper)
+        public GroupBetsController(DataContext context, IConverterHelper converterHelper, IUserHelper userHelper, IImageHelper imageHelper, IMailHelper mailHelper)
         {
             _context = context;
             _converterHelper = converterHelper;
             _userHelper = userHelper;
             _imageHelper = imageHelper;
+            _mailHelper = mailHelper;
         }
 
 
@@ -164,5 +166,98 @@ namespace Soccer.Web.Controllers.API
             await _context.SaveChangesAsync();
             return Ok("Grupo de apuestas borrado");
         }
+
+
+        [HttpPost]
+        [Route("Invitar")]
+        public async Task<IActionResult> PostUserGroupBet([FromBody] AddUserGroupBetRequest request)
+        {
+            if (!ModelState.IsValid)
+            {                return BadRequest(ModelState);
+            }
+
+            Player proposalPlayer = await _context.Players
+                .Include(u=>u.User)
+                .FirstOrDefaultAsync(p => p.Id == request.PlayerId);
+
+            if (proposalPlayer.User == null)
+            {
+                return BadRequest("Este Usuario no existe.");
+            }
+
+            Player requiredPlayer2 = _converterHelper.ToPlayer(await _userHelper.GetUserAsync(request.Email));
+
+            Player requiredPlayer = await _context.Players
+                .Include(u => u.User)
+                .FirstOrDefaultAsync(p => p.User.Id == requiredPlayer2.User.Id);
+
+            GroupBet groupBet = await _context.GroupBets
+                .Include(u => u.GroupBetPlayers)
+                .FirstOrDefaultAsync(p => p.Id == request.GroupBetId);
+
+
+            if (requiredPlayer.User == null)
+            {
+                return BadRequest("Este Usuario no existe.");
+            }
+
+
+                GroupBetPlayer groupBetPlayer = await _context.GroupBetPlayers
+                .Include(ug => ug.Player)
+                .ThenInclude(u => u.User)
+                .FirstOrDefaultAsync(ug => ug.Player.Id == requiredPlayer.Id && ug.GroupBet.Id == request.GroupBetId);
+            if (groupBetPlayer != null)
+            {
+                {
+                    return BadRequest("Este Usuario ya pertenece al Grupo.");
+                }
+            }
+
+            PlayerGroupBetRequestEntity playerGroupBetRequest = new PlayerGroupBetRequestEntity
+            {
+                ProposalPlayer = proposalPlayer,
+                RequiredPlayer = requiredPlayer,
+                GroupBet= groupBet,
+                Status = PlayerGroupBetStatus.Pending,
+                Token = Guid.NewGuid()
+            };
+
+            try
+            {
+                _context.PlayerGroupBetRequests.Add(playerGroupBetRequest);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            string linkConfirm = Url.Action("ConfirmUserGroup", "Account", new
+            {
+                requestId = playerGroupBetRequest.Id,
+                token = playerGroupBetRequest.Token
+            }, protocol: HttpContext.Request.Scheme);
+
+            string linkReject = Url.Action("RejectUserGroup", "Account", new
+            {
+                requestId = playerGroupBetRequest.Id,
+                token = playerGroupBetRequest.Token
+            }, protocol: HttpContext.Request.Scheme);
+
+            Response response = _mailHelper.SendMail(request.Email, "Solicitud de unirse a un Grupo", $"<h1>Solicitud de unirse a un Grupo</h1>" +
+                $"El Usuario: {proposalPlayer.User.FullName} ({proposalPlayer.User.Email}), ha solicitado que sea miembro de su grupo de usuarios {groupBet.Name} en la aplicación FULBO PULENTA. " +
+                $"</hr></br></br>Si desea aceptar, haga clic aquí: <a href = \"{linkConfirm}\">Confirmar</a>" +
+                $"</hr></br></br> . Si desea rechazar, haga clic aquí: <a href = \"{linkReject}\">Rechazar</a>");
+
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+
+            return Ok("Se ha enviado un correo electrónico al usuario con su solicitud, esperamos a que responda pronto!");
+        }
+
+
+
     }
 }
