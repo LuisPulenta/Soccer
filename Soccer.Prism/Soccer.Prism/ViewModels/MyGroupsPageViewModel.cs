@@ -19,7 +19,7 @@ namespace Soccer.Prism.ViewModels
         private PlayerGroupBetResponse _playerGroupBet;
         private PlayerResponse _player;
         private PlayerResponse _playerLogueado;
-
+        private int _cantPlayers;
         private bool _isEnabled;
         private bool _isRefreshing;
         private bool _isRunning;
@@ -33,6 +33,12 @@ namespace Soccer.Prism.ViewModels
         private DelegateCommand _searchCommand;
         private DelegateCommand _refreshCommand;
 
+
+        public int CantPlayers
+        {
+            get => _cantPlayers;
+            set => SetProperty(ref _cantPlayers, value);
+        }
 
         public PlayerResponse PlayerLogueado
         {
@@ -151,6 +157,7 @@ namespace Soccer.Prism.ViewModels
                 Name = p.Name,
                 Tournament = p.Tournament,
                 GroupBetPlayers = p.GroupBetPlayers,
+                CantPlayers=p.GroupBetPlayers.Count()
             }).ToList());
 
 

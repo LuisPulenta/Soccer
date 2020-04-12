@@ -140,6 +140,18 @@
                         Text="{Binding Admin.FullName}"
                         FontSize="Micro">
                       </Label>
+                      
+                    </StackLayout>
+                    <StackLayout
+                      Orientation="Horizontal">
+                      <Label
+                        Text="Cantidad de Jugadores: "
+                        FontSize="Micro">
+                      </Label>
+                      <Label
+                        Text="{Binding CantPlayers}"
+                        FontSize="Micro">
+                      </Label>
                     </StackLayout>
                     <StackLayout>
                       <Label

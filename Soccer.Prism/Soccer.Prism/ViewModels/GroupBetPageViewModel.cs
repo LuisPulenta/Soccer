@@ -119,7 +119,59 @@ namespace Soccer.Prism.ViewModels
 
         private async void BorrarGrupoAsync()
         {
+            var answer = await App.Current.MainPage.DisplayAlert(
+                "Confirmar",
+                "¿Está seguro de borrar este grupo?",
+                "Si",
+                "No");
 
+            if (!answer)
+            {
+                return;
+            }
+
+            IsRunning = true;
+            IsEnabled = false;
+
+
+            var url = App.Current.Resources["UrlAPI"].ToString();
+            var token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
+
+
+            foreach (GroupBetPlayerResponse groupBetPlayer in GroupBet.GroupBetPlayers)
+            {
+                var responsex = await _apiService.DeleteAsync(
+                url,
+                "api",
+                "/GroupBetPlayers",
+                groupBetPlayer.Id,
+                "bearer",
+                token.Token);
+            }
+            
+
+            var response = await _apiService.DeleteAsync(
+               url,
+               "api",
+               "/GroupBets",
+               GroupBet.Id,
+               "bearer",
+               token.Token);
+
+            if (!response.IsSuccess)
+            {
+                IsRunning = false;
+                IsEnabled = true;
+                await App.Current.MainPage.DisplayAlert(
+                    "Error",
+                    "No se puedo borrar", //response.Message,
+                    "Accept");
+                return;
+            }
+            MyGroupsPageViewModel.GetInstance().ReloadGroups();
+            IsRunning = false;
+            IsEnabled = true;
+            await _navigationService.GoBackAsync();
         }
 
         private async void SalirGrupoAsync()

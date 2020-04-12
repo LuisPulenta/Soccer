@@ -142,6 +142,27 @@ namespace Soccer.Web.Controllers.API
             return Ok(response);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteGroupBet([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.BadRequest(ModelState);
+            }
 
+            var groupBet = await _context.GroupBets
+                .Include(p => p.GroupBetPlayers)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (groupBet == null)
+            {
+                return this.NotFound();
+            }
+
+            
+
+            _context.GroupBets.Remove(groupBet);
+            await _context.SaveChangesAsync();
+            return Ok("Grupo de apuestas borrado");
+        }
     }
 }
