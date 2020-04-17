@@ -29,6 +29,7 @@ namespace Soccer.Prism.ViewModels
         private LeagueResponse _league;
         private ObservableCollection<LeagueResponse> _leagues;
         private PlayerResponse _player;
+        private DateTime _fechaNac;
         private Sex _sex;
         private int _sexId;
         private ObservableCollection<Sex> _sexs;
@@ -46,6 +47,7 @@ namespace Soccer.Prism.ViewModels
             _apiService = apiService;
             _filesHelper = filesHelper;
             Player = JsonConvert.DeserializeObject<PlayerResponse>(Settings.Player);
+            FechaNac = Player.BornDate;
             Title = "Modificar Usuario";
             Sexs = new ObservableCollection<Sex>(CombosHelper.GetSexs());
             Sex = Sexs.FirstOrDefault(pt => pt.Name == Player.Sex);
@@ -80,6 +82,13 @@ namespace Soccer.Prism.ViewModels
             get => _team;
             set => SetProperty(ref _team, value);
         }
+
+        public DateTime FechaNac
+        {
+            get => _fechaNac;
+            set => SetProperty(ref _fechaNac, value);
+        }
+
         public Sex Sex
         {
             get => _sex;
@@ -169,6 +178,7 @@ namespace Soccer.Prism.ViewModels
             UserRequest userRequest = new UserRequest
             {
                 Address = Player.Address,
+                BornDate= FechaNac,                
                 Document = Player.Document,
                 Email = Player.Email,
                 FirstName = Player.FirstName,
@@ -179,7 +189,8 @@ namespace Soccer.Prism.ViewModels
                 PictureArray = imageArray,
                 Sex = Player.Sex,
                 NickName = Player.NickName,
-                TeamId = Player.Team.Id
+                TeamId = Player.Team.Id,
+                LeagueId=Player.Team.LeagueId
             };
 
             TokenResponse token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
@@ -336,8 +347,7 @@ namespace Soccer.Prism.ViewModels
         private async void LoadLeaguesAsync()
         {
             string url = App.Current.Resources["UrlAPI"].ToString();
-            bool connection = await _apiService.CheckConnectionAsync(url);
-            if (!connection)
+            if (!_apiService.CheckConnection())
             {
                 IsRunning = false;
                 IsEnabled = true;

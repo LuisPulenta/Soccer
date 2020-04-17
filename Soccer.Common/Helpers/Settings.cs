@@ -6,7 +6,6 @@ namespace Soccer.Common.Helpers
     public static class Settings
     {
         private const string _groupBet = "groupBet";
-        private const string _tournament = "tournament";
         private const string _player = "player";
         private const string _token = "token";
         private const string _isLogin = "isLogin";
@@ -21,11 +20,7 @@ namespace Soccer.Common.Helpers
             set => AppSettings.AddOrUpdateValue(_groupBet, value);
         }
 
-        public static string Tournament
-        {
-            get => AppSettings.GetValueOrDefault(_tournament, _stringDefault);
-            set => AppSettings.AddOrUpdateValue(_tournament, value);
-        }
+
 
         public static string Player
         {

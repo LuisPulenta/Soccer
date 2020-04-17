@@ -29,7 +29,8 @@
           "Microsoft.AspNetCore.Razor.Design": "2.1.2",
           "Microsoft.NETCore.App": "2.1.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.10",
-          "Soccer.Common": "1.0.0"
+          "Soccer.Common": "1.0.0",
+          "Xamarin.Essentials": "1.5.2"
         },
         "runtime": {
           "Soccer.Web.dll": {}
@@ -508,22 +509,6 @@
           "System.Runtime.Handles": "4.3.0"
         }
       },
-      "Xam.Plugin.Connectivity/4.0.0.190-beta": {
-        "runtime": {
-          "lib/netcoreapp2.0/Plugin.Connectivity.Abstractions.dll": {
-            "assemblyVersion": "4.0.0.190",
-            "fileVersion": "4.0.0.190"
-          },
-          "lib/netcoreapp2.0/Plugin.Connectivity.dll": {
-            "assemblyVersion": "4.0.0.190",
-            "fileVersion": "4.0.0.190"
-          }
-        },
-        "compile": {
-          "lib/netcoreapp2.0/Plugin.Connectivity.Abstractions.dll": {},
-          "lib/netcoreapp2.0/Plugin.Connectivity.dll": {}
-        }
-      },
       "Xam.Plugins.Settings/4.1.0-beta": {
         "runtime": {
           "lib/netcoreapp2.0/Plugin.Settings.dll": {
@@ -535,12 +520,26 @@
           "lib/netcoreapp2.0/Plugin.Settings.dll": {}
         }
       },
+      "Xamarin.Essentials/1.5.2": {
+        "dependencies": {
+          "System.Numerics.Vectors": "4.5.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Xamarin.Essentials.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Xamarin.Essentials.dll": {}
+        }
+      },
       "Soccer.Common/1.0.0": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
           "System.ComponentModel.Annotations": "4.7.0",
-          "Xam.Plugin.Connectivity": "4.0.0.190-beta",
-          "Xam.Plugins.Settings": "4.1.0-beta"
+          "Xam.Plugins.Settings": "4.1.0-beta",
+          "Xamarin.Essentials": "1.5.2"
         },
         "runtime": {
           "Soccer.Common.dll": {}
@@ -3914,19 +3913,19 @@
       "path": "system.threading.threadpool/4.3.0",
       "hashPath": "system.threading.threadpool.4.3.0.nupkg.sha512"
     },
-    "Xam.Plugin.Connectivity/4.0.0.190-beta": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-p9PofTKArw6wHg45GpRRE+xDioJGOSAgA+X+E+vUf1CFZmTzeOO3YCmFdP7/W8x6f85Z50zugXGoszEGJx4QSg==",
-      "path": "xam.plugin.connectivity/4.0.0.190-beta",
-      "hashPath": "xam.plugin.connectivity.4.0.0.190-beta.nupkg.sha512"
-    },
     "Xam.Plugins.Settings/4.1.0-beta": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-BpKTyb2kGs8bu0MXThk7GL74df5qToztrDL2jdm6YnkblxVESZEJMbxDqOdVRvfJycujg2cuyqnqjT9DPknU2Q==",
       "path": "xam.plugins.settings/4.1.0-beta",
       "hashPath": "xam.plugins.settings.4.1.0-beta.nupkg.sha512"
+    },
+    "Xamarin.Essentials/1.5.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qHxkrkx5jIC0X/qWhxCPZ3MuuOJm8bfCzAoUtlpOBSE4oV0JhrkTezK0A+IV+k/MeJ3zKc8FexaIXah9rlCTIw==",
+      "path": "xamarin.essentials/1.5.2",
+      "hashPath": "xamarin.essentials.1.5.2.nupkg.sha512"
     },
     "Soccer.Common/1.0.0": {
       "type": "project",

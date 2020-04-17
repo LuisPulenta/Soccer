@@ -105,7 +105,7 @@ namespace Soccer.Prism.ViewModels
 
             await App.Current.MainPage.DisplayAlert(
                 "Ok",
-                response.Message,
+                "La invitación fue enviada",
                 "Aceptar");
             await _navigationService.GoBackAsync();
         }

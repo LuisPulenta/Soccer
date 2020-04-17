@@ -51,9 +51,7 @@ namespace Soccer.Prism.ViewModels
             IsRunning = true;
             string url = App.Current.Resources["UrlAPI"].ToString();
 
-            var connection = await _apiService.CheckConnectionAsync(url);
-
-            if (!connection)
+            if (!_apiService.CheckConnection())
             {
                 IsRunning = false;
                 await App.Current.MainPage.DisplayAlert("Error", "Revise su conexión a Internet.", "Aceptar");
@@ -91,8 +89,7 @@ namespace Soccer.Prism.ViewModels
         private async void LoadLeaguesAsync()
         {
             string url = App.Current.Resources["UrlAPI"].ToString();
-            bool connection = await _apiService.CheckConnectionAsync(url);
-            if (!connection)
+            if (!_apiService.CheckConnection())
             {
                 IsRunning = false;
 

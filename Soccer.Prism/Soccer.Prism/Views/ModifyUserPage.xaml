@@ -100,7 +100,7 @@
             <DatePicker Grid.Row="4"
                         Grid.Column="1"
                         FontSize="Micro"
-                        Date="{Binding Player.BornDate, StringFormat='{0:dd/MM/yyyy}'}" />
+                        Date="{Binding FechaNac, StringFormat='{0:dd/MM/yyyy}'}" />
 
 
 

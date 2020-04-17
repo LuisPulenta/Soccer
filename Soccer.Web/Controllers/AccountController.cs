@@ -15,6 +15,7 @@ using Soccer.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.IO;
+using Soccer.Common.Enum;
 
 namespace Soccer.Web.Controllers
 {
@@ -461,75 +462,86 @@ namespace Soccer.Web.Controllers
             }
 
             PlayerGroupBetRequestEntity playerGroupBetRequest = await _context.PlayerGroupBetRequests
-                .Include(ugr => ugr.ProposalPlayer)
-                .ThenInclude(us=>us.User)
-                .Include(ugr => ugr.RequiredPlayer)
+                .Include(pp => pp.ProposalPlayer)
+                .ThenInclude(u=>u.User)
+                .Include(rp => rp.RequiredPlayer)
                 .ThenInclude(us => us.User)
+                .Include(gb => gb.GroupBet)
+                .ThenInclude(gbp=> gbp.GroupBetPlayers)
                 .FirstOrDefaultAsync(ugr => ugr.Id == requestId &&
-                                            ugr.Token == new Guid(token));
+                                            ugr.Token == new Guid(token) &&
+                                            ugr.Status == PlayerGroupBetStatus.Pending
+                                            );
             if (playerGroupBetRequest == null)
             {
                 return NotFound();
             }
 
-            //await AddGroupBetPlayerAsync(playerGroupBetRequest.ProposalPlayer);
+            await AddGroupBetPlayerAsync(playerGroupBetRequest);
             
 
-            //playerGroupBetRequest.Status = UserGroupStatus.Accepted;
-            //_context.UserGroupRequests.Update(playerGroupBetRequest);
-            //await _context.SaveChangesAsync();
+            playerGroupBetRequest.Status = PlayerGroupBetStatus.Accepted;
+            _context.PlayerGroupBetRequests.Update(playerGroupBetRequest);
+            await _context.SaveChangesAsync();
             return View();
         }
 
-        //private async Task AddGroupBetPlayerAsync(Player proposalPlayer)
-        //{
-        //    UserGroupEntity userGroup = await _context.UserGroups
-        //        .Include(ug => ug.Users)
-        //        .ThenInclude(u => u.User)
-        //        .FirstOrDefaultAsync(ug => ug.User.Id == proposalUser.Id);
-        //    if (userGroup != null)
-        //    {
-        //        UserGroupDetailEntity user = userGroup.Users.FirstOrDefault(u => u.User.Id == requiredUser.Id);
-        //        if (user == null)
-        //        {
-        //            userGroup.Users.Add(new UserGroupDetailEntity { User = requiredUser });
-        //        }
+        private async Task AddGroupBetPlayerAsync(PlayerGroupBetRequestEntity playerGroupBetRequest)
+        {
+            Player player = await _context.Players
+                .Include(u => u.User)
+                .FirstOrDefaultAsync(ug => ug.Id == playerGroupBetRequest.RequiredPlayer.Id);
 
-        //        _context.UserGroups.Update(userGroup);
-        //    }
-        //    else
-        //    {
-        //        _context.UserGroups.Add(new UserGroupEntity
-        //        {
-        //            User = proposalUser,
-        //            Users = new List<UserGroupDetailEntity>
-        //    {
-        //        new UserGroupDetailEntity { User = requiredUser }
-        //    }
-        //        });
-        //    }
-        //}
+            GroupBet groupBet = await _context.GroupBets
+                .Include(ug => ug.GroupBetPlayers)
+                .FirstOrDefaultAsync(ug => ug.Id == playerGroupBetRequest.GroupBet.Id);
 
-        //public async Task<IActionResult> RejectUserGroup(int requestId, string token)
-        //{
-        //    if (requestId == 0 || string.IsNullOrEmpty(token))
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    UserGroupRequestEntity userGroupRequest = await _context
-        //        .UserGroupRequests.FirstOrDefaultAsync(ugr => ugr.Id == requestId &&
-        //                                                ugr.Token == new Guid(token));
-        //    if (userGroupRequest == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    userGroupRequest.Status = UserGroupStatus.Rejected;
-        //    _context.UserGroupRequests.Update(userGroupRequest);
-        //    await _context.SaveChangesAsync();
-        //    return View();
-        //}
+
+            if (player != null && groupBet != null)
+            {
+                GroupBetPlayer groupBetPlayer = new GroupBetPlayer
+                {
+                    GroupBet = groupBet,
+                    Player = player,
+                    IsAccepted = true,
+                    IsBlocked = false,
+                    Points = 0
+                };
+                _context.GroupBetPlayers.Add(groupBetPlayer);
+                _context.SaveChanges();
+            }
+            
+        }
+
+        public async Task<IActionResult> RejectUserGroup(int requestId, string token)
+        {
+            if (requestId == 0 || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
+
+            PlayerGroupBetRequestEntity playerGroupBetRequest = await _context.PlayerGroupBetRequests
+               .Include(pp => pp.ProposalPlayer)
+               .ThenInclude(u => u.User)
+               .Include(rp => rp.RequiredPlayer)
+               .ThenInclude(us => us.User)
+               .Include(gb => gb.GroupBet)
+               .ThenInclude(gbp => gbp.GroupBetPlayers)
+               .FirstOrDefaultAsync(ugr => ugr.Id == requestId &&
+                                           ugr.Token == new Guid(token));
+            if (playerGroupBetRequest == null)
+            {
+                return NotFound();
+            }
+
+            playerGroupBetRequest.Status = PlayerGroupBetStatus.Rejected;
+            _context.PlayerGroupBetRequests.Update(playerGroupBetRequest);
+            await _context.SaveChangesAsync();
+            return View();
+
+        }
 
 
     }

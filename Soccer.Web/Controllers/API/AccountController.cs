@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace Soccer.Web.Controllers.API
 {
     [Route("api/[Controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
         private readonly DataContext _dataContext;
         private readonly IUserHelper _userHelper;
@@ -90,7 +90,10 @@ namespace Soccer.Web.Controllers.API
             }
 
             User userNew = await _userHelper.GetUserAsync(request.Email);
+
             await _userHelper.AddUserToRoleAsync(userNew, UserType.Player.ToString());
+            _dataContext.Players.Add(new Player { User = userNew });
+            await _dataContext.SaveChangesAsync();
 
             string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
             string tokenLink = Url.Action("ConfirmEmail", "Account", new

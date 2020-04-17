@@ -187,6 +187,12 @@ namespace Soccer.Web.Controllers.API
 
             Player requiredPlayer2 = _converterHelper.ToPlayer(await _userHelper.GetUserAsync(request.Email));
 
+
+            if (requiredPlayer2.User == null)
+            {
+                return BadRequest("Este Usuario no existe en la App.");
+            }
+
             Player requiredPlayer = await _context.Players
                 .Include(u => u.User)
                 .FirstOrDefaultAsync(p => p.User.Id == requiredPlayer2.User.Id);
@@ -196,10 +202,7 @@ namespace Soccer.Web.Controllers.API
                 .FirstOrDefaultAsync(p => p.Id == request.GroupBetId);
 
 
-            if (requiredPlayer.User == null)
-            {
-                return BadRequest("Este Usuario no existe.");
-            }
+           
 
 
                 GroupBetPlayer groupBetPlayer = await _context.GroupBetPlayers
@@ -210,6 +213,17 @@ namespace Soccer.Web.Controllers.API
             {
                 {
                     return BadRequest("Este Usuario ya pertenece al Grupo.");
+                }
+            }
+
+            PlayerGroupBetRequestEntity playerGroupBetRequestEntity = await _context.PlayerGroupBetRequests
+                .FirstOrDefaultAsync(ug => ug.RequiredPlayer.Id == requiredPlayer.Id && ug.GroupBet.Id == request.GroupBetId && ug.Status== PlayerGroupBetStatus.Pending);
+            
+            if (playerGroupBetRequestEntity != null)
+
+            {
+                {
+                    return BadRequest("Este Usuario ya tiene una invitación que está pendiente.");
                 }
             }
 

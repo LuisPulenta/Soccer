@@ -20,7 +20,7 @@ namespace Soccer.Prism.ViewModels
             : base(navigationService)
         {
             _apiService = apiService;
-            Title = "Predicciones para...";
+            Title = "Predicciones";
         }
 
         public bool IsRunning
@@ -39,7 +39,7 @@ namespace Soccer.Prism.ViewModels
         {
             base.OnNavigatedTo(parameters);
             _tournament = parameters.GetValue<TournamentResponse>("tournament");
-            Title = $"Predicciones para: {_tournament.Name}";
+            Title = $"Predicciones";
             LoadPredictionsAsync();
         }
 
@@ -47,8 +47,7 @@ namespace Soccer.Prism.ViewModels
         {
             IsRunning = true;
             var url = App.Current.Resources["UrlAPI"].ToString();
-            var connection = await _apiService.CheckConnectionAsync(url);
-            if (!connection)
+            if (!_apiService.CheckConnection())
             {
                 IsRunning = false;
                 await App.Current.MainPage.DisplayAlert(
@@ -89,7 +88,8 @@ namespace Soccer.Prism.ViewModels
                 Points = p.Points,
                 Player = p.Player
             })
-                .Where(p => !p.Match.IsClosed && p.Match.DateLocal > DateTime.Now)
+                //.Where(p => !p.Match.IsClosed && p.Match.DateLocal > DateTime.Now)
+                .Where(p => !p.Match.IsClosed)
                 .OrderBy(p => p.Match.Date)
                 .ToList();
         }

@@ -165,6 +165,7 @@ namespace Soccer.Web.Controllers
 
             var newUser = await _userHelper.GetUserAsync(view.Username);
             await _userHelper.AddUserToRoleAsync(newUser, "Manager");
+            await _dataContext.SaveChangesAsync();
             return newUser;
         }
 
