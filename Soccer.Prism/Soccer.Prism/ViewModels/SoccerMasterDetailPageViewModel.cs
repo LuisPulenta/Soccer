@@ -61,23 +61,23 @@ namespace Soccer.Prism.ViewModels
                 {
                     Icon = "groups",
                     PageName = "MyGroupsPage",
-                    Title = "Mis Grupos",
+                    Title = "Grupos",
                     IsLoginRequired = true
                 },
                 new Menu
                 {
                     Icon = "prediction",
                     PageName = "MyPredictionsPage",
-                    Title = "Mis Predicciones",
+                    Title = "Predicciones",
                     IsLoginRequired = true
                 },
-                new Menu
-                {
-                    Icon = "medal",
-                    PageName = "MyPositionsPage",
-                    Title = "Mis Posiciones",
-                    IsLoginRequired = true
-                },
+                //new Menu
+                //{
+                //    Icon = "medal",
+                //    PageName = "MyPositionsPage",
+                //    Title = "Posiciones",
+                //    IsLoginRequired = true
+                //},
                 new Menu
                 {
                     Icon = "user",

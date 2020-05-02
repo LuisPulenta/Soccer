@@ -17,26 +17,60 @@ namespace Soccer.Prism.ViewModels
         private readonly IApiService _apiService;
         private GroupBetResponse _groupBet;
         private ObservableCollection<GroupBetPlayerItemViewModel> _groupBetPlayers;
+        private ObservableCollection<GroupBetPlayer2ItemViewModel> _positions;
         private bool _isEnabledAdmin;
         private bool _isEnabledPlayer;
+        private List<PositionResponse> _myPositions;
+        private string _search;
         private PlayerResponse _player;
         private DelegateCommand _invitarCommand;
         private DelegateCommand _borrarGrupoCommand;
         private DelegateCommand _salirGrupoCommand;
+        private DelegateCommand _searchCommand;
         private bool _isRunning;
         private bool _isEnabled;
 
         public DelegateCommand InvitarCommand => _invitarCommand ?? (_invitarCommand = new DelegateCommand(InvitarAsync));
         public DelegateCommand BorrarGrupoCommand => _borrarGrupoCommand ?? (_borrarGrupoCommand = new DelegateCommand(BorrarGrupoAsync));
         public DelegateCommand SalirGrupoCommand => _salirGrupoCommand ?? (_salirGrupoCommand = new DelegateCommand(SalirGrupoAsync));
+        public DelegateCommand SearchCommand => _searchCommand ?? (_searchCommand = new DelegateCommand(ShowPositions));
+
+        public List<PlayerResponse> MyPlayers { get; set; }
+
+
+        public string Search
+        {
+            get => _search;
+            set
+            {
+                SetProperty(ref _search, value);
+                ShowPositions();
+            }
+        }
+
+        public ObservableCollection<GroupBetPlayer2ItemViewModel> Positions
+        {
+            get => _positions;
+            set => SetProperty(ref _positions, value);
+        }
 
         public GroupBetPageViewModel(INavigationService navigationService,IApiService apiService ) : base(navigationService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
-            Title = "Grupo de Apuestas:";
+            
             Player = JsonConvert.DeserializeObject<PlayerResponse>(Settings.Player);
+
+            GroupBet = JsonConvert.DeserializeObject<GroupBetResponse>(Settings.GroupBet);
+            Title = $"Grupo: {_groupBet.Name}";
+
+
             LoadGroupBet();
+            LoadPositionsAsync();
+
+
+
+
             if (Player.UserId == GroupBet.Admin.UserId)
             {
                 IsEnabledAdmin = true;
@@ -97,8 +131,7 @@ namespace Soccer.Prism.ViewModels
       
         private void LoadGroupBet()
         {
-            GroupBet = JsonConvert.DeserializeObject<GroupBetResponse>(Settings.GroupBet);
-            Title = $"Grupo: {_groupBet.Name}";
+            
             GroupBetPlayers = new ObservableCollection<GroupBetPlayerItemViewModel>(_groupBet.GroupBetPlayers.Select(p => new GroupBetPlayerItemViewModel(_navigationService, _apiService)
             {
                 Id = p.Id,
@@ -106,10 +139,90 @@ namespace Soccer.Prism.ViewModels
                 IsAccepted = p.IsAccepted,
                 IsBlocked = p.IsBlocked,
                 Player = p.Player,
-                Points = p.Points,
+                Points = p.Player.Predictions.Count()
             }).ToList());
             
         }
+
+        private async void LoadPositionsAsync()
+        {
+            IsRunning = true;
+            string url = App.Current.Resources["UrlAPI"].ToString();
+            if (!_apiService.CheckConnection())
+            {
+                IsRunning = false;
+                await App.Current.MainPage.DisplayAlert(
+                    "Error",
+                    "Revise su conexión a Internet",
+                    "Aceptar");
+                return;
+            }
+
+            TokenResponse token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
+            Response response = await _apiService.GetListAsync<PositionResponse>(url, "api", $"/Predictions/GetPositionsByTournament/{GroupBet.Tournament.Id}/{GroupBet.Id}", "bearer", token.Token);
+            IsRunning = false;
+
+            if (!response.IsSuccess)
+            {
+                await App.Current.MainPage.DisplayAlert(
+                    "Error",
+                    response.Message,
+                    "Aceptar");
+                return;
+            }
+
+            _myPositions = (List<PositionResponse>)response.Result;
+            ShowPositions();
+        }
+
+        private void ShowPositions()
+        {
+            if (string.IsNullOrEmpty(Search))
+            {
+                var myListGroupBetPlayer2ItemViewModel = _myPositions.Select(aa => new GroupBetPlayer2ItemViewModel(_navigationService,_apiService)
+                {
+                    Ranking = aa.Ranking,
+                    Points = aa.Points,
+                    PlayerResponse = aa.PlayerResponse
+                });
+                Positions = new ObservableCollection<GroupBetPlayer2ItemViewModel>(myListGroupBetPlayer2ItemViewModel
+                    .OrderBy(o => o.Ranking));
+            }
+            else
+            {
+                var myListGroupBetPlayer2ItemViewModel = _myPositions.Select(aa => new GroupBetPlayer2ItemViewModel(_navigationService, _apiService)
+                {
+                    Ranking = aa.Ranking,
+                    Points = aa.Points,
+                    PlayerResponse = aa.PlayerResponse
+                });
+                Positions = new ObservableCollection<GroupBetPlayer2ItemViewModel>(myListGroupBetPlayer2ItemViewModel
+                    .OrderBy(o => o.Ranking)
+                    .Where(p => p.PlayerResponse.FirstName.ToUpper().Contains(Search.ToUpper()) ||
+                                            p.PlayerResponse.LastName.ToUpper().Contains(Search.ToUpper())));
+            }
+            
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         private async void InvitarAsync()
         {
@@ -230,5 +343,28 @@ namespace Soccer.Prism.ViewModels
             IsEnabled = true;
             await _navigationService.GoBackAsync();
         }
+
+       
+
+        public void RefreshList()
+        {
+            //var myListControls = MyControls.Select(p => new Control
+            //{
+            //    IDREGISTRO = p.IDREGISTRO,
+            //    Autonumerico = p.Autonumerico,
+            //    ControlesEquivalencia = new ControlesEquivalencia
+            //    {
+            //        CODIGOEQUIVALENCIA = p.ControlesEquivalencia.CODIGOEQUIVALENCIA,
+            //        DECO1 = p.ControlesEquivalencia.DECO1,
+            //        DESCRIPCION = p.ControlesEquivalencia.DESCRIPCION,
+            //        ID = p.ControlesEquivalencia.ID
+            //    }
+
+
+            //}); ;
+            //Controls = new ObservableCollection<Control>(myListControls.OrderBy(p => p.Autonumerico));
+        }
+
+
     }
 }

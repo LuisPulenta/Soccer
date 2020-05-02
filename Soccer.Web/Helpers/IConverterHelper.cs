@@ -48,15 +48,21 @@ namespace Soccer.Web.Helpers
 
         LeagueResponse ToLeagueResponse(LeagueEntity leagueEntity);
 
+        
+
         List<TournamentResponse> ToTournamentResponse(List<TournamentEntity> tournamentEntities);
 
         List<LeagueResponse> ToLeagueResponse(List<LeagueEntity> leagueEntities);
 
         User ToUser(Player player);
 
+        Task<Player> ToPlayer2(User user);
+
         Player ToPlayer(User user);
 
         PredictionResponse ToPredictionResponse(PredictionEntity predictionEntity);
+
+        PredictionResponse3 ToPredictionResponse3(PredictionEntity predictionEntity);
 
         MatchResponse ToMatchResponse(MatchEntity matchEntity);
 

@@ -81,6 +81,9 @@ namespace Soccer.Prism.ViewModels
                 return false;
             }
 
+
+            
+
             if (Match.DateLocal <= DateTime.Now)
             {
                 await App.Current.MainPage.DisplayAlert(

@@ -1,4 +1,5 @@
 ﻿using Soccer.Common.Models;
+using System.Collections.Generic;
 
 namespace Soccer.Common.Models
 {
@@ -6,8 +7,9 @@ namespace Soccer.Common.Models
     {
         public PlayerResponse PlayerResponse { get; set; }
 
-        public int Points { get; set; }
+        public int? Points { get; set; }
 
         public int Ranking { get; set; }
+
     }
 }

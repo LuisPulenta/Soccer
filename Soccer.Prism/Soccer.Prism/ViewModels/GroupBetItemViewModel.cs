@@ -25,7 +25,7 @@ namespace Soccer.Prism.ViewModels
             {
                 { "groupBet", this }
             };
-
+            Settings.Tournament = JsonConvert.SerializeObject(this.Tournament);
             Settings.GroupBet = JsonConvert.SerializeObject(this);
             await _navigationService.NavigateAsync("GroupBetPage", parameters);
         }

@@ -47,7 +47,9 @@
         <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
       </Style>
 
-
+      <Style TargetType="SearchBar">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
+      </Style>
 
       <Style TargetType="Picker">
         <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />

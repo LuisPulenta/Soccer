@@ -66,7 +66,14 @@ namespace Soccer.Prism.ViewModels
                 UserId = new Guid(player.UserId)
             };
 
-            Response response = await _apiService.GetPredictionsForUserAsync(url, "api", "/Predictions/GetPredictionsForUser", request, "bearer", token.Token);
+            Response response = await _apiService.GetPredictionsForUserAsync(
+                url,
+                "api",
+                "/Predictions/GetPredictionsForUser",
+                request,
+                "bearer",
+                token.Token);
+
             IsRunning = false;
 
             if (!response.IsSuccess)
@@ -79,6 +86,7 @@ namespace Soccer.Prism.ViewModels
             }
 
             List<PredictionResponse> list = (List<PredictionResponse>)response.Result;
+            
             Predictions = list.Select(p => new PredictionItemViewModel(_apiService)
             {
                 GoalsLocal = p.GoalsLocal,
@@ -92,6 +100,8 @@ namespace Soccer.Prism.ViewModels
                 .Where(p => !p.Match.IsClosed)
                 .OrderBy(p => p.Match.Date)
                 .ToList();
+
+            
         }
     }
 }

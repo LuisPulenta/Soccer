@@ -58,6 +58,7 @@ namespace Soccer.Prism
 
             containerRegistry.RegisterForNavigation<ClosedPredictionsForTournamentPage, ClosedPredictionsForTournamentPageViewModel>();
             containerRegistry.RegisterForNavigation<PredictionsTabbedPage, PredictionsTabbedPageViewModel>();
+            containerRegistry.RegisterForNavigation<GroupBetPagePlayer, GroupBetPagePlayerViewModel>();
         }
     }
 }

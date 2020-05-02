@@ -428,6 +428,36 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        private DateNameResponse ToDateNameResponse(DateNameEntity dateNameEntity)
+        {
+            if (dateNameEntity == null)
+            {
+                return null;
+            }
+
+            return new DateNameResponse
+            {
+                Id = dateNameEntity.Id,
+                Name = dateNameEntity.Name,
+                Tournament = ToTournamentResponse(dateNameEntity.Tournament)
+            };
+        }
+
+        private GroupResponse ToGroupResponse(GroupEntity groupEntity)
+        {
+            if (groupEntity == null)
+            {
+                return null;
+            }
+
+            return new GroupResponse
+            {
+                Id = groupEntity.Id,
+                Name = groupEntity.Name,
+                Tournament= ToTournamentResponse(groupEntity.Tournament)
+            };
+        }
+
         public User ToUser(Player player)
         {
             return new User
@@ -486,7 +516,32 @@ namespace Soccer.Web.Helpers
                 GoalsVisitor = predictionEntity.GoalsVisitor,
                 Id = predictionEntity.Id,
                 Match = ToMatchResponse(predictionEntity.Match),
-                Points = predictionEntity.Points
+                Points = predictionEntity.Points,
+                Player= ToPlayerResponse(predictionEntity.Player)
+            };
+        }
+
+        public PredictionResponse3 ToPredictionResponse3(PredictionEntity predictionEntity)
+        {
+            return new PredictionResponse3
+            {
+                
+                GoalsLocalPrediction = predictionEntity.GoalsLocal,
+                GoalsVisitorPrediction = predictionEntity.GoalsVisitor,
+                GoalsLocalReal= predictionEntity.Match.GoalsLocal,
+                GoalsVisitorReal = predictionEntity.Match.GoalsVisitor,
+                InitialsLocal= predictionEntity.Match.Local.Initials,
+                InitialsVisitor = predictionEntity.Match.Visitor.Initials,
+                LogoPathLocal= predictionEntity.Match.Local.LogoPath,
+                LogoPathVisitor= predictionEntity.Match.Visitor.LogoPath,
+                NameLocal=predictionEntity.Match.Local.Name,
+                NameVisitor= predictionEntity.Match.Visitor.Name,
+                MatchId= predictionEntity.Match.Id,
+                MatchDate= predictionEntity.Match.DateLocal,
+                PlayerId = predictionEntity.Player.Id,
+                TournamentId= predictionEntity.Match.Group.Tournament.Id,
+                Id = predictionEntity.Id,
+                Points = predictionEntity.Points,
             };
         }
 
@@ -500,7 +555,9 @@ namespace Soccer.Web.Helpers
                 Id = matchEntity.Id,
                 IsClosed = matchEntity.IsClosed,
                 Local = ToTeamResponse(matchEntity.Local),
-                Visitor = ToTeamResponse(matchEntity.Visitor)
+                Visitor = ToTeamResponse(matchEntity.Visitor),
+                //DateName= matchEntity.DateName,
+                //Group= matchEntity.Group
             };
         }
 
@@ -551,7 +608,56 @@ namespace Soccer.Web.Helpers
                 GroupBet = groupBet,
                 IsAccepted = groupBetPlayer.IsAccepted,
                 IsBlocked = groupBetPlayer.IsBlocked,
-                Player = ToPlayerResponse(player),
+                //Player = new PlayerResponse2
+                //{
+                //    FirstName = groupBetPlayer.Player.User.FirstName,
+                //    LastName = groupBetPlayer.Player.User.LastName,
+                //    NickName = groupBetPlayer.Player.User.NickName,
+                //    PicturePath = groupBetPlayer.Player.User.Picture,
+                //    Id = groupBetPlayer.Player.Id,
+                //    Points = groupBetPlayer.Player.User.Points,
+                //    Team = new TeamResponse
+                //    {
+                //        Id = groupBetPlayer.Player.User.FavoriteTeam.Id,
+                //        Initials = groupBetPlayer.Player.User.FavoriteTeam.Initials,
+                //        LeagueId = groupBetPlayer.Player.User.FavoriteTeam.League.Id,
+                //        LeagueName = groupBetPlayer.Player.User.FavoriteTeam.League.Name,
+                //        Name = groupBetPlayer.Player.User.FavoriteTeam.Name,
+                //        LogoPath = groupBetPlayer.Player.User.FavoriteTeam.LogoPath,
+                //    },
+                //    UserId = groupBetPlayer.Player.User.Id,
+                //    Predictions = groupBetPlayer.Player.Predictions.Select(h => new PredictionResponse
+                //    {
+                //        Id = h.Id,
+                //        GoalsLocal = h.GoalsLocal,
+                //        GoalsVisitor = h.GoalsVisitor,
+                //        Points = h.Points,
+                //        Match = new MatchResponse
+                //        {
+                //            Local = new TeamResponse
+                //            {
+                //                Id = h.Match.Local.Id,
+                //                Initials = h.Match.Local.Initials,
+                //                LeagueId = h.Match.Local.League.Id,
+                //                LeagueName = h.Match.Local.League.Name,
+                //                Name = h.Match.Local.Name,
+                //                LogoPath = h.Match.Local.LogoPath,
+                //            },
+                //            Visitor = new TeamResponse
+                //            {
+                //                Id = h.Match.Visitor.Id,
+                //                Initials = h.Match.Visitor.Initials,
+                //                LeagueId = h.Match.Visitor.League.Id,
+                //                LeagueName = h.Match.Visitor.League.Name,
+                //                Name = h.Match.Visitor.Name,
+                //                LogoPath = h.Match.Visitor.LogoPath,
+                //            },
+                //            GoalsLocal = h.GoalsLocal,
+                //            GoalsVisitor = h.GoalsVisitor,
+                //        }
+                //    }).ToList()
+                //},
+            
                 Points = groupBetPlayer.Points
             };
         }

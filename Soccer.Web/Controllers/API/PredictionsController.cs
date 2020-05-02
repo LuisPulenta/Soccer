@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Soccer.Common.Helpers;
 using Soccer.Common.Models;
 using Soccer.Web.Data;
 using Soccer.Web.Data.Entities;
@@ -48,22 +50,22 @@ namespace Soccer.Web.Controllers.API
             Player player = await _context.Players
                 .Include(u => u.User.FavoriteTeam)
                 .ThenInclude(l => l.League)
-                .Include(u => u.Predictions)
+                .Include(pr => pr.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(m => m.Local)
                 .ThenInclude(l => l.League)
-                .Include(u => u.Predictions)
+                .Include(pr => pr.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(m => m.Visitor)
                 .ThenInclude(l => l.League)
-                .Include(u => u.Predictions)
+                .Include(pr => pr.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(p => p.Group)
                 .ThenInclude(p => p.Tournament)
                 .FirstOrDefaultAsync(u => u.User.Id == request.UserId.ToString());
             if (player == null)
             {
-                return BadRequest("Este Usurio no existe.");
+                return BadRequest("Este Usuario no existe.");
             }
 
             // Add precitions already done
@@ -79,7 +81,11 @@ namespace Soccer.Web.Controllers.API
             // Add precitions undone
             List<MatchEntity> matches = await _context.Matches
                 .Include(m => m.Local)
+                .ThenInclude(l=>l.League)
                 .Include(m => m.Visitor)
+                .ThenInclude(l => l.League)
+                .Include(g => g.Group)
+                .Include(d => d.DateName)
                 .Where(m => m.Group.Tournament.Id == request.TournamentId)
                 .ToListAsync();
             foreach (MatchEntity matchEntity in matches)
@@ -96,6 +102,70 @@ namespace Soccer.Web.Controllers.API
 
             return Ok(predictionResponses.OrderBy(pr => pr.Id).ThenBy(pr => pr.Match.Date));
         }
+
+
+
+        [HttpGet]
+        [Route("GetPredictionsForUserInOneTournament/{id}/{id2}")]
+
+        public async Task<IActionResult> GetPredictionsForUserInOneTournament([FromRoute] int id, [FromRoute] int id2)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            TournamentEntity tournament = await _context.Tournaments.FindAsync(id);
+            if (tournament == null)
+            {
+                return BadRequest("Este Torneo no existe.");
+            }
+
+            Player player = await _context.Players
+                .Include(u => u.User.FavoriteTeam)
+                .ThenInclude(l => l.League)
+                .Include(pr => pr.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(m => m.Local)
+                .ThenInclude(l => l.League)
+                .Include(pr => pr.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(m => m.Visitor)
+                .ThenInclude(l => l.League)
+                .Include(pr => pr.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(p => p.Group)
+                .ThenInclude(p => p.Tournament)
+                .FirstOrDefaultAsync(u => u.Id == id2);
+            if (player == null)
+            {
+                return BadRequest("Este Usuario no existe.");
+            }
+
+            // Add precitions already done
+            List<PredictionResponse3> predictionResponses = new List<PredictionResponse3>();
+            foreach (PredictionEntity predictionEntity in player.Predictions)
+            {
+                if (predictionEntity.Match.Group.Tournament.Id == id)
+                {
+                    predictionResponses.Add(_converterHelper.ToPredictionResponse3(predictionEntity));
+                }
+            }
+            return Ok(predictionResponses.OrderBy(pr => pr.Id).ThenBy(pr => pr.MatchDate));
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> PostPrediction([FromBody] PredictionRequest request)
@@ -117,6 +187,7 @@ namespace Soccer.Web.Controllers.API
             }
 
             User userEntity = await _userHelper.GetUserAsync(request.UserId);
+
             if (userEntity == null)
             {
                 return BadRequest("Este usuario no existe.");
@@ -132,12 +203,20 @@ namespace Soccer.Web.Controllers.API
 
             if (predictionEntity == null)
             {
+                //var playerResponse = JsonConvert.DeserializeObject<PlayerResponse>(Settings.Player);
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.UserId.ToString());
+                var player = await _context.Players.FirstOrDefaultAsync(u => u.User.Id == user.Id);
+
+
+
+
                 predictionEntity = new PredictionEntity
                 {
                     GoalsLocal = request.GoalsLocal,
                     GoalsVisitor = request.GoalsVisitor,
                     Match = matchEntity,
-                    Player=_converterHelper.ToPlayer(userEntity)
+                    Player= player
                 };
 
                 _context.Predictions.Add(predictionEntity);
@@ -153,8 +232,9 @@ namespace Soccer.Web.Controllers.API
             return NoContent();
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPositionsByTournament([FromRoute] int id)
+        [HttpGet]
+        [Route("GetPositionsByTournament/{id}/{id2}")]
+        public async Task<IActionResult> GetPositionsByTournament([FromRoute] int id, [FromRoute] int id2)
         {
             if (!ModelState.IsValid)
             {
@@ -162,12 +242,45 @@ namespace Soccer.Web.Controllers.API
             }
 
             TournamentEntity tournament = await _context.Tournaments
-                .Include(t => t.Groups)
-                .ThenInclude(g => g.Matches)
-                .ThenInclude(m => m.Predictions)
+                .Include(g => g.GroupBets)
+                .ThenInclude(gb => gb.GroupBetPlayers)
                 .ThenInclude(p => p.Player)
-                .ThenInclude(us => us.User)
-                .ThenInclude(u => u.FavoriteTeam)
+                .ThenInclude(pr => pr.Predictions)
+                .ThenInclude(m => m.Match)
+                .ThenInclude(l => l.Local)
+                .ThenInclude(le => le.League)
+
+                .Include(g => g.GroupBets)
+                .ThenInclude(gb => gb.GroupBetPlayers)
+                .ThenInclude(p => p.Player)
+                .ThenInclude(pr => pr.Predictions)
+                .ThenInclude(m => m.Match)
+                .ThenInclude(v => v.Visitor)
+                .ThenInclude(l => l.League)
+
+                 .Include(g => g.GroupBets)
+                .ThenInclude(gb => gb.GroupBetPlayers)
+                .ThenInclude(p => p.Player)
+                .ThenInclude(pr => pr.Predictions)
+                .ThenInclude(m => m.Match)
+                .ThenInclude(g => g.Group)
+                .ThenInclude(t => t.Tournament)
+
+                .Include(gb => gb.GroupBets)
+                .ThenInclude(a => a.Admin)
+                .ThenInclude(u => u.User)
+                .ThenInclude(f => f.FavoriteTeam)
+                .ThenInclude(l => l.League)
+
+                .Include(g => g.GroupBets)
+                .ThenInclude(gb => gb.GroupBetPlayers)
+                .ThenInclude(p => p.Player)
+                .ThenInclude(pr => pr.Predictions)
+                .ThenInclude(pr => pr.Player)
+                .ThenInclude(u => u.User)
+                .ThenInclude(f => f.FavoriteTeam)
+                .ThenInclude(l => l.League)
+
                 .FirstOrDefaultAsync(t => t.Id == id);
             if (tournament == null)
             {
@@ -175,29 +288,41 @@ namespace Soccer.Web.Controllers.API
             }
 
             List<PositionResponse> positionResponses = new List<PositionResponse>();
-            foreach (GroupEntity groupEntity in tournament.Groups)
+            foreach (GroupBet groupEntity in tournament.GroupBets)
+
             {
-                foreach (MatchEntity matchEntity in groupEntity.Matches)
+                if (groupEntity.Id == id2)
                 {
-                    foreach (PredictionEntity predictionEntity in matchEntity.Predictions)
+                    foreach (GroupBetPlayer groupBetPlayer in groupEntity.GroupBetPlayers)
                     {
-                        PositionResponse positionResponse = positionResponses.FirstOrDefault(pr => pr.PlayerResponse.Id == predictionEntity.Player.Id);
-                        if (positionResponse == null)
+                        foreach (PredictionEntity predictionEntity in groupBetPlayer.Player.Predictions)
                         {
-                            positionResponses.Add(new PositionResponse
+                            if (predictionEntity.Match.Group.Tournament.Id == id)
                             {
-                                Points = predictionEntity.Points,
-                                PlayerResponse = _converterHelper.ToPlayerResponse(predictionEntity.Player),
-                            });
-                        }
-                        else
-                        {
-                            positionResponse.Points += predictionEntity.Points;
+                                PositionResponse positionResponse = positionResponses.FirstOrDefault(pr => pr.PlayerResponse.Id == predictionEntity.Player.Id);
+                                if (positionResponse == null)
+                                {
+                                    int? pp = 0;
+                                    if (predictionEntity.Points == null) { pp = 0; };
+                                    if (!(predictionEntity.Points == null)) { pp = predictionEntity.Points; };
+                                    positionResponses.Add(new PositionResponse
+                                    {
+                                        Points = pp,
+                                        PlayerResponse = _converterHelper.ToPlayerResponse(predictionEntity.Player),
+                                    });
+                                }
+                                else
+                                {
+                                    int? pp = 0;
+                                    if (predictionEntity.Points == null) { pp = 0; };
+                                    if (!(predictionEntity.Points == null)) { pp = predictionEntity.Points; };
+                                    positionResponse.Points += pp;
+                                }
+                            }
                         }
                     }
                 }
             }
-
             List<PositionResponse> list = positionResponses.OrderByDescending(pr => pr.Points).ToList();
             int i = 1;
             foreach (PositionResponse item in list)
@@ -205,10 +330,7 @@ namespace Soccer.Web.Controllers.API
                 item.Ranking = i;
                 i++;
             }
-
             return Ok(list);
         }
-
-
     }
 }

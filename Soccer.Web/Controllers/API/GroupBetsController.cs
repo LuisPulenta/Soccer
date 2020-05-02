@@ -98,19 +98,46 @@ namespace Soccer.Web.Controllers.API
                 .ThenInclude(u => u.User)
                 .ThenInclude(f => f.FavoriteTeam)
                 .ThenInclude(l => l.League)
+
                 .Include(g => g.GroupBet)
                 .ThenInclude(t => t.Tournament)
+                
                 .Include(g => g.GroupBet)
                 .ThenInclude(p => p.Admin)
                 .ThenInclude(p => p.User)
                 .ThenInclude(f => f.FavoriteTeam)
                 .ThenInclude(l => l.League)
+
                 .Include(g => g.GroupBet)
                 .ThenInclude(p => p.GroupBetPlayers)
                 .ThenInclude(p => p.Player)
                 .ThenInclude(u => u.User)
                 .ThenInclude(f => f.FavoriteTeam)
                 .ThenInclude(l => l.League)
+
+                .Include(g => g.GroupBet)
+                .ThenInclude(p => p.GroupBetPlayers)
+                .ThenInclude(p => p.Player)
+                .ThenInclude(p => p.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(p => p.Local)
+                .ThenInclude(p => p.League)
+
+                .Include(g => g.GroupBet)
+                .ThenInclude(p => p.GroupBetPlayers)
+                .ThenInclude(p => p.Player)
+                .ThenInclude(p => p.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(p => p.Visitor)
+                .ThenInclude(p => p.League)
+
+                .Include(g => g.GroupBet)
+                .ThenInclude(p => p.GroupBetPlayers)
+                .ThenInclude(p => p.Player)
+                .ThenInclude(p => p.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(p => p.Group)
+                .ThenInclude(p => p.Tournament)
 
                 .Where(o => o.Player.User.Email.ToLower() == emailRequest.Email.ToLower())
                 .OrderBy(a => a.GroupBet.Name)
@@ -134,7 +161,38 @@ namespace Soccer.Web.Controllers.API
                         IsAccepted = p.IsAccepted,
                         IsBlocked = p.IsBlocked,
                         Points = p.Points,
-                        Player = _converterHelper.ToPlayerResponse(p.Player),
+                        Player = new PlayerResponse2
+                        {
+                            FirstName = p.Player.User.FirstName,
+                            LastName = p.Player.User.LastName,
+                            NickName = p.Player.User.NickName,
+                            PicturePath = p.Player.User.Picture,
+                            Id = p.Player.Id,
+                            Points = p.Player.User.Points,
+                            Team = new TeamResponse
+                            {
+                                Id = p.Player.User.FavoriteTeam.Id,
+                                Initials = p.Player.User.FavoriteTeam.Initials,
+                                LeagueId = p.Player.User.FavoriteTeam.League.Id,
+                                LeagueName = p.Player.User.FavoriteTeam.League.Name,
+                                Name = p.Player.User.FavoriteTeam.Name,
+                                LogoPath = p.Player.User.FavoriteTeam.LogoPath,
+                            },
+                            UserId = p.Player.User.Id,
+                            Predictions = p.Player.Predictions.Select(h => new PredictionResponse2
+                            {
+                                Id = h.Id,
+                                GoalsLocal = h.GoalsLocal,
+                                GoalsVisitor = h.GoalsVisitor,
+                                Points = h.Points,
+                                MatchId = h.Match.Id,
+                                PlayerId = h.Player.Id,
+                                TournamentId=h.Match.Group.Tournament.Id,
+                                NameLocal = h.Match.Local.Name,
+                                NameVisitor = h.Match.Visitor.Name
+                            }).ToList()
+                        },
+
                     }).ToList()
                 };
 
