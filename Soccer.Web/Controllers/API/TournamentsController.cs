@@ -4,6 +4,7 @@ using Soccer.Web.Data;
 using Soccer.Web.Data.Entities;
 using Soccer.Web.Helpers;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Soccer.Web.Controllers.API
@@ -56,6 +57,7 @@ namespace Soccer.Web.Controllers.API
                 //.ThenInclude(m => m.Predictions)
                 //.ThenInclude(p => p.Player)
                 //.ThenInclude(p => p.User)
+                .Where(t => t.IsActive)
 
                 .ToListAsync();
             return Ok(_converterHelper.ToTournamentResponse(tournaments));

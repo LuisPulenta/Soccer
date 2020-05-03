@@ -145,7 +145,7 @@
                     <StackLayout
                       Orientation="Horizontal">
                       <Label
-                        Text="Cantidad de Jugadores: "
+                        Text="Cant. Jugadores: "
                         FontSize="Micro">
                       </Label>
                       <Label

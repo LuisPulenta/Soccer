@@ -112,7 +112,7 @@ namespace Soccer.Prism.ViewModels
             {
                 var myListPredictions = _myPredictions.Select(aa => new PredictionResponse3()
                 {
-                   GoalsLocalPrediction=aa.GoalsLocalReal,
+                   GoalsLocalPrediction=aa.GoalsLocalPrediction,
                    GoalsLocalReal=aa.GoalsLocalReal,
                    GoalsVisitorPrediction=aa.GoalsVisitorPrediction,
                    GoalsVisitorReal=aa.GoalsVisitorReal,

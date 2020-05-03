@@ -5,6 +5,7 @@ using Soccer.Common.Helpers;
 using Soccer.Common.Models;
 using Soccer.Common.Services;
 using Soccer.Prism.Views;
+using System.Collections.Generic;
 
 namespace Soccer.Prism.ViewModels
 {
@@ -14,18 +15,25 @@ namespace Soccer.Prism.ViewModels
         private readonly IApiService _apiService;
         private bool _isRunning;
         private bool _isEnabled;
+        private bool _isRemember;
         private string _password;
         private DelegateCommand _loginCommand;
         private DelegateCommand _registerCommand;
         private DelegateCommand _forgotPasswordCommand;
 
+
+        public List<VersionResponse> MyVersions { get; set; }
         public LoginPageViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            IsRemember = true;
+            IsEnabled = true;
             Title = "Login";
             IsEnabled = true;
+            Email = "luis@yopmail.com";
+            Password = "123456";
         }
 
         public DelegateCommand LoginCommand => _loginCommand ?? (_loginCommand = new DelegateCommand(LoginAsync));
@@ -44,6 +52,12 @@ namespace Soccer.Prism.ViewModels
         {
             get => _isEnabled;
             set => SetProperty(ref _isEnabled, value);
+        }
+
+        public bool IsRemember
+        {
+            get => _isRemember;
+            set => SetProperty(ref _isRemember, value);
         }
 
         public string Email { get; set; }
@@ -127,6 +141,53 @@ namespace Soccer.Prism.ViewModels
             Settings.Player = JsonConvert.SerializeObject(playerResponse);
             Settings.Token = JsonConvert.SerializeObject(token);
             Settings.IsLogin = true;
+            Settings.IsRemembered = IsRemember;
+
+            //********** CONTROLA NUMERO DE VERSION **********
+            var response3 = await _apiService.GetList2Async<VersionResponse>(
+                 url,
+                 "api",
+                 "/Versions");
+
+            this.MyVersions = (List<VersionResponse>)response3.Result;
+
+
+
+            if (response3.IsSuccess)
+            {
+                var bandera = 0;
+                foreach (var cc in MyVersions)
+                {
+                    if (cc.NroVersion != "1.4")
+                    {
+                        bandera = 1;
+                    }
+                }
+
+                if (bandera == 1)
+                {
+                    //Avisar que hay una nueva version
+                    await App.Current.MainPage.DisplayAlert(
+                   "Aviso",
+                    "Hay una nueva versión en Google Play para descargar",
+                    "Aceptar");
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             IsRunning = false;
             IsEnabled = true;

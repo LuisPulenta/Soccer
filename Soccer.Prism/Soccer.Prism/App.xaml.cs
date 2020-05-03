@@ -26,7 +26,17 @@ namespace Soccer.Prism
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MTY2MzIyQDMxMzcyZTMzMmUzMFVnNW5KSnM2dTZmRDljWm1RYTduQXFwRmNKSzVPWk1lT1JGSFRySXZCUTA9");
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("/SoccerMasterDetailPage/NavigationPage/TournamentsPage");
+            if (Settings.IsLogin)
+            {
+                await NavigationService.NavigateAsync("/SoccerMasterDetailPage/NavigationPage/TournamentsPage");
+            }
+
+            else
+            {
+                await NavigationService.NavigateAsync("/SoccerMasterDetailPage/NavigationPage/LoginPage");
+            }
+                
+            
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

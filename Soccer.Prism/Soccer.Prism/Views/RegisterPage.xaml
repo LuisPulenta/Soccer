@@ -32,7 +32,18 @@
             </ffimageloading:CachedImage.GestureRecognizers>
 
           </ffimageloading:CachedImage>
-
+          <Label
+            Text="Toque la imagen para cambiar la foto"
+            HorizontalOptions="Center"
+            FontSize="Small"
+            TextColor="Blue">
+          </Label>
+          <Label
+            Text="SE RECOMIENDA subir una Selfie ya que la misma es normalmente de mucho menor tamaño que una foto obtenida con la cámara frontal o de una imagen obtenida de la Galería. Una imagen pequeña mejora el rendimiento de la App."
+            HorizontalOptions="Center"
+            FontSize="Micro"
+            TextColor="Red">
+          </Label>
 
           <Grid>
             <Grid.ColumnDefinitions>

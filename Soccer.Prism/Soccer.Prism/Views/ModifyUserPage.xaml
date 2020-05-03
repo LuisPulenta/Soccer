@@ -30,7 +30,18 @@
               <TapGestureRecognizer Command="{Binding ChangeImageCommand}"/>
             </ffimageloading:CachedImage.GestureRecognizers>
           </ffimageloading:CachedImage>
-
+          <Label
+            Text="Toque la imagen para cambiar la foto"
+            HorizontalOptions="Center"
+            FontSize="Small"
+            TextColor="Blue">
+          </Label>
+          <Label
+            Text="SE RECOMIENDA subir una Selfie ya que la misma es normalmente de mucho menor tamaño que una foto obtenida con la cámara frontal o de una imagen obtenida de la Galería. Una imagen pequeña mejora el rendimiento de la App."
+            HorizontalOptions="Center"
+            FontSize="Micro"
+            TextColor="Red">
+          </Label>
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"/>
@@ -149,7 +160,7 @@
             <Label Grid.Row="8"
                                Grid.Column="0"
                                FontSize="Micro"
-                               Text="{Binding League.LeagueName}"
+                               Text="Hincha de:"
                                VerticalOptions="Center"/>
 
 

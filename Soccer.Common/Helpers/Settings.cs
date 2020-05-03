@@ -11,6 +11,7 @@ namespace Soccer.Common.Helpers
         private const string _token = "token";
         private const string _tournament = "tournament";
         private const string _isLogin = "isLogin";
+        private const string _isRemembered = "IsRemembered";
         private static readonly string _stringDefault = string.Empty;
         private static readonly bool _boolDefault = false;
 
@@ -32,6 +33,12 @@ namespace Soccer.Common.Helpers
         {
             get => AppSettings.GetValueOrDefault(_player, _stringDefault);
             set => AppSettings.AddOrUpdateValue(_player, value);
+        }
+
+        public static bool IsRemembered
+        {
+            get => AppSettings.GetValueOrDefault(_isRemembered, _boolDefault);
+            set => AppSettings.AddOrUpdateValue(_isRemembered, value);
         }
 
         public static string Token

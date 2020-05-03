@@ -12,16 +12,16 @@
     <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
                      AbsoluteLayout.LayoutFlags="All" 
                      Padding="5">
-      <Image HeightRequest="150"
-                   Margin="0,20,0,0"
+      <Image HeightRequest="80"
+                   Margin="0,0,0,0"
                    Source="Titulo"/>
       <Image HeightRequest="150"
-                   Margin="0,20,0,0"
+                   Margin="0,5,0,0"
                    Source="Logo"/>
 
-      <StackLayout VerticalOptions="CenterAndExpand">
-        <Grid Margin="20" 
-                  VerticalOptions="CenterAndExpand">
+      <StackLayout VerticalOptions="StartAndExpand">
+        <Grid Margin="5" 
+                  VerticalOptions="StartAndExpand">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
@@ -48,7 +48,10 @@
                        IsPassword="True"
                        Placeholder="Ingrese Password..."
                        Text="{Binding Password}"/>
+          
         </Grid>
+       
+
         <Label FontAttributes="Bold"
             HorizontalOptions="Center" 
             Text="¿Olvidó su Password?"

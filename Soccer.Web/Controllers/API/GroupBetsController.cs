@@ -139,7 +139,7 @@ namespace Soccer.Web.Controllers.API
                 .ThenInclude(p => p.Group)
                 .ThenInclude(p => p.Tournament)
 
-                .Where(o => o.Player.User.Email.ToLower() == emailRequest.Email.ToLower())
+                .Where(o => o.Player.User.Email.ToLower() == emailRequest.Email.ToLower() && o.GroupBet.Tournament.IsActive)
                 .OrderBy(a => a.GroupBet.Name)
                 .ToListAsync();
 

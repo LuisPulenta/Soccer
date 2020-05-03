@@ -147,7 +147,7 @@ namespace Soccer.Web.Controllers.API
             List<PredictionResponse3> predictionResponses = new List<PredictionResponse3>();
             foreach (PredictionEntity predictionEntity in player.Predictions)
             {
-                if (predictionEntity.Match.Group.Tournament.Id == id)
+                if (predictionEntity.Match.Group.Tournament.Id == id && predictionEntity.Match.IsClosed)
                 {
                     predictionResponses.Add(_converterHelper.ToPredictionResponse3(predictionEntity));
                 }
@@ -245,6 +245,13 @@ namespace Soccer.Web.Controllers.API
                 .Include(g => g.GroupBets)
                 .ThenInclude(gb => gb.GroupBetPlayers)
                 .ThenInclude(p => p.Player)
+                .ThenInclude(u => u.User)
+                .ThenInclude(f => f.FavoriteTeam)
+                .ThenInclude(le => le.League)
+
+                .Include(g => g.GroupBets)
+                .ThenInclude(gb => gb.GroupBetPlayers)
+                .ThenInclude(p => p.Player)
                 .ThenInclude(pr => pr.Predictions)
                 .ThenInclude(m => m.Match)
                 .ThenInclude(l => l.Local)
@@ -291,8 +298,28 @@ namespace Soccer.Web.Controllers.API
             foreach (GroupBet groupEntity in tournament.GroupBets)
 
             {
+                
+                //***** Esto es lo nuevo que agregue *****
                 if (groupEntity.Id == id2)
                 {
+                    foreach (GroupBetPlayer groupBetPlayer in groupEntity.GroupBetPlayers)
+                    {
+                         {
+                                PositionResponse positionResponse = positionResponses.FirstOrDefault(pr => pr.PlayerResponse.Id == groupBetPlayer.Player.Id);
+                            if (positionResponse == null)
+                            {
+                                positionResponses.Add(new PositionResponse
+                                {
+                                    Points = 0,
+                                    PlayerResponse = _converterHelper.ToPlayerResponse(groupBetPlayer.Player),
+                                });
+                            }
+                         }
+                    }
+                //************************************
+
+
+
                     foreach (GroupBetPlayer groupBetPlayer in groupEntity.GroupBetPlayers)
                     {
                         foreach (PredictionEntity predictionEntity in groupBetPlayer.Player.Predictions)
