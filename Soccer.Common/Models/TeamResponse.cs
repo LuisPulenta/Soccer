@@ -9,7 +9,7 @@
         public int LeagueId { get; set; }
         public string LeagueName { get; set; }
         public string LogoFullPath => string.IsNullOrEmpty(LogoPath)
-           ? "noimage"//null
+           ? "http://keypress.serveftp.net:88/SoccerApi/Images/teams/noimage.png"
            : $"http://keypress.serveftp.net:88/SoccerApi{LogoPath.Substring(1)}";
     }
 }

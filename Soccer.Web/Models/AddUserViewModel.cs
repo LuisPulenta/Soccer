@@ -14,11 +14,6 @@ namespace Soccer.Web.Models
         [EmailAddress]
         public string Username { get; set; }
 
-        [Display(Name = "Documento")]
-        [MaxLength(20, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
-        [Required(ErrorMessage = "El campo {0} es requerido.")]
-        public string Document { get; set; }
-
         [Display(Name = "Nombre")]
         [MaxLength(50, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
         [Required(ErrorMessage = "El campo {0} es requerido.")]
@@ -29,18 +24,6 @@ namespace Soccer.Web.Models
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         public string LastName { get; set; }
 
-        [Display(Name = "Dirección")]
-        [MaxLength(100, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
-        public string Address { get; set; }
-
-        [Display(Name = "Fecha Nacimiento")]
-        [Required(ErrorMessage = "El campo {0} es requerido.")]
-        public DateTime BornDate { get; set; }
-
-        [Display(Name = "Sexo")]
-        [Required(ErrorMessage = "El campo {0} es requerido.")]
-        [MaxLength(6, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
-        public string Sex { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [MaxLength(20, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
@@ -55,16 +38,6 @@ namespace Soccer.Web.Models
 
         [Display(Name = "Puntos")]
         public int Points { get; set; }
-
-        [Display(Name = "Teléfono")]
-        [MaxLength(50, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
-        public string PhoneNumber { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:N6}")]
-        public double Latitude { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:N6}")]
-        public double Longitude { get; set; }
 
         [Display(Name = "Password")]
         [Required(ErrorMessage = "El campo {0} es requerido.")]

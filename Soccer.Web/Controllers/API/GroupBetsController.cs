@@ -316,7 +316,7 @@ namespace Soccer.Web.Controllers.API
                 token = playerGroupBetRequest.Token
             }, protocol: HttpContext.Request.Scheme);
 
-            Response response = _mailHelper.SendMail(request.Email, "Solicitud de unirse a un Grupo", $"<h1>Solicitud de unirse a un Grupo</h1>" +
+            Response response = _mailHelper.SendMail("Soporte Soccer",request.Email, "Solicitud de unirse a un Grupo", $"<h1>Solicitud de unirse a un Grupo</h1>" +
                 $"El Usuario: {proposalPlayer.User.FullName} ({proposalPlayer.User.Email}), ha solicitado que sea miembro de su grupo de usuarios {groupBet.Name} en la aplicación FULBO PULENTA. " +
                 $"</hr></br></br>Si desea aceptar, haga clic aquí: <a href = \"{linkConfirm}\">Confirmar</a>" +
                 $"</hr></br></br> . Si desea rechazar, haga clic aquí: <a href = \"{linkReject}\">Rechazar</a>");

@@ -27,25 +27,16 @@
                                 @Html.DisplayNameFor(model => model.FirstOrDefault().User.Picture)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Document)
-                            </th>
-                            <th>
                                 @Html.DisplayNameFor(model => model.FirstOrDefault().User.FirstName)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.FirstOrDefault().User.LastName)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Address)
-                            </th>
-                            <th>
                                 @Html.DisplayNameFor(model => model.FirstOrDefault().User.Email)
                             </th>
                             <th>
                                 Teléfono
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.FirstOrDefault().User.BornDate)
                             </th>
                             <th>
                                 Hincha de...
@@ -67,16 +58,10 @@
                                     }
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.User.Document)
-                                </td>
-                                <td>
                                     @Html.DisplayFor(modelItem => item.User.FirstName)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.User.LastName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.User.Address)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.User.Email)
@@ -84,10 +69,6 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.User.PhoneNumber)
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.User.BornDate)
-                                </td>
-
                                 <td>
                                     @if (!string.IsNullOrEmpty(item.User.FavoriteTeam.LogoPath))
                                     {

@@ -330,6 +330,7 @@ namespace Soccer.Web.Helpers
                         Date = m.Date,
                         Local = ToTeamResponse(m.Local),
                         Visitor = ToTeamResponse(m.Visitor),
+                        DateName=m.DateName.Name,
                         GoalsLocal = m.GoalsLocal,
                         GoalsVisitor = m.GoalsVisitor,
                         Id = m.Id,
@@ -370,6 +371,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        
         public List<TournamentResponse> ToTournamentResponse(List<TournamentEntity> tournamentEntities)
         {
             List<TournamentResponse> list = new List<TournamentResponse>();
@@ -381,7 +383,7 @@ namespace Soccer.Web.Helpers
             return list;
         }
 
-        public PlayerResponse ToPlayerResponse(Player player)
+               public PlayerResponse ToPlayerResponse(Player player)
         {
             if (player == null)
             {
@@ -390,19 +392,12 @@ namespace Soccer.Web.Helpers
 
             return new PlayerResponse
             {
-                Address = player.User.Address,
-                BornDate = player.User.BornDate,
-                Sex = player.User.Sex,
                 NickName = player.User.NickName,
-                Latitude = player.User.Latitude,
-                Longitude = player.User.Longitude,
-                Document = player.User.Document,
                 Email = player.User.Email,
                 FirstName = player.User.FirstName,
                 Id = player.Id,
                 UserId = player.User.Id,
                 LastName = player.User.LastName,
-                PhoneNumber = player.User.PhoneNumber,
                 PicturePath = player.User.Picture,
                 Team = ToTeamResponse(player?.User.FavoriteTeam),
 
@@ -443,38 +438,19 @@ namespace Soccer.Web.Helpers
             };
         }
 
-        private GroupResponse ToGroupResponse(GroupEntity groupEntity)
-        {
-            if (groupEntity == null)
-            {
-                return null;
-            }
-
-            return new GroupResponse
-            {
-                Id = groupEntity.Id,
-                Name = groupEntity.Name,
-                Tournament= ToTournamentResponse(groupEntity.Tournament)
-            };
-        }
+        
 
         public User ToUser(Player player)
         {
             return new User
             {
-                Address = player.User.Address,
-                BornDate = player.User.BornDate,
-                Document = player.User.Document,
                 Email = player.User.Email,
                 FirstName = player.User.FirstName,
                 LastName = player.User.LastName,
-                Latitude = player.User.Latitude,
-                Longitude = player.User.Longitude,
                 NickName = player.User.NickName,
                 PhoneNumber = player.User.PhoneNumber,
                 Picture = player.User.Picture,
                 Points = player.User.Points,
-                Sex = player.User.Sex,
                 UserName = player.User.UserName,
                 FavoriteTeam = player.User.FavoriteTeam,
                 Id = player.User.Id,
@@ -567,6 +543,7 @@ namespace Soccer.Web.Helpers
             {
                 Id = leagueEntity.Id,
                 Name = leagueEntity.Name,
+                LogoPath=leagueEntity.LogoPath,
                 Teams = leagueEntity.Teams?.Select(g => new TeamResponse
                 {
                     Id = g.Id,
@@ -673,5 +650,91 @@ namespace Soccer.Web.Helpers
             return list;
         }
 
+        public GroupResponse2 ToGroupResponse(GroupEntity groupEntity)
+        {
+            if (groupEntity == null)
+            {
+                return null;
+            }
+
+            return new GroupResponse2
+            {
+                Id = groupEntity.Id,
+                Name = groupEntity.Name,
+            };
+        }
+
+        public List<GroupResponse2> ToGroupResponse(List<GroupEntity> groupEntities)
+        {
+            List<GroupResponse2> list = new List<GroupResponse2>();
+            foreach (GroupEntity groupEntity in groupEntities)
+            {
+                list.Add(ToGroupResponse(groupEntity));
+            }
+
+            return list;
+        }
+
+        public async Task<GroupDetailResponse2> ToGroupDetailResponse(GroupDetailEntity groupDetailEntity)
+        {
+            if (groupDetailEntity == null)
+            {
+                return null;
+            }
+
+            return new GroupDetailResponse2
+            {
+                Id = groupDetailEntity.Id,
+                GoalsAgainst = groupDetailEntity.GoalsAgainst,
+                GoalsFor = groupDetailEntity.GoalsFor,
+                MatchesLost = groupDetailEntity.MatchesLost,
+                MatchesPlayed = groupDetailEntity.MatchesPlayed,
+                MatchesTied = groupDetailEntity.MatchesTied,
+                MatchesWon = groupDetailEntity.MatchesWon,
+                Team = ToTeamResponse(await _context.Teams.FindAsync(groupDetailEntity.Team.Id)),
+            };
+        }
+
+        public async Task<List<GroupDetailResponse2>> ToGroupDetailResponse(List<GroupDetailEntity> groupDetailEntities)
+        {
+            List<GroupDetailResponse2> list = new List<GroupDetailResponse2>();
+            foreach (GroupDetailEntity groupDetailEntity in groupDetailEntities)
+            {
+                list.Add(await ToGroupDetailResponse(groupDetailEntity));
+            }
+
+            return list;
+        }
+
+        public async Task<MatchResponse2> ToMatchResponse2(MatchEntity matchEntity)
+        {
+            if (matchEntity == null)
+            {
+                return null;
+            }
+
+            return new MatchResponse2
+            {
+                Date= matchEntity.Date,
+                DateName = matchEntity.DateName.Name,
+                GoalsLocal = matchEntity.GoalsLocal,
+                GoalsVisitor = matchEntity.GoalsVisitor,
+                Group = ToGroupResponse(await _context.Groups.FindAsync(matchEntity.Group.Id)),
+                IsClosed = matchEntity.IsClosed,
+                Local= ToTeamResponse(await _context.Teams.FindAsync(matchEntity.Local.Id)),
+                Visitor = ToTeamResponse(await _context.Teams.FindAsync(matchEntity.Visitor.Id)),
+                Id = matchEntity.Id,
+            };
+        }
+
+        public async Task<List<MatchResponse2>> ToMatchResponse2(List<MatchEntity> matches)
+        {
+            List<MatchResponse2> list = new List<MatchResponse2>();
+            foreach (MatchEntity matchEntity in matches)
+            {
+                list.Add(await ToMatchResponse2(matchEntity));
+            }
+            return list;
+        }
     }
 }

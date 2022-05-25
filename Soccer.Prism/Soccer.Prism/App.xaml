@@ -4,73 +4,73 @@
              xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="Soccer.Prism.App">
-  <Application.Resources>
+    <Application.Resources>
 
-    <ResourceDictionary>
+        <ResourceDictionary>
 
-      <!-- Parameters -->
-      <x:String x:Key="UrlAPI">http://keypress.serveftp.net:88/SoccerApi/</x:String>
-      <x:String x:Key="UrlNoImage">noimage.png</x:String>
+            <!-- Parameters -->
+            <x:String x:Key="UrlAPI">http://keypress.serveftp.net:88/SoccerApi/</x:String>
+            <x:String x:Key="UrlNoImage">noimage.png</x:String>
 
-      <!-- Colores -->
-      <Color x:Key="ColorBackground">#00D99D</Color>
-      <Color x:Key="ColorPrimary">#000000</Color>
-      <Color x:Key="ColorSecondary">#90FF69</Color>
-      <Color x:Key="ColorDanger">#FFFFFF</Color>
-      <Color x:Key="ColorAccent">#38006A</Color>
-      <Color x:Key="ColorFont">#000000</Color>
-      <Color x:Key="ColorFontInverse">#FFFFFF</Color>
+            <!-- Colores -->
+            <Color x:Key="ColorBackground">#00D99D</Color>
+            <Color x:Key="ColorPrimary">#000000</Color>
+            <Color x:Key="ColorSecondary">#90FF69</Color>
+            <Color x:Key="ColorDanger">#FFFFFF</Color>
+            <Color x:Key="ColorAccent">#38006A</Color>
+            <Color x:Key="ColorFont">#000000</Color>
+            <Color x:Key="ColorFontInverse">#FFFFFF</Color>
 
 
-      <!-- Styles -->
-      <Style TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource ColorAccent}" />
-        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-        <Setter Property="TextColor" Value="{StaticResource ColorFontInverse}" />
-        <Setter Property="CornerRadius" Value="10" />
-      </Style>
+            <!-- Styles -->
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorAccent}" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="TextColor" Value="{StaticResource ColorFontInverse}" />
+                <Setter Property="CornerRadius" Value="10" />
+            </Style>
 
-      <Style TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource ColorFont}" />
-      </Style>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource ColorFont}" />
+            </Style>
 
-      <Style x:Key="SecondaryButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource ColorSecondary}" />
-      </Style>
+            <Style x:Key="SecondaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorSecondary}" />
+            </Style>
 
-      <Style x:Key="DangerButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource ColorDanger}" />
-        <Setter Property="TextColor" Value="{StaticResource ColorFont}" />
-      </Style>
+            <Style x:Key="DangerButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorDanger}" />
+                <Setter Property="TextColor" Value="{StaticResource ColorFont}" />
+            </Style>
 
-      <Style TargetType="Entry">
-        <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
-      </Style>
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
+            </Style>
 
-      <Style TargetType="SearchBar">
-        <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
-      </Style>
+            <Style TargetType="SearchBar">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
+            </Style>
 
-      <Style TargetType="Picker">
-        <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
-      </Style>
+            <Style TargetType="Picker">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
+            </Style>
 
-      <Style TargetType="DatePicker">
-        <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
-      </Style>
+            <Style TargetType="DatePicker">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorFontInverse}" />
+            </Style>
 
-      <!-- Data Templates -->
-      <DataTemplate x:Key="MatchTemplate">
-        <StackLayout>
-          <Grid>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackLayout
+            <!-- Data Templates -->
+            <DataTemplate x:Key="MatchTemplate">
+                <StackLayout>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackLayout
             Grid.Column="0">
-              <ffimageloading:CachedImage 
+                            <ffimageloading:CachedImage 
                             Aspect="AspectFit"
                             CacheDuration= "50"
                             HeightRequest="80"
@@ -78,36 +78,36 @@
                             RetryDelay= "600"
                             Source="{Binding Local.LogoFullPath}" 
                             WidthRequest="80"/>
-              <Label
+                            <Label
             Text="{Binding Local.Initials}" 
               FontSize="Medium"
               FontAttributes="Bold"
               HorizontalOptions="Center">
-              </Label>
-            </StackLayout>
+                            </Label>
+                        </StackLayout>
 
-            <StackLayout Grid.Column="1"
+                        <StackLayout Grid.Column="1"
                 VerticalOptions="Center">
-              <StackLayout HorizontalOptions="Center" 
+                            <StackLayout HorizontalOptions="Center" 
                     Orientation="Horizontal">
-                <Label FontAttributes="Bold"
+                                <Label FontAttributes="Bold"
                 FontSize="48"
                 Text="{Binding GoalsLocal}"/>
-                <Label Text="Vs."
+                                <Label Text="Vs."
                 VerticalOptions="Center"/>
-                <Label FontAttributes="Bold"
+                                <Label FontAttributes="Bold"
                 FontSize="48"
                 Text="{Binding GoalsVisitor}"/>
-              </StackLayout>
-              <StackLayout Orientation="Horizontal"
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal"
                     HorizontalOptions="Center">
-                <Label Text="{Binding DateLocal, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                                <Label Text="{Binding DateLocal, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
                 VerticalOptions="Center" />
-              </StackLayout>
-            </StackLayout>
-            <StackLayout
+                            </StackLayout>
+                        </StackLayout>
+                        <StackLayout
             Grid.Column="2">
-              <ffimageloading:CachedImage 
+                            <ffimageloading:CachedImage 
                             Aspect="AspectFit"
                             CacheDuration= "50"
                             HeightRequest="80"
@@ -115,28 +115,28 @@
                             RetryDelay= "600"
                             Source="{Binding Visitor.LogoFullPath}" 
                             WidthRequest="80"/>
-              <Label
+                            <Label
             Text="{Binding Visitor.Initials}" 
               FontSize="Medium"
               FontAttributes="Bold"
               HorizontalOptions="Center">
-              </Label>
-            </StackLayout>
+                            </Label>
+                        </StackLayout>
 
-          </Grid>
-        </StackLayout>
-      </DataTemplate>
-
-
-
-    </ResourceDictionary>
+                    </Grid>
+                </StackLayout>
+            </DataTemplate>
 
 
 
-      
-  
-  
-  
+        </ResourceDictionary>
 
-  </Application.Resources>
+
+
+
+
+
+
+
+    </Application.Resources>
 </prism:PrismApplication>

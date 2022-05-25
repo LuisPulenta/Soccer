@@ -38,21 +38,14 @@ namespace Soccer.Web.Helpers
         {
             User user = new User
             {
-                Address = model.Address,
-                Document = model.Document,
                 Email = model.Username,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Points = model.Points,
                 Picture = path,
-                PhoneNumber = model.PhoneNumber,
                 UserName = model.Username,
-                Longitude = model.Longitude,
-                Latitude = model.Latitude,
-                BornDate = model.BornDate,
                 FavoriteTeam = await _context.Teams.FindAsync(model.TeamId),
                 NickName = model.NickName,
-                Sex = model.Sex,
             };
 
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);

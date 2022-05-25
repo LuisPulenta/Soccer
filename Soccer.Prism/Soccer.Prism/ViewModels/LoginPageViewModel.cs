@@ -158,7 +158,7 @@ namespace Soccer.Prism.ViewModels
                 var bandera = 0;
                 foreach (var cc in MyVersions)
                 {
-                    if (cc.NroVersion != "1.4")
+                    if (cc.NroVersion != "1.8")
                     {
                         bandera = 1;
                     }

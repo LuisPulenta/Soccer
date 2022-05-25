@@ -419,17 +419,11 @@ namespace Soccer.Web.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(100);
 
-                    b.Property<DateTime>("BornDate");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<string>("Document")
-                        .IsRequired()
-                        .HasMaxLength(20);
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -446,13 +440,9 @@ namespace Soccer.Web.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<double>("Latitude");
-
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<double>("Longitude");
 
                     b.Property<string>("NickName")
                         .IsRequired()
@@ -475,10 +465,6 @@ namespace Soccer.Web.Migrations
                     b.Property<int>("Points");
 
                     b.Property<string>("SecurityStamp");
-
-                    b.Property<string>("Sex")
-                        .IsRequired()
-                        .HasMaxLength(6);
 
                     b.Property<bool>("TwoFactorEnabled");
 

@@ -31,11 +31,11 @@ namespace Soccer.Web.Data
             
             var favoriteTeam = await _context.Teams.FirstOrDefaultAsync(m => m.Id == 1);
 
-            var manager = await CheckUserAsync("17157729", "Luis", "Nuñez", "Espora 2052", DateTime.Now, "Hombre",  "Luis", "Lucho", favoriteTeam, 0, "luisalbertonu@gmail.com", "156814963", 0, 0, "Manager");
+            var manager = await CheckUserAsync( "Luis", "Nuñez",   "Luis", "Lucho", favoriteTeam, 0, "luisalbertonu@gmail.com", "156814963", "Manager");
 
-            var player1 = await CheckUserAsync("17157729", "Luis", "Nuñez", "Espora 2052", DateTime.Now, "Hombre",  "Luis", "Lucho", favoriteTeam, 0, "luis@yopmail.com", "156814963", 0, 0, "Player");
-            var player2 = await CheckUserAsync("11111111", "Pablo", "Lacuadri", "Villa Santa Ana", DateTime.Now, "Hombre",  "Pablo", "Pablito", favoriteTeam, 0, "lacua@yopmail.com", "123456789", 0, 0, "Player");
-            var player3 = await CheckUserAsync("22222222", "Diego", "Maradona", "Villa Fiorito", DateTime.Now, "Hombre",  "Maradona", "Dieguito", favoriteTeam, 0, "maradona@yopmail.com", "10101010", 0, 0, "Player");
+            var player1 = await CheckUserAsync("Luis", "Nuñez",   "Luis", "Lucho", favoriteTeam, 0, "luis@yopmail.com", "156814963", "Player");
+            var player2 = await CheckUserAsync( "Pablo", "Lacuadri",  "Pablo", "Pablito", favoriteTeam, 0, "lacua@yopmail.com", "123456789", "Player");
+            var player3 = await CheckUserAsync( "Diego", "Maradona",   "Maradona", "Dieguito", favoriteTeam, 0, "maradona@yopmail.com", "10101010", "Player");
             await CheckPlayerAsync(player1, player2, player3);
             await CheckManagerAsync(manager);
 
@@ -73,20 +73,14 @@ namespace Soccer.Web.Data
 
 
 
-        private async Task<User> CheckUserAsync(string document,
-                                                  string firstName,
+        private async Task<User> CheckUserAsync(  string firstName,
                                                   string lastName,
-                                                  string address,
-                                                  DateTime bornDate,
-                                                  string sex,
                                                   string picture,
                                                   string nickName,
                                                   TeamEntity favoriteTeam,
                                                   int points,
                                                   string email,
                                                   string phoneNumber,
-                                                  double latitude,
-                                                  double longitude,
                                                   string role)
         {
             var user = await _userHelper.GetUserAsync(email);
@@ -94,12 +88,8 @@ namespace Soccer.Web.Data
             {
                 user = new User
                 {
-                    Document = document,
                     FirstName = firstName,
                     LastName = lastName,
-                    Address = address,
-                    BornDate = bornDate,
-                    Sex = sex,
                     Picture = $"~/images/Users/{picture}.jpg",
                     NickName = nickName,
                     FavoriteTeam = favoriteTeam,
@@ -107,8 +97,6 @@ namespace Soccer.Web.Data
                     Email = email,
                     UserName = email,
                     PhoneNumber = phoneNumber,
-                    Latitude = latitude,
-                    Longitude = longitude
                 };
 
                 await _userHelper.AddUserAsync(user, "123456");

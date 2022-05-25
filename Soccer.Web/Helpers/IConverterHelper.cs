@@ -45,23 +45,13 @@ namespace Soccer.Web.Helpers
         MatchViewModel2 ToMatchViewModel2(MatchEntity matchEntity);
 
         TournamentResponse ToTournamentResponse(TournamentEntity tournamentEntity);
-
-        LeagueResponse ToLeagueResponse(LeagueEntity leagueEntity);
-
-        
-
         List<TournamentResponse> ToTournamentResponse(List<TournamentEntity> tournamentEntities);
-
+        LeagueResponse ToLeagueResponse(LeagueEntity leagueEntity);
         List<LeagueResponse> ToLeagueResponse(List<LeagueEntity> leagueEntities);
-
         User ToUser(Player player);
-
         Task<Player> ToPlayer2(User user);
-
         Player ToPlayer(User user);
-
         PredictionResponse ToPredictionResponse(PredictionEntity predictionEntity);
-
         PredictionResponse3 ToPredictionResponse3(PredictionEntity predictionEntity);
 
         MatchResponse ToMatchResponse(MatchEntity matchEntity);
@@ -71,6 +61,15 @@ namespace Soccer.Web.Helpers
         Task<GroupBetResponse> ToGroupBetResponse(GroupBet groupBet);
 
         Task<GroupBetPlayerResponse> ToGroupBetPlayerResponse(GroupBetPlayer groupBetPlayer);
+
+        GroupResponse2 ToGroupResponse(GroupEntity groupEntity);
+        List<GroupResponse2> ToGroupResponse(List<GroupEntity> groupEntities);
+
+        Task<GroupDetailResponse2> ToGroupDetailResponse(GroupDetailEntity groupDetailEntity);
+        Task<List<GroupDetailResponse2>> ToGroupDetailResponse(List<GroupDetailEntity> groupDetailEntities);
+
+        Task<MatchResponse2> ToMatchResponse2(MatchEntity matchEntity);
+        Task<List<MatchResponse2>> ToMatchResponse2(List<MatchEntity> matchEntities);
 
     }
 }

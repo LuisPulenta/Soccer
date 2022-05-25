@@ -26,18 +26,22 @@ namespace Soccer.Web.Controllers.API
         public async Task<IActionResult> GetTournament()
         {
             List<TournamentEntity> tournaments = await _context.Tournaments
-                .Include(t => t.Groups)
-                .ThenInclude(g => g.GroupDetails)
-                .ThenInclude(gd => gd.Team)
-                .ThenInclude(l => l.League)
+                //.Include(t => t.Groups)
+                //.ThenInclude(g => g.GroupDetails)
+                //.ThenInclude(gd => gd.Team)
+                //.ThenInclude(l => l.League)
 
+                //.Include(t => t.Groups)
+                //.ThenInclude(g => g.Matches)
+                //.ThenInclude(m => m.Local)
 
-                .Include(t => t.Groups)
-                .ThenInclude(g => g.Matches)
-                .ThenInclude(m => m.Local)
-                .Include(t => t.Groups)
-                .ThenInclude(g => g.Matches)
-                .ThenInclude(m => m.Visitor)
+                //.Include(t => t.Groups)
+                //.ThenInclude(g => g.Matches)
+                //.ThenInclude(m => m.Visitor)
+
+                //.Include(t => t.Groups)
+                //.ThenInclude(g => g.Matches)
+                //.ThenInclude(m => m.DateName)
 
                 //.Include(t => t.Groups)
                 //.ThenInclude(g => g.Matches)
@@ -63,5 +67,54 @@ namespace Soccer.Web.Controllers.API
             return Ok(_converterHelper.ToTournamentResponse(tournaments));
         }
 
+        [HttpPost]
+        [Route("GetGroups/{codigo}")]
+        public async Task<IActionResult> GetGroups(int codigo)
+        {
+            List<GroupEntity> groups = await _context.Groups
+                .Where(t => t.Tournament.Id == codigo)
+                .OrderBy (c=>c.Name)
+
+                .ToListAsync();
+            return Ok(_converterHelper.ToGroupResponse(groups));
+        }
+
+        [HttpPost]
+        [Route("GetGroupDetails/{codigo}")]
+        public async Task<IActionResult> GetGroupDetails(int codigo)
+        {
+            List<GroupDetailEntity> groupDetails = await _context.GroupDetails
+                .Include(t=>t.Team)
+                .ThenInclude(l=>l.League)
+                .Where(t => t.Group.Id == codigo)
+                .OrderByDescending(c => c.Points).ThenBy(c => c.GoalDifference).ThenBy(c => c.GoalsAgainst)
+
+                .ToListAsync();
+
+            var res = _converterHelper.ToGroupDetailResponse(groupDetails);
+
+            return Ok(res.Result);
+        }
+
+        [HttpPost]
+        [Route("GetMatches/{codigo}")]
+        public async Task<IActionResult> GetMatches(int codigo)
+        {
+            List<MatchEntity> matches = await _context.Matches
+                .Include(t => t.Group)
+                .Include(t => t.Local)
+                .ThenInclude(l => l.League)
+                .Include(t => t.Visitor)
+                .ThenInclude(l => l.League)
+                .Include(t => t.DateName)
+                .Where(t => t.Group.Id == codigo)
+                .OrderByDescending(c => c.DateName)
+
+                .ToListAsync();
+
+            var res = _converterHelper.ToMatchResponse2(matches);
+
+            return Ok(res.Result);
+        }
     }
 }

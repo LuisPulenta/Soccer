@@ -16,12 +16,7 @@
             <input type="hidden" asp-for="UserTypeId" />
             <input type="hidden" asp-for="Picture" />
 
-            <div class="form-group">
-                <label asp-for="Document" class="control-label"></label>
-                <input asp-for="Document" class="form-control" />
-                <span asp-validation-for="Document" class="text-danger"></span>
-            </div>
-
+            
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
@@ -33,28 +28,6 @@
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-
-
-            <div class="form-group">
-                <label asp-for="Sex" class="control-label"></label>
-                <select asp-for="Sex" asp-items="Model.Sexs" class="form-control"></select>
-                <span asp-validation-for="Sex" class="text-danger"></span>
-            </div>
-
-
-
 
 
             <div class="form-group">
@@ -86,28 +59,11 @@
                 <span asp-validation-for="TeamId" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="BornDate" class="control-label"></label>
-                <input asp-for="BornDate" class="form-control" />
-                <span asp-validation-for="BornDate" class="text-danger"></span>
-            </div>
-
+            
             <div class="form-group">
                 <label asp-for="Points" class="control-label"></label>
                 <input asp-for="Points" class="form-control" />
                 <span asp-validation-for="Points" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Latitude" class="control-label"></label>
-                <input asp-for="Latitude" class="form-control" />
-                <span asp-validation-for="Latitude" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Longitude" class="control-label"></label>
-                <input asp-for="Longitude" class="form-control" />
-                <span asp-validation-for="Longitude" class="text-danger"></span>
             </div>
 
             <div class="form-group">

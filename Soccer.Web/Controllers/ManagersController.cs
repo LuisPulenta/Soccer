@@ -115,7 +115,7 @@ namespace Soccer.Web.Controllers
                     token = myToken
                 }, protocol: HttpContext.Request.Scheme);
 
-                _mailHelper.SendMail(model.Username, "Confirmación de E-Mail", $"<h1>Confirmación de E-Mail</h1>" +
+                _mailHelper.SendMail("Soporte Soccer", model.Username, "Confirmación de E-Mail", $"<h1>Confirmación de E-Mail</h1>" +
                     $"Para habilitar el Usuario, " +
                     $"por favor haga clic en el siguiente link: </br></br><a href = \"{tokenLink}\">Confirmar E-mail</a>");
 
@@ -140,19 +140,12 @@ namespace Soccer.Web.Controllers
             }
             var user = new User
             {
-                Document = view.Document,
                 FirstName = view.FirstName,
                 LastName = view.LastName,
-                Address = view.Address,
-                PhoneNumber = view.PhoneNumber,
-                BornDate = view.BornDate,
-                Sex = view.Sex,
                 Picture = path,
                 NickName = view.NickName,
                 FavoriteTeam = await _dataContext.Teams.FindAsync(view.FavoriteTeamId),
                 Points = view.Points,
-                Latitude = view.Latitude,
-                Longitude = view.Longitude,
                 Email = view.Username,
                 UserName = view.Username,
             };
@@ -189,23 +182,15 @@ namespace Soccer.Web.Controllers
             var model = new EditUserViewModel
             {
                 Id = manager.Id,
-                Document = manager.User.Document,
                 FirstName = manager.User.FirstName,
                 LastName = manager.User.LastName,
-                Address = manager.User.Address,
                 PhoneNumber = manager.User.PhoneNumber,
                 Picture = manager.User.Picture,
-                BornDate = manager.User.BornDate,
-                Sex = manager.User.Sex,
-
                 NickName = manager.User.NickName,
                 FavoriteTeamId = manager.User.FavoriteTeam.Id,
                 LeagueId = manager.User.FavoriteTeam.League.Id,
                 TeamId = manager.User.FavoriteTeam.Id,
-                SexId = manager.User.Sex,
                 Points = manager.User.Points,
-                Latitude = manager.User.Latitude,
-                Longitude = manager.User.Longitude,
                 Leagues = _combosHelper.GetComboLeagues(),
                 Teams = _combosHelper.GetComboTeams(manager.User.FavoriteTeam.League.Id),
                 Sexs = _combosHelper.GetComboSexs(),
@@ -247,19 +232,13 @@ namespace Soccer.Web.Controllers
                     .Include(o => o.User)
                     .FirstOrDefaultAsync(o => o.Id == model.Id);
 
-                manager.User.Document = model.Document;
                 manager.User.FirstName = model.FirstName;
                 manager.User.LastName = model.LastName;
-                manager.User.Address = model.Address;
                 manager.User.PhoneNumber = model.PhoneNumber;
-                manager.User.BornDate = model.BornDate;
                 manager.User.Picture = path;
-                manager.User.Sex = model.Sex;
                 manager.User.NickName = model.NickName;
                 manager.User.FavoriteTeam = await _dataContext.Teams.FindAsync(model.FavoriteTeamId);
                 manager.User.Points = model.Points;
-                manager.User.Latitude = model.Latitude;
-                manager.User.Longitude = model.Longitude;
 
                 await _userHelper.UpdateUserAsync(manager.User);
                 return RedirectToAction(nameof(Index));

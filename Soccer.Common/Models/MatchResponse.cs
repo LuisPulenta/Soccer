@@ -14,7 +14,7 @@ namespace Soccer.Common.Models
         public int? GoalsVisitor { get; set; }
         public bool IsClosed { get; set; }
         public GroupResponse Group { get; set; }
-        public DateNameResponse DateName { get; set; }
+        public String DateName { get; set; }
         public ICollection<PredictionResponse> Predictions { get; set; }
     }
 }

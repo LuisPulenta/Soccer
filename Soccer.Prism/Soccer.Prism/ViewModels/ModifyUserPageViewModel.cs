@@ -47,10 +47,7 @@ namespace Soccer.Prism.ViewModels
             _apiService = apiService;
             _filesHelper = filesHelper;
             Player = JsonConvert.DeserializeObject<PlayerResponse>(Settings.Player);
-            FechaNac = Player.BornDate;
             Title = "Modificar Usuario";
-            Sexs = new ObservableCollection<Sex>(CombosHelper.GetSexs());
-            Sex = Sexs.FirstOrDefault(pt => pt.Name == Player.Sex);
             LeagueId = Player.Team.LeagueId;
             IsEnabled = true;
             var tournamentsPageViewModel = TournamentsPageViewModel.GetInstance();
@@ -171,23 +168,17 @@ namespace Soccer.Prism.ViewModels
                 imageArray = _filesHelper.ReadFully(_file.GetStream());
             }
 
-            Player.Sex = Sex.Name;
             Player.Team.Id = Team.Id;
             //Player.PictureArray = imageArray;
 
             UserRequest userRequest = new UserRequest
             {
-                Address = Player.Address,
-                BornDate= FechaNac,                
-                Document = Player.Document,
                 Email = Player.Email,
                 FirstName = Player.FirstName,
                 LastName = Player.LastName,
                 Password = "123456", // It doesn't matter what is sent here. It is only for the model to be valid
                 PasswordConfirm = "123456", // It doesn't matter what is sent here. It is only for the model to be valid
-                Phone = Player.PhoneNumber,
                 PictureArray = imageArray,
-                Sex = Player.Sex,
                 NickName = Player.NickName,
                 TeamId = Player.Team.Id,
                 LeagueId=Player.Team.LeagueId
@@ -220,14 +211,6 @@ namespace Soccer.Prism.ViewModels
 
         private async Task<bool> ValidateDataAsync()
         {
-            if (string.IsNullOrEmpty(Player.Document))
-            {
-                await App.Current.MainPage.DisplayAlert(
-                     "Error",
-                    "Debe ingresar un Documento",
-                    "Aceptar");
-                return false;
-            }
 
             if (string.IsNullOrEmpty(Player.FirstName))
             {
@@ -243,24 +226,6 @@ namespace Soccer.Prism.ViewModels
                 await App.Current.MainPage.DisplayAlert(
                       "Error",
                     "Debe ingresar un Apellido",
-                    "Aceptar");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(Player.Address))
-            {
-                await App.Current.MainPage.DisplayAlert(
-                      "Error",
-                    "Debe ingresar un Domicilio",
-                    "Aceptar");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(Player.PhoneNumber))
-            {
-                await App.Current.MainPage.DisplayAlert(
-                      "Error",
-                    "Debe ingresar un Teléfono",
                     "Aceptar");
                 return false;
             }

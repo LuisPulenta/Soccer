@@ -131,9 +131,31 @@ namespace Soccer.Web.Controllers
                     token = myToken
                 }, protocol: HttpContext.Request.Scheme);
 
-                _mailHelper.SendMail(model.Username, "Confirmación de E-Mail", $"<h1>Confirmación de E-Mail</h1>" +
-                    $"Para habilitar el Usuario, " +
-                    $"por favor haga clic en el siguiente link: </br></br><a href = \"{tokenLink}\">Confirmar E-mail</a>");
+                _mailHelper.SendMail("Soporte Soccer", user.Email, "Confirmación de Email",
+                 $"<table style = 'max-width: 800px; padding: 10px; margin:0 auto; border-collapse: collapse;'>" +
+                 $"  <tr>" +
+                 $"    <td style = 'background-color: #3658a8; text-align: center; padding: 0'>" +
+                                    $"  <td style = 'padding: 0'>" +
+                 $"<tr>" +
+                 $" <td style = 'background-color: #ecf0f1'>" +
+                 $"      <div style = 'color: #3658a8; margin: 4% 10% 2%; text-align: justify;font-family: sans-serif'>" +
+                 $"            <h1 style = 'color: #e67e22; margin: 0 0 7px' > Soccer </h1>" +
+                 $"                    <p style = 'margin: 2px; font-size: 15px'>" +
+                 $"                      Para completar el registro de su Usuario usted debe <br>" +
+                 $"      <ul style = 'font-size: 15px;  margin: 10px 0'>" +
+                 $"        <li> confirmar la dirección de Email haciendo clic en el botón del final de este mail.</li>" +
+
+                 $"  <div style = 'width: 100%;margin:5px 0; display: inline-block;text-align: center'>" +
+                 $"  </div>" +
+                 $"  <div style = 'width: 100%; text-align: center'>" +
+                 $"    <h2 style = 'color: #e67e22; margin: 0 0 5px' >Confirmación de Email</h2>" +
+                 $"    Para habilitar el usuario, por favor hacer clic en el siguiente enlace: </ br ></ br > " +
+                 $"    <a style ='text-decoration: none; border-radius: 5px; padding: 5px 5px; color: white; background-color: #3658a8' href = \"{tokenLink}\">Confirmar Email</a>" +
+                 $"    <p style = 'color: #b3b3b3; font-size: 12px; text-align: center;margin: 10px 0 0' > Soccer</p>" +
+                 $"  </div>" +
+                 $" </td >" +
+                 $"</tr>" +
+                 $"</table>");
 
 
 
@@ -158,19 +180,12 @@ namespace Soccer.Web.Controllers
 
             var user = new User
             {
-                Document = model.Document,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Address = model.Address,
-                PhoneNumber = model.PhoneNumber,
-                BornDate = model.BornDate,
-                Sex = model.Sex,
                 Picture = path,
                 NickName = model.NickName,
                 FavoriteTeam = await _dataContext.Teams.FindAsync(model.FavoriteTeamId),
                 Points = model.Points,
-                Latitude = model.Latitude,
-                Longitude = model.Longitude,
                 Email = model.Username,
                 UserName = model.Username,
             };
@@ -207,23 +222,15 @@ namespace Soccer.Web.Controllers
             var model = new EditUserViewModel
             {
                 Id = player.Id,
-                Document = player.User.Document,
                 FirstName = player.User.FirstName,
                 LastName = player.User.LastName,
-                Address = player.User.Address,
                 PhoneNumber = player.User.PhoneNumber,
                 Picture = player.User.Picture,
-                BornDate = player.User.BornDate,
-                Sex = player.User.Sex,
-                
                 NickName = player.User.NickName,
                 FavoriteTeamId = player.User.FavoriteTeam.Id,
                 LeagueId = player.User.FavoriteTeam.League.Id,
                 TeamId = player.User.FavoriteTeam.Id,
-                SexId = player.User.Sex,
                 Points = player.User.Points,
-                Latitude = player.User.Latitude,
-                Longitude = player.User.Longitude,
                 Leagues = _combosHelper.GetComboLeagues(),
                 Teams = _combosHelper.GetComboTeams(player.User.FavoriteTeam.League.Id),
                 Sexs = _combosHelper.GetComboSexs(),
@@ -265,19 +272,13 @@ namespace Soccer.Web.Controllers
                     .Include(o => o.User)
                     .FirstOrDefaultAsync(o => o.Id == model.Id);
 
-                player.User.Document = model.Document;
                 player.User.FirstName = model.FirstName;
                 player.User.LastName = model.LastName;
-                player.User.Address = model.Address;
                 player.User.PhoneNumber = model.PhoneNumber;
-                player.User.BornDate = model.BornDate;
                 player.User.Picture = path;
-                player.User.Sex = model.Sex;
                 player.User.NickName = model.NickName;
                 player.User.FavoriteTeam = await _dataContext.Teams.FindAsync(model.FavoriteTeamId);
                 player.User.Points = model.Points;
-                player.User.Latitude = model.Latitude;
-                player.User.Longitude = model.Longitude;
 
                 await _userHelper.UpdateUserAsync(player.User);
                 return RedirectToAction(nameof(Index));
