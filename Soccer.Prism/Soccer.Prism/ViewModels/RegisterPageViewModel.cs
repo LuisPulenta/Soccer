@@ -53,7 +53,7 @@ namespace Soccer.Prism.ViewModels
             IsEnabled = true;
             Sexs = new ObservableCollection<Sex>(CombosHelper.GetSexs());
             Teams = new ObservableCollection<TeamResponse>();
-            User = new UserRequest { BornDate = DateTime.Today };
+            User = new UserRequest {  };
         }
 
         public DelegateCommand RegisterCommand => _registerCommand ?? (_registerCommand = new DelegateCommand(RegisterAsync));
@@ -158,7 +158,6 @@ namespace Soccer.Prism.ViewModels
                 imageArray = _filesHelper.ReadFully(_file.GetStream());
             }
 
-            User.Sex = Sex.Name;
             User.TeamId = Team.Id;
             User.PictureArray = imageArray;
 
@@ -187,15 +186,7 @@ namespace Soccer.Prism.ViewModels
 
         private async Task<bool> ValidateDataAsync()
         {
-            if (string.IsNullOrEmpty(User.Document))
-            {
-                await App.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "Debe ingresar un Documento",
-                    "Aceptar");
-                return false;
-            }
-
+            
             if (string.IsNullOrEmpty(User.FirstName))
             {
                 await App.Current.MainPage.DisplayAlert(
@@ -214,14 +205,7 @@ namespace Soccer.Prism.ViewModels
                 return false;
             }
 
-            if (string.IsNullOrEmpty(User.Address))
-            {
-                await App.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "Debe ingresar un Domicilio",
-                    "Aceptar");
-                return false;
-            }
+            
 
             if (string.IsNullOrEmpty(User.Email) || !_regexHelper.IsValidEmail(User.Email))
             {
@@ -232,14 +216,7 @@ namespace Soccer.Prism.ViewModels
                 return false;
             }
 
-            if (string.IsNullOrEmpty(User.Phone))
-            {
-                await App.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "Debe ingresar un Teléfono",
-                    "Aceptar");
-                return false;
-            }
+            
 
             if (Team == null)
             {

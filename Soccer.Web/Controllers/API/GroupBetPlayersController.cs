@@ -153,46 +153,46 @@ namespace Soccer.Web.Controllers.API
             return Ok("J");
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPost]
-        [Route("GetGroupBetPlayerByIds")]
-        public async Task<IActionResult> GetGroupBetPlayerByIds([FromBody] GroupBetPlayerRequest2 groupBetPlayerRequest)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[HttpPost]
+        //[Route("GetGroupBetPlayerByIds")]
+        //public async Task<IActionResult> GetGroupBetPlayerByIds([FromBody] GroupBetPlayerRequest2 groupBetPlayerRequest)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            var groupBetPlayer = _context.GroupBetPlayers
-                .FirstOrDefault(o => o.GroupBet.Id == groupBetPlayerRequest.GroupBetId && o.Player.Id== groupBetPlayerRequest.PlayerId);
+        //    var groupBetPlayer = _context.GroupBetPlayers
+        //        .FirstOrDefault(o => o.GroupBet.Id == groupBetPlayerRequest.GroupBetId && o.Player.Id== groupBetPlayerRequest.PlayerId);
 
 
-            var groupBet = await _context.GroupBets
-                .Include(p => p.Tournament)
-                .Include(p=>p.Admin)
-                .ThenInclude(p => p.User)
-                .ThenInclude(p => p.FavoriteTeam)
-                .ThenInclude(p => p.League)
-                .FirstOrDefaultAsync(u => u.Id == groupBetPlayerRequest.GroupBetId);
-            var player = await _context.Players
-                .Include(p => p.User)
-                .ThenInclude(p => p.FavoriteTeam)
-                .ThenInclude(p => p.League)
-                .FirstOrDefaultAsync(u => u.Id == groupBetPlayerRequest.PlayerId);
+        //    var groupBet = await _context.GroupBets
+        //        .Include(p => p.Tournament)
+        //        .Include(p=>p.Admin)
+        //        .ThenInclude(p => p.User)
+        //        .ThenInclude(p => p.FavoriteTeam)
+        //        .ThenInclude(p => p.League)
+        //        .FirstOrDefaultAsync(u => u.Id == groupBetPlayerRequest.GroupBetId);
+        //    var player = await _context.Players
+        //        .Include(p => p.User)
+        //        .ThenInclude(p => p.FavoriteTeam)
+        //        .ThenInclude(p => p.League)
+        //        .FirstOrDefaultAsync(u => u.Id == groupBetPlayerRequest.PlayerId);
 
-            var groupBetPlayer1 = new GroupBetPlayer
-            {
-                Id = groupBetPlayer.Id,
-                GroupBet = groupBet,
-                Player = player,
-                IsAccepted = groupBetPlayer.IsAccepted,
-                IsBlocked = groupBetPlayer.IsBlocked,
-                Points = groupBetPlayer.Points
-            };
+        //    var groupBetPlayer1 = new GroupBetPlayer
+        //    {
+        //        Id = groupBetPlayer.Id,
+        //        GroupBet = groupBet,
+        //        Player = player,
+        //        IsAccepted = groupBetPlayer.IsAccepted,
+        //        IsBlocked = groupBetPlayer.IsBlocked,
+        //        Points = groupBetPlayer.Points
+        //    };
 
-            var groupBetPlayerResponse = _converterHelper.ToGroupBetPlayerResponse(groupBetPlayer1);
+        //    var groupBetPlayerResponse = _converterHelper.ToGroupBetPlayerResponse(groupBetPlayer1);
 
-            return Ok(groupBetPlayerResponse.Result);
-        }
+        //    return Ok(groupBetPlayerResponse.Result);
+        //}
     }
 }

@@ -25,7 +25,7 @@ namespace Soccer.Web.Data.Entities
         public ICollection<GroupBetPlayer> GroupBetPlayers { get; set; }
 
         public string LogoFullPath => string.IsNullOrEmpty(LogoPath)
-           ? "noimage"//null
+           ? "http://keypress.serveftp.net:88/SoccerApi/Images/noimage.png"
            : $"http://keypress.serveftp.net:88/SoccerApi{LogoPath.Substring(1)}";
     }
 }

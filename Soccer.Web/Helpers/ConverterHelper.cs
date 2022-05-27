@@ -557,88 +557,6 @@ namespace Soccer.Web.Helpers
         }
 
 
-        
-        public async Task<GroupBetResponse>  ToGroupBetResponse(GroupBet groupBet)
-        {
-            var player = await _context.Players.FindAsync(groupBet.Admin.Id);
-            var tournament = await _context.Tournaments.FindAsync(groupBet.Tournament.Id);
-
-            return new GroupBetResponse
-            {
-                Id = groupBet.Id,
-                Name = groupBet.Name,
-                Admin = ToPlayerResponse(player),
-                CreationDate = groupBet.CreationDate,
-                LogoPath = groupBet.LogoPath,
-                Tournament = ToTournamentResponse(tournament)
-            };
-        }
-
-        public async Task<GroupBetPlayerResponse> ToGroupBetPlayerResponse(GroupBetPlayer groupBetPlayer)
-        {
-            var player = await _context.Players.FindAsync(groupBetPlayer.Player.Id);
-            var groupBet = await ToGroupBetResponse(await _context.GroupBets.FindAsync(groupBetPlayer.GroupBet.Id));
-
-            return new GroupBetPlayerResponse
-            {
-                Id = groupBetPlayer.Id,
-                GroupBet = groupBet,
-                IsAccepted = groupBetPlayer.IsAccepted,
-                IsBlocked = groupBetPlayer.IsBlocked,
-                //Player = new PlayerResponse2
-                //{
-                //    FirstName = groupBetPlayer.Player.User.FirstName,
-                //    LastName = groupBetPlayer.Player.User.LastName,
-                //    NickName = groupBetPlayer.Player.User.NickName,
-                //    PicturePath = groupBetPlayer.Player.User.Picture,
-                //    Id = groupBetPlayer.Player.Id,
-                //    Points = groupBetPlayer.Player.User.Points,
-                //    Team = new TeamResponse
-                //    {
-                //        Id = groupBetPlayer.Player.User.FavoriteTeam.Id,
-                //        Initials = groupBetPlayer.Player.User.FavoriteTeam.Initials,
-                //        LeagueId = groupBetPlayer.Player.User.FavoriteTeam.League.Id,
-                //        LeagueName = groupBetPlayer.Player.User.FavoriteTeam.League.Name,
-                //        Name = groupBetPlayer.Player.User.FavoriteTeam.Name,
-                //        LogoPath = groupBetPlayer.Player.User.FavoriteTeam.LogoPath,
-                //    },
-                //    UserId = groupBetPlayer.Player.User.Id,
-                //    Predictions = groupBetPlayer.Player.Predictions.Select(h => new PredictionResponse
-                //    {
-                //        Id = h.Id,
-                //        GoalsLocal = h.GoalsLocal,
-                //        GoalsVisitor = h.GoalsVisitor,
-                //        Points = h.Points,
-                //        Match = new MatchResponse
-                //        {
-                //            Local = new TeamResponse
-                //            {
-                //                Id = h.Match.Local.Id,
-                //                Initials = h.Match.Local.Initials,
-                //                LeagueId = h.Match.Local.League.Id,
-                //                LeagueName = h.Match.Local.League.Name,
-                //                Name = h.Match.Local.Name,
-                //                LogoPath = h.Match.Local.LogoPath,
-                //            },
-                //            Visitor = new TeamResponse
-                //            {
-                //                Id = h.Match.Visitor.Id,
-                //                Initials = h.Match.Visitor.Initials,
-                //                LeagueId = h.Match.Visitor.League.Id,
-                //                LeagueName = h.Match.Visitor.League.Name,
-                //                Name = h.Match.Visitor.Name,
-                //                LogoPath = h.Match.Visitor.LogoPath,
-                //            },
-                //            GoalsLocal = h.GoalsLocal,
-                //            GoalsVisitor = h.GoalsVisitor,
-                //        }
-                //    }).ToList()
-                //},
-            
-                Points = groupBetPlayer.Points
-            };
-        }
-
         public List<LeagueResponse> ToLeagueResponse(List<LeagueEntity> leagueEntities)
         {
             List<LeagueResponse> list = new List<LeagueResponse>();
@@ -733,6 +651,38 @@ namespace Soccer.Web.Helpers
             foreach (MatchEntity matchEntity in matches)
             {
                 list.Add(await ToMatchResponse2(matchEntity));
+            }
+            return list;
+        }
+
+        public async Task<GroupBetResponse2> ToGroupBetResponse2(GroupBetPlayer groupBetPlayer)
+        {
+            return new GroupBetResponse2
+            {
+                Id = groupBetPlayer.Id,
+                AdminName= groupBetPlayer.GroupBet.Admin.User.FullName,
+                AdminPicture = groupBetPlayer.GroupBet.Admin.User.ImageFullPath,
+                AdminTeam = groupBetPlayer.GroupBet.Admin.User.FavoriteTeam.LogoFullPath,
+                LogoPath = groupBetPlayer.GroupBet.LogoPath,
+                TournamentName=groupBetPlayer.GroupBet.Tournament.Name,
+                GroupBetPlayers = groupBetPlayer.GroupBet.GroupBetPlayers?.Select(g => new GroupBetPlayerResponse2
+                {
+                    Id = g.Id,
+                    IsAccepted = g.IsAccepted,
+                    IsBlocked=g.IsBlocked,
+                }).ToList(),
+                CreationDate=groupBetPlayer.GroupBet.CreationDate,
+                Name=groupBetPlayer.GroupBet.Name,
+                CantPlayers=groupBetPlayer.GroupBet.GroupBetPlayers.Count(),
+            };
+        }
+
+        public async Task<List<GroupBetResponse2>> ToGroupBetResponse2(List<GroupBetPlayer> groupBetPlayers)
+        {
+            List<GroupBetResponse2> list = new List<GroupBetResponse2>();
+            foreach (GroupBetPlayer groupBetPlayer in groupBetPlayers)
+            {
+                list.Add(await ToGroupBetResponse2(groupBetPlayer));
             }
             return list;
         }

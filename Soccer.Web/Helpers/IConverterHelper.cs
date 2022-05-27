@@ -58,9 +58,9 @@ namespace Soccer.Web.Helpers
 
         PlayerResponse ToPlayerResponse(Player player);
 
-        Task<GroupBetResponse> ToGroupBetResponse(GroupBet groupBet);
+        
 
-        Task<GroupBetPlayerResponse> ToGroupBetPlayerResponse(GroupBetPlayer groupBetPlayer);
+        //Task<GroupBetPlayerResponse> ToGroupBetPlayerResponse(GroupBetPlayer groupBetPlayer);
 
         GroupResponse2 ToGroupResponse(GroupEntity groupEntity);
         List<GroupResponse2> ToGroupResponse(List<GroupEntity> groupEntities);
@@ -70,6 +70,9 @@ namespace Soccer.Web.Helpers
 
         Task<MatchResponse2> ToMatchResponse2(MatchEntity matchEntity);
         Task<List<MatchResponse2>> ToMatchResponse2(List<MatchEntity> matchEntities);
+
+        Task<GroupBetResponse2> ToGroupBetResponse2(GroupBetPlayer groupBetPlayer);
+        Task<List<GroupBetResponse2>> ToGroupBetResponse2(List<GroupBetPlayer> groupBetPlayerEntities);
 
     }
 }

@@ -80,127 +80,130 @@ namespace Soccer.Web.Controllers.API
             _context.GroupBets.Add(groupBet);
             _context.GroupBetPlayers.Add(groupBetPlayer);
             await _context.SaveChangesAsync();
-            return Ok(_converterHelper.ToGroupBetResponse(groupBet));
+            //return Ok(_converterHelper.ToGroupBetResponse(groupBet));
+            return Ok();
             //return NoContent();
         }
 
-        [HttpPost]
-        [Route("GetGroupBetsByEmail")]
-        public async Task<IActionResult> GetGroupBets(EmailRequest emailRequest)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
 
-            var groupBetsPlayer = await _context.GroupBetPlayers
-                .Include(p => p.Player)
-                .ThenInclude(u => u.User)
-                .ThenInclude(f => f.FavoriteTeam)
-                .ThenInclude(l => l.League)
 
-                .Include(g => g.GroupBet)
-                .ThenInclude(t => t.Tournament)
+        //[HttpPost]
+        //[Route("GetGroupBetsByEmail")]
+        //public async Task<IActionResult> GetGroupBets(EmailRequest emailRequest)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    var groupBetsPlayer = await _context.GroupBetPlayers
+        //        .Include(p => p.Player)
+        //        .ThenInclude(u => u.User)
+        //        .ThenInclude(f => f.FavoriteTeam)
+        //        .ThenInclude(l => l.League)
+
+        //        .Include(g => g.GroupBet)
+        //        .ThenInclude(t => t.Tournament)
                 
-                .Include(g => g.GroupBet)
-                .ThenInclude(p => p.Admin)
-                .ThenInclude(p => p.User)
-                .ThenInclude(f => f.FavoriteTeam)
-                .ThenInclude(l => l.League)
+        //        .Include(g => g.GroupBet)
+        //        .ThenInclude(p => p.Admin)
+        //        .ThenInclude(p => p.User)
+        //        .ThenInclude(f => f.FavoriteTeam)
+        //        .ThenInclude(l => l.League)
 
-                .Include(g => g.GroupBet)
-                .ThenInclude(p => p.GroupBetPlayers)
-                .ThenInclude(p => p.Player)
-                .ThenInclude(u => u.User)
-                .ThenInclude(f => f.FavoriteTeam)
-                .ThenInclude(l => l.League)
+        //        .Include(g => g.GroupBet)
+        //        .ThenInclude(p => p.GroupBetPlayers)
+        //        .ThenInclude(p => p.Player)
+        //        .ThenInclude(u => u.User)
+        //        .ThenInclude(f => f.FavoriteTeam)
+        //        .ThenInclude(l => l.League)
 
-                .Include(g => g.GroupBet)
-                .ThenInclude(p => p.GroupBetPlayers)
-                .ThenInclude(p => p.Player)
-                .ThenInclude(p => p.Predictions)
-                .ThenInclude(p => p.Match)
-                .ThenInclude(p => p.Local)
-                .ThenInclude(p => p.League)
+        //        .Include(g => g.GroupBet)
+        //        .ThenInclude(p => p.GroupBetPlayers)
+        //        .ThenInclude(p => p.Player)
+        //        .ThenInclude(p => p.Predictions)
+        //        .ThenInclude(p => p.Match)
+        //        .ThenInclude(p => p.Local)
+        //        .ThenInclude(p => p.League)
 
-                .Include(g => g.GroupBet)
-                .ThenInclude(p => p.GroupBetPlayers)
-                .ThenInclude(p => p.Player)
-                .ThenInclude(p => p.Predictions)
-                .ThenInclude(p => p.Match)
-                .ThenInclude(p => p.Visitor)
-                .ThenInclude(p => p.League)
+        //        .Include(g => g.GroupBet)
+        //        .ThenInclude(p => p.GroupBetPlayers)
+        //        .ThenInclude(p => p.Player)
+        //        .ThenInclude(p => p.Predictions)
+        //        .ThenInclude(p => p.Match)
+        //        .ThenInclude(p => p.Visitor)
+        //        .ThenInclude(p => p.League)
 
-                .Include(g => g.GroupBet)
-                .ThenInclude(p => p.GroupBetPlayers)
-                .ThenInclude(p => p.Player)
-                .ThenInclude(p => p.Predictions)
-                .ThenInclude(p => p.Match)
-                .ThenInclude(p => p.Group)
-                .ThenInclude(p => p.Tournament)
+        //        .Include(g => g.GroupBet)
+        //        .ThenInclude(p => p.GroupBetPlayers)
+        //        .ThenInclude(p => p.Player)
+        //        .ThenInclude(p => p.Predictions)
+        //        .ThenInclude(p => p.Match)
+        //        .ThenInclude(p => p.Group)
+        //        .ThenInclude(p => p.Tournament)
 
-                .Where(o => o.Player.User.Email.ToLower() == emailRequest.Email.ToLower() && o.GroupBet.Tournament.IsActive)
-                .OrderBy(a => a.GroupBet.Name)
-                .ToListAsync();
+        //        .Where(o => o.Player.User.Email.ToLower() == emailRequest.Email.ToLower() && o.GroupBet.Tournament.IsActive)
+        //        .OrderBy(a => a.GroupBet.Name)
+        //        .ToListAsync();
 
-            var response = new List<GroupBetResponse>();
-            foreach (var groupBetPlayer in groupBetsPlayer)
-            {
-                var group = new GroupBetResponse
-                {
-                    Id = groupBetPlayer.GroupBet.Id,
-                    Admin = _converterHelper.ToPlayerResponse(groupBetPlayer.GroupBet.Admin),
-                    CreationDate = groupBetPlayer.GroupBet.CreationDate,
-                    LogoPath = groupBetPlayer.GroupBet.LogoPath,
-                    Name = groupBetPlayer.GroupBet.Name,
-                    Tournament = _converterHelper.ToTournamentResponse(await _context.Tournaments.FirstOrDefaultAsync(a => a.Id == groupBetPlayer.GroupBet.Tournament.Id)),
+        //    var response = new List<GroupBetResponse>();
+        //    foreach (var groupBetPlayer in groupBetsPlayer)
+        //    {
+        //        var group = new GroupBetResponse
+        //        {
+        //            Id = groupBetPlayer.GroupBet.Id,
+        //            Admin = _converterHelper.ToPlayerResponse(groupBetPlayer.GroupBet.Admin),
+        //            CreationDate = groupBetPlayer.GroupBet.CreationDate,
+        //            LogoPath = groupBetPlayer.GroupBet.LogoPath,
+        //            Name = groupBetPlayer.GroupBet.Name,
+        //            Tournament = _converterHelper.ToTournamentResponse(await _context.Tournaments.FirstOrDefaultAsync(a => a.Id == groupBetPlayer.GroupBet.Tournament.Id)),
 
-                    GroupBetPlayers = groupBetPlayer.GroupBet.GroupBetPlayers.Select(p => new GroupBetPlayerResponse
-                    {
-                        Id = p.Id,
-                        IsAccepted = p.IsAccepted,
-                        IsBlocked = p.IsBlocked,
-                        Points = p.Points,
-                        Player = new PlayerResponse2
-                        {
-                            FirstName = p.Player.User.FirstName,
-                            LastName = p.Player.User.LastName,
-                            NickName = p.Player.User.NickName,
-                            PicturePath = p.Player.User.Picture,
-                            Id = p.Player.Id,
-                            Points = p.Player.User.Points,
-                            Team = new TeamResponse
-                            {
-                                Id = p.Player.User.FavoriteTeam.Id,
-                                Initials = p.Player.User.FavoriteTeam.Initials,
-                                LeagueId = p.Player.User.FavoriteTeam.League.Id,
-                                LeagueName = p.Player.User.FavoriteTeam.League.Name,
-                                Name = p.Player.User.FavoriteTeam.Name,
-                                LogoPath = p.Player.User.FavoriteTeam.LogoPath,
-                            },
-                            UserId = p.Player.User.Id,
-                            Predictions = p.Player.Predictions.Select(h => new PredictionResponse2
-                            {
-                                Id = h.Id,
-                                GoalsLocal = h.GoalsLocal,
-                                GoalsVisitor = h.GoalsVisitor,
-                                Points = h.Points,
-                                MatchId = h.Match.Id,
-                                PlayerId = h.Player.Id,
-                                TournamentId=h.Match.Group.Tournament.Id,
-                                NameLocal = h.Match.Local.Name,
-                                NameVisitor = h.Match.Visitor.Name
-                            }).ToList()
-                        },
+        //            GroupBetPlayers = groupBetPlayer.GroupBet.GroupBetPlayers.Select(p => new GroupBetPlayerResponse
+        //            {
+        //                Id = p.Id,
+        //                IsAccepted = p.IsAccepted,
+        //                IsBlocked = p.IsBlocked,
+        //                Points = p.Points,
+        //                Player = new PlayerResponse
+        //                {
+        //                    FirstName = p.Player.User.FirstName,
+        //                    LastName = p.Player.User.LastName,
+        //                    NickName = p.Player.User.NickName,
+        //                    PicturePath = p.Player.User.Picture,
+        //                    Id = p.Player.Id,
+        //                    Points = p.Player.User.Points,
+        //                    Team = new TeamResponse
+        //                    {
+        //                        Id = p.Player.User.FavoriteTeam.Id,
+        //                        Initials = p.Player.User.FavoriteTeam.Initials,
+        //                        LeagueId = p.Player.User.FavoriteTeam.League.Id,
+        //                        LeagueName = p.Player.User.FavoriteTeam.League.Name,
+        //                        Name = p.Player.User.FavoriteTeam.Name,
+        //                        LogoPath = p.Player.User.FavoriteTeam.LogoPath,
+        //                    },
+        //                    UserId = p.Player.User.Id,
+        //                    Predictions = p.Player.Predictions.Select(h => new PredictionResponse2
+        //                    {
+        //                        Id = h.Id,
+        //                        GoalsLocal = h.GoalsLocal,
+        //                        GoalsVisitor = h.GoalsVisitor,
+        //                        Points = h.Points,
+        //                        MatchId = h.Match.Id,
+        //                        PlayerId = h.Player.Id,
+        //                        TournamentId=h.Match.Group.Tournament.Id,
+        //                        NameLocal = h.Match.Local.Name,
+        //                        NameVisitor = h.Match.Visitor.Name
+        //                    }).ToList()
+        //                },
 
-                    }).ToList()
-                };
+        //            }).ToList()
+        //        };
 
-                response.Add(group);
-            }
+        //        response.Add(group);
+        //    }
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroupBet([FromRoute] int id)

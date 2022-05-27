@@ -116,5 +116,25 @@ namespace Soccer.Web.Controllers.API
 
             return Ok(res.Result);
         }
+
+        [HttpPost]
+        [Route("GetMyGroups/{codigo}")]
+        public async Task<IActionResult> GetMyGroups(string codigo)
+        {
+            List<GroupBetPlayer> groupsBet = await _context.GroupBetPlayers
+                .Include(t => t.GroupBet)
+                .ThenInclude(t=>t.GroupBetPlayers)
+                .Include(t => t.GroupBet)
+                .ThenInclude(t => t.Tournament)
+                .Include(t => t.GroupBet)
+                .ThenInclude(t => t.Admin)
+                .ThenInclude(t => t.User)
+                .ThenInclude(t => t.FavoriteTeam)
+                .Where(t => t.Player.User.Id == codigo && t.GroupBet.Tournament.IsActive)
+                .ToListAsync();
+
+            var res = _converterHelper.ToGroupBetResponse2(groupsBet);
+            return Ok(res.Result);
+        }
     }
 }
