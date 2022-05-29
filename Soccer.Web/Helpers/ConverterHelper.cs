@@ -532,7 +532,7 @@ namespace Soccer.Web.Helpers
                 IsClosed = matchEntity.IsClosed,
                 Local = ToTeamResponse(matchEntity.Local),
                 Visitor = ToTeamResponse(matchEntity.Visitor),
-                //DateName= matchEntity.DateName,
+                DateName= matchEntity.DateName.Name,
                 //Group= matchEntity.Group
             };
         }

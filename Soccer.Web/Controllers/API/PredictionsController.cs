@@ -50,18 +50,22 @@ namespace Soccer.Web.Controllers.API
             Player player = await _context.Players
                 .Include(u => u.User.FavoriteTeam)
                 .ThenInclude(l => l.League)
+                
                 .Include(pr => pr.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(m => m.Local)
                 .ThenInclude(l => l.League)
+                
                 .Include(pr => pr.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(m => m.Visitor)
                 .ThenInclude(l => l.League)
+                
                 .Include(pr => pr.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(p => p.Group)
                 .ThenInclude(p => p.Tournament)
+                
                 .FirstOrDefaultAsync(u => u.User.Id == request.UserId.ToString());
             if (player == null)
             {
@@ -106,6 +110,87 @@ namespace Soccer.Web.Controllers.API
 
 
         [HttpGet]
+        [Route("GetPredictionsForUser/{tournamentId}/{userId}")]
+        public async Task<IActionResult> GetPredictionsForUser([FromRoute] int tournamentId, [FromRoute] int userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            TournamentEntity tournament = await _context.Tournaments.FindAsync(tournamentId);
+            if (tournament == null)
+            {
+                return BadRequest("Este Torneo no existe.");
+            }
+
+            Player player = await _context.Players
+                .Include(u => u.User.FavoriteTeam)
+                .ThenInclude(l => l.League)
+
+                .Include(pr => pr.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(m => m.Local)
+                .ThenInclude(l => l.League)
+
+                .Include(pr => pr.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(m => m.Visitor)
+                .ThenInclude(l => l.League)
+
+                .Include(pr => pr.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(p => p.Group)
+                .ThenInclude(p => p.Tournament)
+
+                .Include(pr => pr.Predictions)
+                .ThenInclude(p => p.Match)
+                .ThenInclude(p => p.DateName)
+
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (player == null)
+            {
+                return BadRequest("Este Usuario no existe.");
+            }
+
+            // Add precitions already done
+            List<PredictionResponse> predictionResponses = new List<PredictionResponse>();
+            foreach (PredictionEntity predictionEntity in player.Predictions)
+            {
+                if (predictionEntity.Match.Group.Tournament.Id == tournamentId)
+                {
+                    predictionResponses.Add(_converterHelper.ToPredictionResponse(predictionEntity));
+                }
+            }
+
+            // Add precitions undone
+            List<MatchEntity> matches = await _context.Matches
+                .Include(m => m.Local)
+                .ThenInclude(l => l.League)
+                .Include(m => m.Visitor)
+                .ThenInclude(l => l.League)
+                .Include(g => g.Group)
+                .Include(d => d.DateName)
+                .Where(m => m.Group.Tournament.Id == tournamentId)
+                .ToListAsync();
+            foreach (MatchEntity matchEntity in matches)
+            {
+                PredictionResponse predictionResponse = predictionResponses.FirstOrDefault(pr => pr.Match.Id == matchEntity.Id);
+                if (predictionResponse == null)
+                {
+                    predictionResponses.Add(new PredictionResponse
+                    {
+                        Player= _converterHelper.ToPlayerResponse(player),
+                        Match = _converterHelper.ToMatchResponse(matchEntity),
+                    });
+                }
+            }
+
+            return Ok(predictionResponses.OrderBy(pr => pr.Id).ThenBy(pr => pr.Match.Date));
+        }
+
+        [HttpGet]
         [Route("GetPredictionsForUserInOneTournament/{id}/{id2}")]
 
         public async Task<IActionResult> GetPredictionsForUserInOneTournament([FromRoute] int id, [FromRoute] int id2)
@@ -125,6 +210,7 @@ namespace Soccer.Web.Controllers.API
             Player player = await _context.Players
                 .Include(u => u.User.FavoriteTeam)
                 .ThenInclude(l => l.League)
+
                 .Include(pr => pr.Predictions)
                 .ThenInclude(p => p.Match)
                 .ThenInclude(m => m.Local)
@@ -152,7 +238,9 @@ namespace Soccer.Web.Controllers.API
                     predictionResponses.Add(_converterHelper.ToPredictionResponse3(predictionEntity));
                 }
             }
-            return Ok(predictionResponses.OrderBy(pr => pr.Id).ThenBy(pr => pr.MatchDate));
+
+            var res = predictionResponses.OrderBy(pr => pr.Id).ThenBy(pr => pr.MatchDate);
+            return Ok(res);            
         }
 
 
