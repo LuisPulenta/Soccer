@@ -12,6 +12,7 @@ namespace Soccer.Common.Models
         public String AdminPicture { get; set; }
         public String AdminTeam { get; set; }
         public String TournamentName { get; set; }
+        public int TournamentId { get; set; }
         public DateTime CreationDate { get; set; }
         public ICollection<GroupBetPlayerResponse2> GroupBetPlayers { get; set; }
         public int? CantPlayers { get; set; }

@@ -190,6 +190,8 @@ namespace Soccer.Web.Controllers.API
             return Ok(predictionResponses.OrderBy(pr => pr.Id).ThenBy(pr => pr.Match.Date));
         }
 
+        
+
         [HttpGet]
         [Route("GetPredictionsForUserInOneTournament/{id}/{id2}")]
 

@@ -659,12 +659,13 @@ namespace Soccer.Web.Helpers
         {
             return new GroupBetResponse2
             {
-                Id = groupBetPlayer.Id,
+                Id = groupBetPlayer.GroupBet.Id,
                 AdminName= groupBetPlayer.GroupBet.Admin.User.FullName,
                 AdminPicture = groupBetPlayer.GroupBet.Admin.User.ImageFullPath,
                 AdminTeam = groupBetPlayer.GroupBet.Admin.User.FavoriteTeam.LogoFullPath,
                 LogoPath = groupBetPlayer.GroupBet.LogoPath,
                 TournamentName=groupBetPlayer.GroupBet.Tournament.Name,
+                TournamentId = groupBetPlayer.GroupBet.Tournament.Id,
                 GroupBetPlayers = groupBetPlayer.GroupBet.GroupBetPlayers?.Select(g => new GroupBetPlayerResponse2
                 {
                     Id = g.Id,
@@ -683,6 +684,42 @@ namespace Soccer.Web.Helpers
             foreach (GroupBetPlayer groupBetPlayer in groupBetPlayers)
             {
                 list.Add(await ToGroupBetResponse2(groupBetPlayer));
+            }
+            return list;
+        }
+
+        public async Task<PredictionResponse4> ToPredictionsResponse4(PredictionEntity prediction)
+        {
+            return new PredictionResponse4
+            {
+                Id = prediction.Id,
+                GoalsLocalPrediction = prediction.GoalsLocal,
+                GoalsVisitorPrediction = prediction.GoalsVisitor,
+                GoalsLocalReal = prediction.Match.GoalsLocal,
+                GoalsVisitorReal = prediction.Match.GoalsVisitor,
+                InitialsLocal = prediction.Match.Local.Initials,
+                InitialsVisitor = prediction.Match.Visitor.Initials,
+                LogoPathLocal = prediction.Match.Local.LogoFullPath,
+                LogoPathVisitor = prediction.Match.Visitor.LogoFullPath,
+                MatchDate = prediction.Match.DateLocal,
+                MatchId = prediction.Match.Id,
+                NameLocal = prediction.Match.Local.Name,
+                NameVisitor = prediction.Match.Visitor.Name,
+                PlayerId = prediction.Player.Id,
+                PlayerName = prediction.Player.User.FullName,
+                PlayerNickName = prediction.Player.User.NickName,
+                PlayerPicture = prediction.Player.User.ImageFullPath,
+                Points = prediction.Points,
+                TournamentId = prediction.Match.Group.Tournament.Id,
+            };
+        }
+
+        public async Task<List<PredictionResponse4>> ToPredictionsResponse4(List<PredictionEntity> predictions)
+        {
+            List<PredictionResponse4> list = new List<PredictionResponse4>();
+            foreach (PredictionEntity prediction in predictions)
+            {
+                list.Add(await ToPredictionsResponse4(prediction));
             }
             return list;
         }

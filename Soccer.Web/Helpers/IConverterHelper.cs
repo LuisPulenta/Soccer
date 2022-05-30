@@ -74,5 +74,8 @@ namespace Soccer.Web.Helpers
         Task<GroupBetResponse2> ToGroupBetResponse2(GroupBetPlayer groupBetPlayer);
         Task<List<GroupBetResponse2>> ToGroupBetResponse2(List<GroupBetPlayer> groupBetPlayerEntities);
 
+        Task<PredictionResponse4> ToPredictionsResponse4(PredictionEntity prediction);
+        Task<List<PredictionResponse4>> ToPredictionsResponse4(List<PredictionEntity> predictions);
+
     }
 }

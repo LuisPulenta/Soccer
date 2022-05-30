@@ -136,5 +136,41 @@ namespace Soccer.Web.Controllers.API
             var res = _converterHelper.ToGroupBetResponse2(groupsBet);
             return Ok(res.Result);
         }
+
+        [HttpPost]
+        [Route("GetMyGroup/{group}/{tournament}")]
+        public async Task<IActionResult> GetMyGroup(int group, int tournament)
+        {
+            List<PredictionEntity> predictions = await _context.Predictions
+                .Include(t => t.Player)
+                .ThenInclude(t => t.GroupBetPlayers)
+
+                .Include(t => t.Match)
+                .ThenInclude(t => t.Group)
+                .ThenInclude(t => t.Tournament)
+
+                .Include(t => t.Player)
+                .ThenInclude(t => t.User)
+                .ThenInclude(t => t.FavoriteTeam)
+
+                .Include(t => t.Match)
+                .ThenInclude(t => t.Local)
+
+                .Include(t => t.Match)
+                .ThenInclude(t => t.Visitor)
+
+                .Include(t => t.Match)
+                .ThenInclude(t => t.DateName)
+
+                .Include(t => t.Match)
+                .ThenInclude(t => t.Group)
+                .ThenInclude(t => t.Tournament)
+
+                .Where(t => t.Match.Group.Tournament.Id==tournament)  
+                .ToListAsync();
+
+            var res = _converterHelper.ToPredictionsResponse4(predictions);
+            return Ok(res.Result);
+        }
     }
 }
