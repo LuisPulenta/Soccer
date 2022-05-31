@@ -9,6 +9,7 @@ namespace Soccer.Common.Models
         public string Name { get; set; }
         public string LogoPath { get; set; }
         public String AdminName { get; set; }
+        public String AdminNickName { get; set; }
         public String AdminPicture { get; set; }
         public String AdminTeam { get; set; }
         public String TournamentName { get; set; }

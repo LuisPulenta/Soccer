@@ -661,6 +661,7 @@ namespace Soccer.Web.Helpers
             {
                 Id = groupBetPlayer.GroupBet.Id,
                 AdminName= groupBetPlayer.GroupBet.Admin.User.FullName,
+                AdminNickName = groupBetPlayer.GroupBet.Admin.User.NickName,
                 AdminPicture = groupBetPlayer.GroupBet.Admin.User.ImageFullPath,
                 AdminTeam = groupBetPlayer.GroupBet.Admin.User.FavoriteTeam.LogoFullPath,
                 LogoPath = groupBetPlayer.GroupBet.LogoPath,
