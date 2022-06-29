@@ -53,17 +53,17 @@ namespace Soccer.Web.Helpers
             int points = 0;
             if (predictionEntity.GoalsLocal == _matchEntity.GoalsLocal)
             {
-                points += 2;
+                points += 1;
             }
 
             if (predictionEntity.GoalsVisitor == _matchEntity.GoalsVisitor)
             {
-                points += 2;
+                points += 1;
             }
 
             if (_matchStatus == GetMatchStaus(predictionEntity.GoalsLocal.Value, predictionEntity.GoalsVisitor.Value))
             {
-                points++;
+                points+=2;
             }
 
             return points;
