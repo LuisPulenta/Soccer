@@ -18,7 +18,7 @@ namespace Soccer.Common.Models
         public ICollection<PredictionResponse2> Predictions { get; set; }
         public string PictureFullPath => string.IsNullOrEmpty(PicturePath)
          ? "noimage"//null
-         : $"http://keypress.serveftp.net:88/SoccerApi{PicturePath.Substring(1)}";
+         : $"https://keypress.serveftp.net/SoccerApi{PicturePath.Substring(1)}";
 
     }
 }

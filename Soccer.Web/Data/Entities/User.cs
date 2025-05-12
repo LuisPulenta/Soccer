@@ -23,10 +23,12 @@ namespace Soccer.Web.Data.Entities
         public string Picture { get; set; }
 
         public string ImageFullPath => string.IsNullOrEmpty(Picture)
-           ? "http://keypress.serveftp.net:88/SoccerApi/Images/users/nouser.png"
-           : $"http://keypress.serveftp.net:88/SoccerApi{Picture.Substring(1)}";
+           ? "https://keypress.serveftp.net/SoccerApi/Images/users/nouser.png"
+           : $"https://keypress.serveftp.net/SoccerApi{Picture.Substring(1)}";
 
-        //: $"http://keypress.serveftp.net:88/SoccerApi/Soccer{Picture.Substring(1)}";
+        //: $"https://keypress.serveftp.net/SoccerApi/Soccer{Picture.Substring(1)}";
+
+
 
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [MaxLength(20, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]

@@ -15,6 +15,6 @@ namespace Soccer.Common.Models
         public int? CantPlayers { get; set; }
         public string LogoFullPath => string.IsNullOrEmpty(LogoPath)
            ? "noimage"//null
-           : $"http://keypress.serveftp.net:88/SoccerApi{LogoPath.Substring(1)}";
+           : $"https://keypress.serveftp.net/SoccerApi{LogoPath.Substring(1)}";
     }
 }

@@ -17,8 +17,8 @@ namespace Soccer.Common.Models
         public UserType UserType { get; set; }
         public string FullName => $"{FirstName} {LastName}";
         public string PictureFullPath => string.IsNullOrEmpty(PicturePath)
-         ? "http://keypress.serveftp.net:88/SoccerApi/Images/users/nouser.png"
-         : $"http://keypress.serveftp.net:88/SoccerApi{PicturePath.Substring(1)}";
+         ? "https://keypress.serveftp.net/SoccerApi/Images/users/nouser.png"
+         : $"https://keypress.serveftp.net/SoccerApi{PicturePath.Substring(1)}";
     
     }
 }

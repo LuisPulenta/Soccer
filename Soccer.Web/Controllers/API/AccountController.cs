@@ -36,6 +36,7 @@ namespace Soccer.Web.Controllers.API
             _converterHelper = converterHelper;
         }
 
+        //------------------------------------------------------------------------------------------------
         [HttpPost]
         public async Task<IActionResult> PostUser([FromBody] UserRequest request)
         {
@@ -126,6 +127,7 @@ namespace Soccer.Web.Controllers.API
             });
         }
 
+        //------------------------------------------------------------------------------------------------
         [HttpPost]
         [Route("RecoverPassword")]
         public async Task<IActionResult> RecoverPassword([FromBody] EmailRequest request)
@@ -182,6 +184,7 @@ namespace Soccer.Web.Controllers.API
             });
         }
 
+        //------------------------------------------------------------------------------------------------
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut]
         public async Task<IActionResult> PutAccount([FromBody] UserRequest request)
@@ -219,6 +222,8 @@ namespace Soccer.Web.Controllers.API
 
             return NoContent();
         }
+
+        //------------------------------------------------------------------------------------------------
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("ChangePassword")]
@@ -262,6 +267,7 @@ namespace Soccer.Web.Controllers.API
             });
         }
 
+        //------------------------------------------------------------------------------------------------
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("GetUserByEmail")]

@@ -21,11 +21,11 @@ namespace Soccer.Common.Models
         public string LogoPathLocal { get; set; }
         public string LogoFullPathLocal => string.IsNullOrEmpty(LogoPathLocal)
            ? "noimage"//null
-           : $"http://keypress.serveftp.net:88/SoccerApi{LogoPathLocal.Substring(1)}";
+           : $"https://keypress.serveftp.net/SoccerApi{LogoPathLocal.Substring(1)}";
         public string LogoPathVisitor{ get; set; }
         public string LogoFullPathVisitor=> string.IsNullOrEmpty(LogoPathVisitor)
            ? "noimage"//null
-           : $"http://keypress.serveftp.net:88/SoccerApi{LogoPathVisitor.Substring(1)}";
+           : $"https://keypress.serveftp.net/SoccerApi{LogoPathVisitor.Substring(1)}";
         public string InitialsLocal { get; set; }
         public string InitialsVisitor { get; set; }
     }

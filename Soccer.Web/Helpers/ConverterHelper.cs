@@ -19,8 +19,7 @@ namespace Soccer.Web.Helpers
             _combosHelper = combosHelper;
         }
 
-
-
+        //------------------------------------------------------------------------------------------------
         public LeagueEntity ToLeagueEntity(LeagueViewModel model, string path, bool isNew)
         {
             return new LeagueEntity
@@ -31,6 +30,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public LeagueViewModel ToLeagueViewModel(LeagueEntity leagueEntity)
         {
             return new LeagueViewModel
@@ -41,6 +41,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public GroupBet ToGroupBet(GroupBetViewModel model, string path, bool isNew)
         {
             return new GroupBet
@@ -55,6 +56,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public GroupBetViewModel ToGroupBetViewModel(GroupBet groupBet)
         {
             return new GroupBetViewModel
@@ -69,6 +71,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public TeamEntity ToTeamEntity(TeamViewModel model, string path, bool isNew)
         {
             return new TeamEntity
@@ -81,6 +84,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public TeamViewModel ToTeamViewModel(TeamEntity teamEntity)
         {
             return new TeamViewModel
@@ -94,6 +98,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public TournamentEntity ToTournamentEntity(TournamentViewModel model, string path, bool isNew)
         {
             return new TournamentEntity
@@ -109,6 +114,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public TournamentEntity ToTournamentEntity(TournamentResponse model)
         {
             return new TournamentEntity
@@ -122,6 +128,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public TournamentViewModel ToTournamentViewModel(TournamentEntity tournamentEntity)
         {
             return new TournamentViewModel
@@ -137,6 +144,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<GroupEntity> ToGroupEntityAsync(GroupViewModel model, bool isNew)
         {
             return new GroupEntity
@@ -150,6 +158,7 @@ namespace Soccer.Web.Helpers
         }
 
 
+        //------------------------------------------------------------------------------------------------
         public GroupViewModel ToGroupViewModel(GroupEntity groupEntity)
         {
             return new GroupViewModel
@@ -163,6 +172,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<DateNameEntity> ToDateNameEntityAsync(DateNameViewModel model, bool isNew)
         {
             return new DateNameEntity
@@ -174,6 +184,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public DateNameViewModel ToDateNameViewModel(DateNameEntity dateNameEntity)
         {
             return new DateNameViewModel
@@ -186,6 +197,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<GroupDetailEntity> ToGroupDetailEntityAsync(GroupDetailViewModel model, bool isNew)
         {
             return new GroupDetailEntity
@@ -202,6 +214,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public GroupDetailViewModel ToGroupDetailViewModel(GroupDetailEntity groupDetailEntity)
         {
             return new GroupDetailViewModel
@@ -223,6 +236,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<MatchEntity> ToMatchEntityAsync(MatchViewModel model, bool isNew)
         {
             return new MatchEntity
@@ -240,6 +254,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public MatchViewModel ToMatchViewModel(MatchEntity matchEntity)
         {
             return new MatchViewModel
@@ -262,6 +277,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<MatchEntity> ToMatchEntityAsync2(MatchViewModel2 model, bool isNew)
         {
             return new MatchEntity
@@ -279,6 +295,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public MatchViewModel2 ToMatchViewModel2(MatchEntity matchEntity)
         {
             return new MatchViewModel2
@@ -300,6 +317,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public TournamentResponse ToTournamentResponse(TournamentEntity tournamentEntity)
         {
             return new TournamentResponse
@@ -371,7 +389,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
-        
+        //------------------------------------------------------------------------------------------------
         public List<TournamentResponse> ToTournamentResponse(List<TournamentEntity> tournamentEntities)
         {
             List<TournamentResponse> list = new List<TournamentResponse>();
@@ -404,6 +422,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         private TeamResponse ToTeamResponse(TeamEntity team)
         {
             if (team == null)
@@ -423,6 +442,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         private DateNameResponse ToDateNameResponse(DateNameEntity dateNameEntity)
         {
             if (dateNameEntity == null)
@@ -438,8 +458,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
-        
-
+        //------------------------------------------------------------------------------------------------
         public User ToUser(Player player)
         {
             return new User
@@ -457,6 +476,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<Player> ToPlayer2(User user)
         {
             var player = await _context.Players.FindAsync(user.Id);
@@ -466,7 +486,8 @@ namespace Soccer.Web.Helpers
                 User = player.User,
             };
         }
-
+        
+        //------------------------------------------------------------------------------------------------
         public Player ToPlayer(User user)
         {
             return new Player
@@ -475,6 +496,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public Player ToPlayer(PlayerResponse playerResponse)
         {
             return new Player
@@ -484,6 +506,7 @@ namespace Soccer.Web.Helpers
 
         }
 
+        //------------------------------------------------------------------------------------------------
         public PredictionResponse ToPredictionResponse(PredictionEntity predictionEntity)
         {
             return new PredictionResponse
@@ -497,6 +520,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public PredictionResponse3 ToPredictionResponse3(PredictionEntity predictionEntity)
         {
             return new PredictionResponse3
@@ -521,6 +545,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public MatchResponse ToMatchResponse(MatchEntity matchEntity)
         {
             return new MatchResponse
@@ -537,6 +562,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public LeagueResponse ToLeagueResponse(LeagueEntity leagueEntity)
         {
             return new LeagueResponse
@@ -556,7 +582,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
-
+        //------------------------------------------------------------------------------------------------
         public List<LeagueResponse> ToLeagueResponse(List<LeagueEntity> leagueEntities)
         {
             List<LeagueResponse> list = new List<LeagueResponse>();
@@ -568,6 +594,7 @@ namespace Soccer.Web.Helpers
             return list;
         }
 
+        //------------------------------------------------------------------------------------------------
         public GroupResponse2 ToGroupResponse(GroupEntity groupEntity)
         {
             if (groupEntity == null)
@@ -582,6 +609,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public List<GroupResponse2> ToGroupResponse(List<GroupEntity> groupEntities)
         {
             List<GroupResponse2> list = new List<GroupResponse2>();
@@ -593,6 +621,7 @@ namespace Soccer.Web.Helpers
             return list;
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<GroupDetailResponse2> ToGroupDetailResponse(GroupDetailEntity groupDetailEntity)
         {
             if (groupDetailEntity == null)
@@ -613,6 +642,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<List<GroupDetailResponse2>> ToGroupDetailResponse(List<GroupDetailEntity> groupDetailEntities)
         {
             List<GroupDetailResponse2> list = new List<GroupDetailResponse2>();
@@ -624,6 +654,7 @@ namespace Soccer.Web.Helpers
             return list;
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<MatchResponse2> ToMatchResponse2(MatchEntity matchEntity)
         {
             if (matchEntity == null)
@@ -645,6 +676,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<List<MatchResponse2>> ToMatchResponse2(List<MatchEntity> matches)
         {
             List<MatchResponse2> list = new List<MatchResponse2>();
@@ -655,6 +687,7 @@ namespace Soccer.Web.Helpers
             return list;
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<GroupBetResponse2> ToGroupBetResponse2(GroupBetPlayer groupBetPlayer)
         {
             return new GroupBetResponse2
@@ -679,6 +712,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<List<GroupBetResponse2>> ToGroupBetResponse2(List<GroupBetPlayer> groupBetPlayers)
         {
             List<GroupBetResponse2> list = new List<GroupBetResponse2>();
@@ -689,6 +723,7 @@ namespace Soccer.Web.Helpers
             return list;
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<PredictionResponse4> ToPredictionsResponse4(PredictionEntity prediction)
         {
             return new PredictionResponse4
@@ -715,6 +750,7 @@ namespace Soccer.Web.Helpers
             };
         }
 
+        //------------------------------------------------------------------------------------------------
         public async Task<List<PredictionResponse4>> ToPredictionsResponse4(List<PredictionEntity> predictions)
         {
             List<PredictionResponse4> list = new List<PredictionResponse4>();

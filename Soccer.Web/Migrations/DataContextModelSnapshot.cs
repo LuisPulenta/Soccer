@@ -156,6 +156,8 @@ namespace Soccer.Web.Migrations
 
                     b.Property<int?>("AdminId");
 
+                    b.Property<DateTime>("CreationDate");
+
                     b.Property<string>("LogoPath");
 
                     b.Property<string>("Name")
@@ -339,6 +341,33 @@ namespace Soccer.Web.Migrations
                     b.ToTable("Players");
                 });
 
+            modelBuilder.Entity("Soccer.Web.Data.Entities.PlayerGroupBetRequestEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("GroupBetId");
+
+                    b.Property<int?>("ProposalPlayerId");
+
+                    b.Property<int?>("RequiredPlayerId");
+
+                    b.Property<int>("Status");
+
+                    b.Property<Guid>("Token");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupBetId");
+
+                    b.HasIndex("ProposalPlayerId");
+
+                    b.HasIndex("RequiredPlayerId");
+
+                    b.ToTable("PlayerGroupBetRequests");
+                });
+
             modelBuilder.Entity("Soccer.Web.Data.Entities.PredictionEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -419,11 +448,8 @@ namespace Soccer.Web.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -484,6 +510,21 @@ namespace Soccer.Web.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Soccer.Web.Data.Entities.Version", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Fecha");
+
+                    b.Property<string>("NroVersion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Versions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -613,6 +654,21 @@ namespace Soccer.Web.Migrations
                     b.HasOne("Soccer.Web.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Soccer.Web.Data.Entities.PlayerGroupBetRequestEntity", b =>
+                {
+                    b.HasOne("Soccer.Web.Data.Entities.GroupBet", "GroupBet")
+                        .WithMany()
+                        .HasForeignKey("GroupBetId");
+
+                    b.HasOne("Soccer.Web.Data.Entities.Player", "ProposalPlayer")
+                        .WithMany()
+                        .HasForeignKey("ProposalPlayerId");
+
+                    b.HasOne("Soccer.Web.Data.Entities.Player", "RequiredPlayer")
+                        .WithMany()
+                        .HasForeignKey("RequiredPlayerId");
                 });
 
             modelBuilder.Entity("Soccer.Web.Data.Entities.PredictionEntity", b =>
